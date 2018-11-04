@@ -1,0 +1,34 @@
+[package]
+name = "ads1x1x"
+version = "0.1.0"
+authors = ["Diego Barrios Romero <eldruin@gmail.com>"]
+repository = "https://github.com/eldruin/ads1x1x-rs"
+license = "MIT OR Apache-2.0"
+description = "Platform-agnostic Rust driver for the ADS1013, ADS1014, ADS1015, ADS1113, ADS1114, ADS1115, ADS1018 and ADS1118 ultra-small, low-power analog-to-digital converters (ADC)."
+readme = "README.md"
+keywords = ["adc", "analog", "driver", "embedded-hal-driver"]
+categories = ["embedded", "hardware-support", "no-std"]
+homepage = "https://github.com/eldruin/ads1x1x-rs"
+documentation = "https://docs.rs/ads1x1x"
+include = [
+    "**/*.rs",
+    "Cargo.toml",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE-MIT",
+    "LICENSE-APACHE",
+]
+
+[badges.travis-ci]
+branch = "master"
+repository = "eldruin/ads1x1x-rs"
+
+[dependencies]
+embedded-hal = "0.2.2"
+
+[dev-dependencies]
+linux-embedded-hal = "0.2"
+embedded-hal-mock = "0.4"
+
+[profile.release]
+lto = true
