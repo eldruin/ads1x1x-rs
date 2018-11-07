@@ -159,6 +159,10 @@ pub use devices::channel;
 
 mod private {
     pub trait Sealed {}
+
+    impl<I2C> Sealed for super::interface::I2cInterface<I2C> {}
+    impl<SPI, CS> Sealed for super::interface::SpiInterface<SPI, CS> {}
+
     impl Sealed for super::devices::ic::Ads1013 {}
     impl Sealed for super::devices::ic::Ads1113 {}
 }
