@@ -53,6 +53,7 @@
 //TODO #![deny(warnings)]
 #![no_std]
 
+extern crate nb;
 extern crate embedded_hal as hal;
 use core::marker::PhantomData;
 
@@ -133,6 +134,9 @@ struct BitFlags;
 impl BitFlags {
     const OP_MODE      : u16 = 0b0000_0001_0000_0000;
     const OS           : u16 = 0b1000_0000_0000_0000;
+    const DR2          : u16 = 0b0000_0000_1000_0000;
+    const DR1          : u16 = 0b0000_0000_0100_0000;
+    const DR0          : u16 = 0b0000_0000_0010_0000;
 }
 
 
