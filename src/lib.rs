@@ -65,6 +65,15 @@ pub enum Error<E> {
 
 const DEVICE_BASE_ADDRESS : u8 = 0b100_1000;
 
+/// Mode marker types
+pub mod mode {
+    /// One-shot operating mode / power-down state (default)
+    pub struct OneShot(());
+
+    /// Continuous conversion mode
+    pub struct Continuous(());
+}
+
 /// Possible slave addresses
 #[derive(Debug, Clone)]
 pub enum SlaveAddr {
@@ -92,16 +101,67 @@ impl SlaveAddr {
     }
 }
 
-/// ADS1x1x ADC driver
-#[derive(Debug, Default)]
-pub struct Ads1x1x<DI, IC> {
-    iface: DI,
-    _ic: PhantomData<IC>
+struct Register;
+
+impl Register {
+    const CONVERSION : u8 = 0x00;
+    const CONFIG     : u8 = 0x01;
+    //const LOW_TH     : u8 = 0x02;
+    //const HIGH_TH    : u8 = 0x03;
 }
 
+struct BitFlags;
+impl BitFlags {
+    const OP_MODE      : u16 = 0b0000_0001_0000_0000;
+    const OS           : u16 = 0b1000_0000_0000_0000;
+}
+
+
+#[derive(Debug, Clone)]
+struct Config {
+    bits: u16
+}
+
+impl Config {
+    fn is_high(&self, mask : u16) -> bool {
+        (self.bits & mask) != 0
+    }
+
+    fn with_high(&self, mask: u16) -> Self {
+        Config { bits: self.bits | mask }
+    }
+    fn with_low(&self, mask: u16) -> Self {
+        Config { bits: self.bits & !mask }
+    }
+}
+
+impl Default for Config {
+    fn default() -> Self {
+        Config { bits: 0x8583 }
+    }
+}
+
+/// ADS1x1x ADC driver
+#[derive(Debug, Default)]
+pub struct Ads1x1x<DI, IC, MODE> {
+    iface: DI,
+    config: Config,
+    a_conversion_was_started: bool,
+    _ic: PhantomData<IC>,
+    _mode: PhantomData<MODE>
+}
+
+#[doc(hidden)]
 pub mod interface;
 mod devices;
 pub use devices::ic;
+pub use devices::channel;
+
+mod private {
+    pub trait Sealed {}
+    impl Sealed for super::devices::ic::Ads1013 {}
+    impl Sealed for super::devices::ic::Ads1113 {}
+}
 
 #[cfg(test)]
 mod tests {
