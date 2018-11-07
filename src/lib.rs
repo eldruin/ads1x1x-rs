@@ -5,7 +5,9 @@
 //! [`embedded-hal`]: https://github.com/rust-embedded/embedded-hal
 //!
 //! This driver allows you to:
-//! - TODO
+//! - Set the operating mode to one-shot or continuous. See: [`into_continuous()`].
+//!
+//! [`into_continuous()`]: struct.Ads1x1x.html#method.into_continuous
 //!
 //! ## The devices
 //!
