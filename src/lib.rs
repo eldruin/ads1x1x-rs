@@ -52,7 +52,7 @@
 
 #![deny(unsafe_code)]
 #![deny(missing_docs)]
-//TODO #![deny(warnings)]
+#![deny(warnings)]
 #![no_std]
 
 extern crate nb;
