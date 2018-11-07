@@ -24,7 +24,8 @@ branch = "master"
 repository = "eldruin/ads1x1x-rs"
 
 [dependencies]
-embedded-hal = "0.2.2"
+nb = "0.1"
+embedded-hal = { version = "0.2.2", features = ["unproven"] }
 
 [dev-dependencies]
 linux-embedded-hal = "0.2"
