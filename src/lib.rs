@@ -74,6 +74,25 @@ pub mod mode {
     pub struct Continuous(());
 }
 
+/// Data rate
+#[derive(Debug, Clone)]
+pub enum DataRate {
+    /// 128 SPS
+    Sps128,
+    /// 250 SPS
+    Sps250,
+    /// 490 SPS
+    Sps490,
+    /// 920 SPS
+    Sps920,
+    /// 1600 SPS (default)
+    Sps1600,
+    /// 2400 SPS
+    Sps2400,
+    /// 3300 SPS
+    Sps3300
+}
+
 /// Possible slave addresses
 #[derive(Debug, Clone)]
 pub enum SlaveAddr {
