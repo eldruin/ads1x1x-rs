@@ -22,3 +22,13 @@ macro_rules! ic_marker {
 ic_marker!(Ads1013, _12);
 ic_marker!(Ads1113, _16);
 ic_marker!(Ads1014, _12);
+
+pub trait Tier2Features : super::private::Sealed { }
+
+macro_rules! tier2_features {
+    ($name:ident) => {
+        impl Tier2Features for $name {}
+    }
+}
+
+tier2_features!(Ads1014);
