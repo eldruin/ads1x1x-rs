@@ -2,7 +2,7 @@
 
 use core::marker::PhantomData;
 use { Ads1x1x, mode, Error, Register, BitFlags, Config, ic };
-use { interface, hal };
+use { interface, hal, nb };
 use super::super::OperatingMode;
 use super::convert_measurement;
 
