@@ -7,7 +7,11 @@ analog-to-digital converters (ADC), based on the [`embedded-hal`] traits.
 [`embedded-hal`]: https://github.com/rust-embedded/embedded-hal
 
 This driver allows you to:
-- TODO
+- Set the operating mode to one-shot or continuous. See: `into_continuous()`.
+- Make a measurement in one-shot mode. See: `read()`.
+- Set the data rate. See: `set_data_rate()`.
+- Set the low and high thresholds. See: `set_high_threshold()`.
+- Set the comparator mode. See: `set_comparator_mode()`.
 
 ## The devices
 
