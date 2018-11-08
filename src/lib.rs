@@ -98,6 +98,24 @@ pub enum DataRate {
     Sps3300
 }
 
+/// Comparator mode (only for ADS1x14, ADS1x15)
+#[derive(Debug, Clone)]
+pub enum ComparatorMode {
+    /// Traditional comparator (default)
+    ///
+    /// In this mode the ALERT/RDY pin asserts (according to selected active
+    /// polarity) when the conversion data exceeds the limit set as *high*
+    /// threshold and remains active until the conversion data falls below the
+    /// value set as *low* threshold.
+    Traditional,
+    /// Window comparator
+    ///
+    /// In this mode the ALERT/RDY pin asserts (according to selected active
+    /// polarity) when the conversion data exceeds the value set as *high*
+    /// threshold or goes below the value set as *low* temperature threshold.
+    Window
+}
+
 /// Possible slave addresses
 #[derive(Debug, Clone)]
 pub enum SlaveAddr {
@@ -141,6 +159,7 @@ impl BitFlags {
     const DR2          : u16 = 0b0000_0000_1000_0000;
     const DR1          : u16 = 0b0000_0000_0100_0000;
     const DR0          : u16 = 0b0000_0000_0010_0000;
+    const COMP_MODE    : u16 = 0b0000_0000_0001_0000;
 }
 
 
