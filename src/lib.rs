@@ -183,13 +183,14 @@ pub use devices::ic;
 pub use devices::channel;
 
 mod private {
+    use super::{ devices::ic, interface };
     pub trait Sealed {}
 
-    impl<I2C> Sealed for super::interface::I2cInterface<I2C> {}
-    impl<SPI, CS> Sealed for super::interface::SpiInterface<SPI, CS> {}
+    impl<I2C> Sealed for interface::I2cInterface<I2C> {}
+    impl<SPI, CS> Sealed for interface::SpiInterface<SPI, CS> {}
 
-    impl Sealed for super::devices::ic::Ads1013 {}
-    impl Sealed for super::devices::ic::Ads1113 {}
+    impl Sealed for ic::Ads1013 {}
+    impl Sealed for ic::Ads1113 {}
 }
 
 #[cfg(test)]
