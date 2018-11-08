@@ -22,6 +22,7 @@ macro_rules! ic_marker {
 ic_marker!(Ads1013, _12);
 ic_marker!(Ads1113, _16);
 ic_marker!(Ads1014, _12);
+ic_marker!(Ads1114, _16);
 
 pub trait Tier2Features : super::private::Sealed { }
 
@@ -32,3 +33,4 @@ macro_rules! tier2_features {
 }
 
 tier2_features!(Ads1014);
+tier2_features!(Ads1114);

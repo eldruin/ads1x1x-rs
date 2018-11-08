@@ -213,6 +213,7 @@ mod private {
     impl Sealed for ic::Ads1013 {}
     impl Sealed for ic::Ads1113 {}
     impl Sealed for ic::Ads1014 {}
+    impl Sealed for ic::Ads1114 {}
 }
 
 #[cfg(test)]
