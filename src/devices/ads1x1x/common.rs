@@ -1,11 +1,12 @@
 //! Common functions
 
-use { Ads1x1x, DataRate, Error, Register, BitFlags, interface };
+use { Ads1x1x, Error, Register, BitFlags, interface, Config, ic };
 use super::OperatingMode;
 
 impl<DI, IC, MODE, E> Ads1x1x<DI, IC, MODE>
 where
-    DI: interface::WriteData<Error = E>
+    DI: interface::WriteData<Error = E>,
+    IC: ic::Resolution
 {
     pub(super) fn set_operating_mode(&mut self, mode: OperatingMode) -> Result<(), Error<E>> {
         let config;
@@ -18,20 +19,18 @@ where
         Ok(())
     }
 
-    /// Set data rate
-    pub fn set_data_rate(&mut self, rate: DataRate) -> Result<(), Error<E>> {
-        let config;
-        match rate {
-            DataRate::Sps128  => config = self.config.with_low( BitFlags::DR2).with_low( BitFlags::DR1).with_low( BitFlags::DR0),
-            DataRate::Sps250  => config = self.config.with_low( BitFlags::DR2).with_low( BitFlags::DR1).with_high(BitFlags::DR0),
-            DataRate::Sps490  => config = self.config.with_low( BitFlags::DR2).with_high(BitFlags::DR1).with_low( BitFlags::DR0),
-            DataRate::Sps920  => config = self.config.with_low( BitFlags::DR2).with_high(BitFlags::DR1).with_high(BitFlags::DR0),
-            DataRate::Sps1600 => config = self.config.with_high(BitFlags::DR2).with_low( BitFlags::DR1).with_low( BitFlags::DR0),
-            DataRate::Sps2400 => config = self.config.with_high(BitFlags::DR2).with_low( BitFlags::DR1).with_high(BitFlags::DR0),
-            DataRate::Sps3300 => config = self.config.with_high(BitFlags::DR2).with_high(BitFlags::DR1).with_low( BitFlags::DR0),
-        }
-        self.iface.write_register(Register::CONFIG, config.bits)?;
-        self.config = config;
-        Ok(())
+    /// Reset the internal state of this driver to the default values.
+    ///
+    /// *Note:* This does not alter the state or configuration of the device.
+    ///
+    /// This resets the cached configuration register value in this driver to
+    /// the power-up (reset) configuration of the device.
+    ///
+    /// This needs to be called after performing a reset on the device, for
+    /// example through an I2C general-call Reset command, which was not done
+    /// through this driver to ensure that the configurations in the device
+    /// and in the driver match.
+    pub fn reset_internal_driver_state(&mut self) {
+        self.config = Config::default();
     }
 }
