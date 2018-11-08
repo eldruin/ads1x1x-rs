@@ -51,10 +51,12 @@ impl Default for Config {
 
 macro_rules! impl_new_destroy {
     ($ic:ident, $create:ident, $destroy:ident, $trans:ty, $iface:ty) => {
+        #[allow(unused)]
         pub fn $create(transactions: &[$trans]) -> Ads1x1x<$iface, ic::$ic, mode::OneShot> {
             Ads1x1x::$create(I2cMock::new(&transactions), SlaveAddr::default())
         }
 
+        #[allow(unused)]
         pub fn $destroy<MODE>(dev: Ads1x1x<$iface, ic::$ic, MODE>) {
             dev.$destroy().done();
         }
