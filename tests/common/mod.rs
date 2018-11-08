@@ -5,12 +5,12 @@ use self::ads1x1x::{ Ads1x1x, interface, ic, SlaveAddr, mode };
 pub const DEVICE_ADDRESS : u8 = 0b100_1000;
 
 pub struct Register;
-
+#[allow(unused)]
 impl Register {
     pub const CONVERSION : u8 = 0x00;
     pub const CONFIG     : u8 = 0x01;
-    //const LOW_TH     : u8 = 0x02;
-    //const HIGH_TH    : u8 = 0x03;
+    pub const LOW_TH     : u8 = 0x02;
+    pub const HIGH_TH    : u8 = 0x03;
 }
 
 pub struct BitFlags;

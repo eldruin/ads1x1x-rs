@@ -9,6 +9,23 @@ mod common;
 use common::{ new_ads1013, destroy_ads1013,
               DEVICE_ADDRESS as DEV_ADDR, Register, BitFlags, Config };
 
+#[test]
+fn can_set_low_threshold() {
+    let transactions = [ I2cTrans::write(DEV_ADDR, vec![Register::LOW_TH, 0x7F, 0xF0]) ];
+    let mut dev = new_ads1013(&transactions);
+    dev.set_low_threshold(2047).unwrap();
+    destroy_ads1013(dev);
+}
+
+#[test]
+fn can_set_high_threshold() {
+    let transactions = [ I2cTrans::write(DEV_ADDR, vec![Register::HIGH_TH, 0x7F, 0xF0]) ];
+    let mut dev = new_ads1013(&transactions);
+    dev.set_high_threshold(2047).unwrap();
+    destroy_ads1013(dev);
+}
+
+
 macro_rules! test_set_data_rate {
     ($name:ident, $variant:ident, $config:expr) => {
         #[test]
