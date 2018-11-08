@@ -128,8 +128,8 @@ struct Register;
 impl Register {
     const CONVERSION : u8 = 0x00;
     const CONFIG     : u8 = 0x01;
-    //const LOW_TH     : u8 = 0x02;
-    //const HIGH_TH    : u8 = 0x03;
+    const LOW_TH     : u8 = 0x02;
+    const HIGH_TH    : u8 = 0x03;
 }
 
 struct BitFlags;
