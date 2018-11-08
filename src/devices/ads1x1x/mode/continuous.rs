@@ -1,12 +1,13 @@
 //! Common functions
 
 use core::marker::PhantomData;
-use { Ads1x1x, mode, Error, interface };
+use { Ads1x1x, mode, Error, interface, ic };
 use super::super::OperatingMode;
 
 impl<DI, IC, E> Ads1x1x<DI, IC, mode::Continuous>
 where
-    DI: interface::WriteData<Error = E>
+    DI: interface::WriteData<Error = E>,
+    IC: ic::Resolution
 {
     /// Change operating mode to OneShot
     pub fn into_one_shot(mut self) -> Result<Ads1x1x<DI, IC, mode::OneShot>, Error<E>> {

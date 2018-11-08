@@ -8,7 +8,8 @@ use super::convert_measurement;
 
 impl<DI, IC, E> Ads1x1x<DI, IC, mode::OneShot>
 where
-    DI: interface::WriteData<Error = E> + interface::ReadData<Error = E>
+    DI: interface::WriteData<Error = E> + interface::ReadData<Error = E>,
+    IC: ic::Resolution
 {
     /// Change operating mode to Continuous
     pub fn into_continuous(mut self) -> Result<Ads1x1x<DI, IC, mode::Continuous>, Error<E>> {
