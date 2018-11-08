@@ -63,7 +63,9 @@ use core::marker::PhantomData;
 #[derive(Debug)]
 pub enum Error<E> {
     /// I²C/SPI bus error
-    Comm(E)
+    Comm(E),
+    /// Invalid input data provided
+    InvalidInputData
 }
 
 const DEVICE_BASE_ADDRESS : u8 = 0b100_1000;
