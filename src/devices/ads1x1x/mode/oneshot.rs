@@ -24,7 +24,7 @@ where
     }
 
     fn is_measurement_in_progress(&mut self) -> Result<bool, Error<E>> {
-        let config = Config { 
+        let config = Config {
             bits: self.iface.read_register(Register::CONFIG)?
         };
         Ok(!config.is_high(BitFlags::OS))
@@ -44,6 +44,7 @@ where
 {
     type Error = Error<E>;
 
+    /// Request that the ADC begin a conversion on the specified channel
     fn read(&mut self, _channel: &mut CH) -> nb::Result<i16, Self::Error> {
         //TODO for devices with MUX select channel, if it is the wrong one, return AlreadyInProgress or WrongChannel error
         if self.is_measurement_in_progress().map_err(nb::Error::Other)? {
