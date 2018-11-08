@@ -39,3 +39,4 @@ macro_rules! impl_new_destroy {
 
 impl_new_destroy!(Ads1013, new_ads1013, destroy_ads1013);
 impl_new_destroy!(Ads1113, new_ads1113, destroy_ads1113);
+impl_new_destroy!(Ads1014, new_ads1014, destroy_ads1014);

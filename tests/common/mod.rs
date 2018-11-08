@@ -66,6 +66,7 @@ macro_rules! impl_new_destroy {
 
 impl_new_destroy!(Ads1013, new_ads1013, destroy_ads1013, I2cTrans, interface::I2cInterface<I2cMock>);
 impl_new_destroy!(Ads1113, new_ads1113, destroy_ads1113, I2cTrans, interface::I2cInterface<I2cMock>);
+impl_new_destroy!(Ads1014, new_ads1014, destroy_ads1014, I2cTrans, interface::I2cInterface<I2cMock>);
 
 #[macro_export]
 macro_rules! assert_would_block {

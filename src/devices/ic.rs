@@ -21,3 +21,4 @@ macro_rules! ic_marker {
 
 ic_marker!(Ads1013, _12);
 ic_marker!(Ads1113, _16);
+ic_marker!(Ads1014, _12);
