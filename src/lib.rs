@@ -130,7 +130,7 @@ pub mod mode {
 }
 
 /// Data rate
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum DataRate {
     /// 128 SPS
     Sps128,
@@ -149,7 +149,7 @@ pub enum DataRate {
 }
 
 /// Comparator mode (only for ADS1x14, ADS1x15)
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum ComparatorMode {
     /// Traditional comparator (default)
     ///
@@ -167,7 +167,7 @@ pub enum ComparatorMode {
 }
 
 /// Comparator polarity (only for ADS1x14, ADS1x15)
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum ComparatorPolarity {
     /// Active low (default)
     ActiveLow,
