@@ -22,6 +22,7 @@ impl BitFlags {
     pub const DR1          : u16 = 0b0000_0000_0100_0000;
     pub const DR0          : u16 = 0b0000_0000_0010_0000;
     pub const COMP_MODE    : u16 = 0b0000_0000_0001_0000;
+    pub const COMP_POL     : u16 = 0b0000_0000_0000_1000;
 }
 
 pub struct Config {

@@ -2,7 +2,8 @@
 //!
 //! These are the features included only in ADS1x14, ADS1x15
 
-use { Ads1x1x, Error, interface, ic, ComparatorMode, Register, BitFlags };
+use { Ads1x1x, Error, interface, ic, ComparatorMode, ComparatorPolarity,
+      Register, BitFlags };
 
 impl<DI, IC, MODE, E> Ads1x1x<DI, IC, MODE>
 where
@@ -15,6 +16,18 @@ where
         match mode {
             ComparatorMode::Traditional => config = self.config.with_low(BitFlags::COMP_MODE),
             ComparatorMode::Window      => config = self.config.with_high(BitFlags::COMP_MODE)
+        }
+        self.iface.write_register(Register::CONFIG, config.bits)?;
+        self.config = config;
+        Ok(())
+    }
+
+    /// Set comparator polarity
+    pub fn set_comparator_polarity(&mut self, polarity: ComparatorPolarity) -> Result<(), Error<E>> {
+        let config;
+        match polarity {
+            ComparatorPolarity::ActiveLow  => config = self.config.with_low( BitFlags::COMP_POL),
+            ComparatorPolarity::ActiveHigh => config = self.config.with_high(BitFlags::COMP_POL)
         }
         self.iface.write_register(Register::CONFIG, config.bits)?;
         self.config = config;
