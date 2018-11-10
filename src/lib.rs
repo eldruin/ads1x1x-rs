@@ -11,6 +11,7 @@
 //! - Set the low and high thresholds. See: [`set_high_threshold()`].
 //! - Set the comparator mode. See: [`set_comparator_mode()`].
 //! - Set the comparator polarity. See: [`set_comparator_polarity()`].
+//! - Set the comparator latching. See: [`set_comparator_latching()`].
 //!
 //! [`into_continuous()`]: struct.Ads1x1x.html#method.into_continuous
 //! [`read()`]: struct.Ads1x1x.html#method.read
@@ -18,6 +19,7 @@
 //! [`set_high_threshold()`]: struct.Ads1x1x.html#method.set_high_threshold
 //! [`set_comparator_mode()`]: struct.Ads1x1x.html#method.set_comparator_mode
 //! [`set_comparator_polarity()`]: struct.Ads1x1x.html#method.set_comparator_polarity
+//! [`set_comparator_latching()`]: struct.Ads1x1x.html#method.set_comparator_latching
 //!
 //! ## The devices
 //!

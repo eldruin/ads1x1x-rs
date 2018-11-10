@@ -13,6 +13,7 @@ This driver allows you to:
 - Set the low and high thresholds. See: `set_high_threshold()`.
 - Set the comparator mode. See: `set_comparator_mode()`.
 - Set the comparator polarity. See: `set_comparator_polarity()`.
+- Set the comparator latching. See: `set_comparator_latching()`.
 
 ## The devices
 
