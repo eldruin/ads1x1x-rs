@@ -59,6 +59,46 @@
 //! - [ADS111x](http://www.ti.com/lit/ds/symlink/ads1115.pdf)
 //! - [ADS1118](http://www.ti.com/lit/ds/symlink/ads1118.pdf)
 //!
+//! ## Usage examples (see also examples folder)
+//!
+//! To use this driver, import this crate and an `embedded_hal` implementation,
+//! then instantiate the appropriate device.
+//! In the following examples an instance of the device ADS1013 will be created
+//! as an example. Other devices can be created with similar methods like:
+//! `Ads1x1x::new_ads1114(...)`.
+//!
+//! ### Create a driver instance for the ADS1013
+//!
+//! ```no_run
+//! extern crate linux_embedded_hal as hal;
+//! extern crate ads1x1x;
+//! use ads1x1x::{ Ads1x1x, SlaveAddr };
+//!
+//! # fn main() {
+//! let dev = hal::I2cdev::new("/dev/i2c-1").unwrap();
+//! let address = SlaveAddr::default();
+//! let rtc = Ads1x1x::new_ads1013(dev, address);
+//! // do something...
+//!
+//! // get the I2C device back
+//! let dev = rtc.destroy_ads1013();
+//! # }
+//! ```
+//!
+//! ### Create a driver instance for the ADS1013 with an alternative address
+//!
+//! ```no_run
+//! extern crate linux_embedded_hal as hal;
+//! extern crate ads1x1x;
+//! use ads1x1x::{ Ads1x1x, SlaveAddr };
+//!
+//! # fn main() {
+//! let dev = hal::I2cdev::new("/dev/i2c-1").unwrap();
+//! let (a1, a0) = (true, false);
+//! let address = SlaveAddr::Alternative(a1, a0);
+//! let rtc = Ads1x1x::new_ads1013(dev, address);
+//! # }
+//! ```
 
 #![deny(unsafe_code)]
 #![deny(missing_docs)]
