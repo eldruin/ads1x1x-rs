@@ -2,7 +2,7 @@ extern crate embedded_hal;
 extern crate embedded_hal_mock as hal;
 use hal::i2c::Transaction as I2cTrans;
 extern crate ads1x1x;
-use ads1x1x::{ ComparatorMode, ComparatorPolarity };
+use ads1x1x::{ ComparatorMode, ComparatorPolarity, ComparatorLatching};
 
 #[macro_use]
 mod common;
@@ -33,4 +33,9 @@ mod can_set_comparator_polarity {
     set_value_test!(high, set_comparator_polarity, ComparatorPolarity::ActiveHigh, Config::default().with_high(BitFlags::COMP_POL));
 }
 
+mod can_set_comparator_latching {
+    use super::*;
+    set_value_test!(non, set_comparator_latching, ComparatorLatching::Nonlatching, Config::default().with_low( BitFlags::COMP_LAT));
+    set_value_test!(lat, set_comparator_latching, ComparatorLatching::Latching,    Config::default().with_high(BitFlags::COMP_LAT));
+}
 

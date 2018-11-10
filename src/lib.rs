@@ -175,6 +175,26 @@ pub enum ComparatorPolarity {
     ActiveHigh
 }
 
+/// Comparator polarity (only for ADS1x14, ADS1x15)
+///
+/// Select whether the ALERT/RDY pin latches after being asserted or clears
+/// after conversions are within the margin of the upper and lower
+/// threshold values.
+#[derive(Debug, Clone, PartialEq)]
+pub enum ComparatorLatching {
+    /// Nonlatching (default)
+    ///
+    /// The ALERT/RDY pin does not latch when asserted.
+    Nonlatching,
+    /// Latching
+    ///
+    /// The asserted ALERT/RDY pin remains latched until conversion data are
+    /// read by the master or an appropriate SMBus alert response is sent by
+    /// the master. The device responds with its address, and it is the lowest
+    /// address currently asserting the ALERT/RDY bus line.
+    Latching
+}
+
 /// Possible slave addresses
 #[derive(Debug, Clone)]
 pub enum SlaveAddr {
@@ -220,6 +240,7 @@ impl BitFlags {
     const DR0          : u16 = 0b0000_0000_0010_0000;
     const COMP_MODE    : u16 = 0b0000_0000_0001_0000;
     const COMP_POL     : u16 = 0b0000_0000_0000_1000;
+    const COMP_LAT     : u16 = 0b0000_0000_0000_0100;
 }
 
 
