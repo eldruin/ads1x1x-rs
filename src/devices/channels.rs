@@ -1,32 +1,70 @@
 //! ADC input channels
 use { Ads1x1x, ic, hal };
 
-/// ADC input channels
+/// ADC input channel selection
 #[allow(dead_code)]
 pub mod channel {
-    /// ADC input channel 0
-    pub struct A0;
-    /// ADC input channel 1
-    pub struct A1;
-    /// ADC input channel 2
-    pub struct A2;
-    /// ADC input channel 3
-    pub struct A3;
+    /// Measure single-ended signal on input channel 0
+    pub struct SingleA0;
+    /// Measure single-ended signal on input channel 1
+    pub struct SingleA1;
+    /// Measure single-ended signal on input channel 2
+    pub struct SingleA2;
+    /// Measure single-ended signal on input channel 3
+    pub struct SingleA3;
+    /// Measure signal on input channel 0 differentially to signal on input channel 1
+    pub struct DifferentialA0A1;
+    /// Measure signal on input channel 0 differentially to signal on input channel 3
+    pub struct DifferentialA0A3;
+    /// Measure signal on input channel 1 differentially to signal on input channel 3
+    pub struct DifferentialA1A3;
+    /// Measure signal on input channel 3 differentially to signal on input channel 3
+    pub struct DifferentialA2A3;
+}
+
+pub enum ChannelSelection {
+    SingleA0,
+    SingleA1,
+    SingleA2,
+    SingleA3,
+    DifferentialA0A1,
+    DifferentialA0A3,
+    DifferentialA1A3,
+    DifferentialA2A3,
 }
 
 macro_rules! impl_channel {
-    ( $IC:ident, $CH:ident, $ID:expr ) => {
+    ( $IC:ident, $CH:ident ) => {
         impl<DI, MODE> hal::adc::Channel<Ads1x1x<DI, ic::$IC, MODE>> for channel::$CH {
-            type ID = u8;
+            type ID = ChannelSelection;
 
             fn channel() -> Self::ID {
-                $ID
+                ChannelSelection::$CH
             }
         }
     }
 }
 
-impl_channel!(Ads1013, A0, 0);
-impl_channel!(Ads1013, A1, 1);
-impl_channel!(Ads1113, A0, 0);
-impl_channel!(Ads1113, A1, 1);
+impl_channel!(Ads1013, DifferentialA0A1);
+impl_channel!(Ads1113, DifferentialA0A1);
+
+impl_channel!(Ads1014, DifferentialA0A1);
+impl_channel!(Ads1114, DifferentialA0A1);
+
+impl_channel!(Ads1015, DifferentialA0A1);
+impl_channel!(Ads1015, DifferentialA0A3);
+impl_channel!(Ads1015, DifferentialA1A3);
+impl_channel!(Ads1015, DifferentialA2A3);
+impl_channel!(Ads1015, SingleA0);
+impl_channel!(Ads1015, SingleA1);
+impl_channel!(Ads1015, SingleA2);
+impl_channel!(Ads1015, SingleA3);
+
+impl_channel!(Ads1115, DifferentialA0A1);
+impl_channel!(Ads1115, DifferentialA0A3);
+impl_channel!(Ads1115, DifferentialA1A3);
+impl_channel!(Ads1115, DifferentialA2A3);
+impl_channel!(Ads1115, SingleA0);
+impl_channel!(Ads1115, SingleA1);
+impl_channel!(Ads1115, SingleA2);
+impl_channel!(Ads1115, SingleA3);
