@@ -279,7 +279,7 @@ pub struct Ads1x1x<DI, IC, CONV, MODE> {
     iface: DI,
     config: Config,
     a_conversion_was_started: bool,
-    converter: CONV,
+    _conv: PhantomData<CONV>,
     _ic: PhantomData<IC>,
     _mode: PhantomData<MODE>
 }

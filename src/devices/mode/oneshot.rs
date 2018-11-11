@@ -18,7 +18,7 @@ where
             iface: self.iface,
             config: self.config,
             a_conversion_was_started: self.a_conversion_was_started,
-            converter: self.converter,
+            _conv: PhantomData,
             _ic: PhantomData,
             _mode: PhantomData
         })

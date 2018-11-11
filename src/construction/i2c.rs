@@ -8,7 +8,7 @@ use interface::I2cInterface;
 
 
 macro_rules! impl_new_destroy {
-    ( $IC:ident, $create:ident, $destroy:ident, $conv:ty, $converter:expr ) => {
+    ( $IC:ident, $create:ident, $destroy:ident, $conv:ty ) => {
         impl<I2C, E> Ads1x1x<I2cInterface<I2C>, ic::$IC, $conv, mode::OneShot>
         where
             I2C: blocking::i2c::Write<Error = E> + blocking::i2c::WriteRead<Error = E>
@@ -22,7 +22,7 @@ macro_rules! impl_new_destroy {
                     },
                     config: Config::default(),
                     a_conversion_was_started: false,
-                    converter: $converter(()),
+                    _conv: PhantomData,
                     _ic: PhantomData,
                     _mode: PhantomData
                 }
@@ -38,9 +38,9 @@ macro_rules! impl_new_destroy {
     }
 }
 
-impl_new_destroy!(Ads1013, new_ads1013, destroy_ads1013, ic::Resolution12Bit, ic::Resolution12Bit);
-impl_new_destroy!(Ads1113, new_ads1113, destroy_ads1113, ic::Resolution16Bit, ic::Resolution16Bit);
-impl_new_destroy!(Ads1014, new_ads1014, destroy_ads1014, ic::Resolution12Bit, ic::Resolution12Bit);
-impl_new_destroy!(Ads1114, new_ads1114, destroy_ads1114, ic::Resolution16Bit, ic::Resolution16Bit);
-impl_new_destroy!(Ads1015, new_ads1015, destroy_ads1015, ic::Resolution12Bit, ic::Resolution12Bit);
-impl_new_destroy!(Ads1115, new_ads1115, destroy_ads1115, ic::Resolution16Bit, ic::Resolution16Bit);
+impl_new_destroy!(Ads1013, new_ads1013, destroy_ads1013, ic::Resolution12Bit);
+impl_new_destroy!(Ads1113, new_ads1113, destroy_ads1113, ic::Resolution16Bit);
+impl_new_destroy!(Ads1014, new_ads1014, destroy_ads1014, ic::Resolution12Bit);
+impl_new_destroy!(Ads1114, new_ads1114, destroy_ads1114, ic::Resolution16Bit);
+impl_new_destroy!(Ads1015, new_ads1015, destroy_ads1015, ic::Resolution12Bit);
+impl_new_destroy!(Ads1115, new_ads1115, destroy_ads1115, ic::Resolution16Bit);
