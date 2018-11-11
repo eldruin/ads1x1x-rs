@@ -1,4 +1,4 @@
-//! Functions exclusive of ADS1013
+//! Constructor/destructor functions for devices using I2C interface.
 
 extern crate embedded_hal as hal;
 use hal::blocking;
