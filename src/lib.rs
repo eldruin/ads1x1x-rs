@@ -150,6 +150,27 @@ pub enum DataRate12Bit {
     Sps3300
 }
 
+
+/// Data rate for ADS1113, ADS1114, ADS1115, ADS1118
+#[derive(Debug, Clone, PartialEq)]
+pub enum DataRate16Bit {
+    /// 8 SPS
+    Sps8,
+    /// 16 SPS
+    Sps16,
+    /// 32 SPS
+    Sps32,
+    /// 64 SPS
+    Sps64,
+    /// 128 SPS (default)
+    Sps128,
+    /// 250 SPS
+    Sps250,
+    /// 475 SPS
+    Sps475,
+    /// 860 SPS
+    Sps860
+}
 /// Comparator mode (only for ADS1x14, ADS1x15)
 #[derive(Debug, Clone, PartialEq)]
 pub enum ComparatorMode {

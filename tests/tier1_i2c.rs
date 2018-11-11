@@ -4,7 +4,7 @@ extern crate embedded_hal;
 extern crate embedded_hal_mock as hal;
 use hal::i2c::Transaction as I2cTrans;
 extern crate ads1x1x;
-use ads1x1x::{ channel, DataRate12Bit };
+use ads1x1x::{ channel, DataRate12Bit, DataRate16Bit };
 
 #[macro_use]
 mod common;
@@ -56,25 +56,49 @@ impl_tests!(ads1013, new_ads1013, destroy_ads1013,  -2048);
 impl_tests!(ads1113, new_ads1113, destroy_ads1113, -32768);
 
 
-macro_rules! test_set_data_rate {
-    ($name:ident, $variant:ident, $config:expr) => {
-        #[test]
-        fn $name() {
-            let transactions = [ I2cTrans::write(DEV_ADDR, vec![Register::CONFIG, $config.msb(), $config.lsb()]) ];
-            let mut dev = new_ads1013(&transactions);
-            dev.set_data_rate(DataRate12Bit::$variant).unwrap();
-            destroy_ads1013(dev);
+mod data_rate_12bit {
+    macro_rules! test {
+        ($name:ident, $variant:ident, $config:expr) => {
+            #[test]
+            fn $name() {
+                let transactions = [ I2cTrans::write(DEV_ADDR, vec![Register::CONFIG, $config.msb(), $config.lsb()]) ];
+                let mut dev = new_ads1013(&transactions);
+                dev.set_data_rate(DataRate12Bit::$variant).unwrap();
+                destroy_ads1013(dev);
+            }
         }
     }
+
+    use super::*;
+    test!(sps128,  Sps128,  Config::default().with_low( BitFlags::DR2).with_low( BitFlags::DR1).with_low( BitFlags::DR0));
+    test!(sps250,  Sps250,  Config::default().with_low( BitFlags::DR2).with_low( BitFlags::DR1).with_high(BitFlags::DR0));
+    test!(sps490,  Sps490,  Config::default().with_low( BitFlags::DR2).with_high(BitFlags::DR1).with_low( BitFlags::DR0));
+    test!(sps920,  Sps920,  Config::default().with_low( BitFlags::DR2).with_high(BitFlags::DR1).with_high(BitFlags::DR0));
+    test!(sps1600, Sps1600, Config::default().with_high(BitFlags::DR2).with_low( BitFlags::DR1).with_low( BitFlags::DR0));
+    test!(sps2400, Sps2400, Config::default().with_high(BitFlags::DR2).with_low( BitFlags::DR1).with_high(BitFlags::DR0));
+    test!(sps3300, Sps3300, Config::default().with_high(BitFlags::DR2).with_high(BitFlags::DR1).with_low( BitFlags::DR0));
 }
 
-mod data_rate {
+mod data_rate_16bit {
+    macro_rules! test {
+        ($name:ident, $variant:ident, $config:expr) => {
+            #[test]
+            fn $name() {
+                let transactions = [ I2cTrans::write(DEV_ADDR, vec![Register::CONFIG, $config.msb(), $config.lsb()]) ];
+                let mut dev = new_ads1113(&transactions);
+                dev.set_data_rate(DataRate16Bit::$variant).unwrap();
+                destroy_ads1113(dev);
+            }
+        }
+    }
+
     use super::*;
-    test_set_data_rate!(sps128,  Sps128,  Config::default().with_low( BitFlags::DR2).with_low( BitFlags::DR1).with_low( BitFlags::DR0));
-    test_set_data_rate!(sps250,  Sps250,  Config::default().with_low( BitFlags::DR2).with_low( BitFlags::DR1).with_high(BitFlags::DR0));
-    test_set_data_rate!(sps490,  Sps490,  Config::default().with_low( BitFlags::DR2).with_high(BitFlags::DR1).with_low( BitFlags::DR0));
-    test_set_data_rate!(sps920,  Sps920,  Config::default().with_low( BitFlags::DR2).with_high(BitFlags::DR1).with_high(BitFlags::DR0));
-    test_set_data_rate!(sps1600, Sps1600, Config::default().with_high(BitFlags::DR2).with_low( BitFlags::DR1).with_low( BitFlags::DR0));
-    test_set_data_rate!(sps2400, Sps2400, Config::default().with_high(BitFlags::DR2).with_low( BitFlags::DR1).with_high(BitFlags::DR0));
-    test_set_data_rate!(sps3300, Sps3300, Config::default().with_high(BitFlags::DR2).with_high(BitFlags::DR1).with_low( BitFlags::DR0));
+    test!(sps8,   Sps8,   Config::default().with_low( BitFlags::DR2).with_low( BitFlags::DR1).with_low( BitFlags::DR0));
+    test!(sps16,  Sps16,  Config::default().with_low( BitFlags::DR2).with_low( BitFlags::DR1).with_high(BitFlags::DR0));
+    test!(sps32,  Sps32,  Config::default().with_low( BitFlags::DR2).with_high(BitFlags::DR1).with_low( BitFlags::DR0));
+    test!(sps64,  Sps64,  Config::default().with_low( BitFlags::DR2).with_high(BitFlags::DR1).with_high(BitFlags::DR0));
+    test!(sps128, Sps128, Config::default().with_high(BitFlags::DR2).with_low( BitFlags::DR1).with_low( BitFlags::DR0));
+    test!(sps250, Sps250, Config::default().with_high(BitFlags::DR2).with_low( BitFlags::DR1).with_high(BitFlags::DR0));
+    test!(sps475, Sps475, Config::default().with_high(BitFlags::DR2).with_high(BitFlags::DR1).with_low( BitFlags::DR0));
+    test!(sps860, Sps860, Config::default().with_high(BitFlags::DR2).with_high(BitFlags::DR1).with_high(BitFlags::DR0));
 }
