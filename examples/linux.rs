@@ -11,6 +11,6 @@ use ads1x1x::{ Ads1x1x, SlaveAddr, channel };
 fn main() {
     let dev = I2cdev::new("/dev/i2c-1").unwrap();
     let mut adc = Ads1x1x::new_ads1013(dev, SlaveAddr::default());
-    let measurement = block!(adc.read(&mut channel::A0)).unwrap();
+    let measurement = block!(adc.read(&mut channel::DifferentialA0A1)).unwrap();
     println!("Measurement: {}", measurement);
 }

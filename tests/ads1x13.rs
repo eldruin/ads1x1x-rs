@@ -30,7 +30,7 @@ macro_rules! impl_tests {
                     let config = Config::default().with_low(BitFlags::OS);
                     let transactions = [ I2cTrans::write_read(DEV_ADDR, vec![Register::CONFIG], vec![config.msb(), config.lsb()] ) ];
                     let mut dev = $create(&transactions);
-                    assert_would_block!(dev.read(&mut channel::A0));
+                    assert_would_block!(dev.read(&mut channel::DifferentialA0A1));
                     $destroy(dev);
                 }
             }
@@ -44,7 +44,7 @@ macro_rules! impl_tests {
                                     I2cTrans::write_read(DEV_ADDR, vec![Register::CONFIG], vec![config_with_os.msb(), config_with_os.lsb()]),
                                     I2cTrans::write_read(DEV_ADDR, vec![Register::CONVERSION], vec![0x80, 0x00] ) ];
                 let mut dev = $create(&transactions);
-                let measurement = block!(dev.read(&mut channel::A0{})).unwrap();
+                let measurement = block!(dev.read(&mut channel::DifferentialA0A1)).unwrap();
                 assert_eq!($expected, measurement);
                 $destroy(dev);
             }
