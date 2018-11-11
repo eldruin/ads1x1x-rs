@@ -1,6 +1,8 @@
 //! Functions for all devices specific to each operating mode
 
 use ic;
+mod oneshot;
+mod continuous;
 
 fn convert_measurement<IC>(register_data: u16) -> i16
 where
@@ -22,8 +24,6 @@ where
     }
 }
 
-mod oneshot;
-mod continuous;
 
 #[cfg(test)]
 mod tests {
