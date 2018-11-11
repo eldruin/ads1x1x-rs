@@ -1,12 +1,11 @@
 //! Common functions
 
-use { Ads1x1x, Error, Register, BitFlags, interface, Config, ic };
+use { Ads1x1x, Error, Register, BitFlags, interface, Config };
 use super::OperatingMode;
 
-impl<DI, IC, MODE, E> Ads1x1x<DI, IC, MODE>
+impl<DI, IC, CONV, MODE, E> Ads1x1x<DI, IC, CONV, MODE>
 where
-    DI: interface::WriteData<Error = E>,
-    IC: ic::Resolution
+    DI: interface::WriteData<Error = E>
 {
     pub(super) fn set_operating_mode(&mut self, mode: OperatingMode) -> Result<(), Error<E>> {
         let config;

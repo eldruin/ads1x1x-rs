@@ -58,23 +58,23 @@ impl Default for Config {
 }
 
 macro_rules! impl_new_destroy {
-    ($ic:ident, $create:ident, $destroy:ident, $trans:ty, $iface:ty) => {
+    ($ic:ident, $create:ident, $destroy:ident, $conv:ty, $trans:ty, $iface:ty) => {
         #[allow(unused)]
-        pub fn $create(transactions: &[$trans]) -> Ads1x1x<$iface, ic::$ic, mode::OneShot> {
+        pub fn $create(transactions: &[$trans]) -> Ads1x1x<$iface, ic::$ic, $conv, mode::OneShot> {
             Ads1x1x::$create(I2cMock::new(&transactions), SlaveAddr::default())
         }
 
         #[allow(unused)]
-        pub fn $destroy<MODE>(dev: Ads1x1x<$iface, ic::$ic, MODE>) {
+        pub fn $destroy<MODE>(dev: Ads1x1x<$iface, ic::$ic, $conv, MODE>) {
             dev.$destroy().done();
         }
     }
 }
 
-impl_new_destroy!(Ads1013, new_ads1013, destroy_ads1013, I2cTrans, interface::I2cInterface<I2cMock>);
-impl_new_destroy!(Ads1113, new_ads1113, destroy_ads1113, I2cTrans, interface::I2cInterface<I2cMock>);
-impl_new_destroy!(Ads1014, new_ads1014, destroy_ads1014, I2cTrans, interface::I2cInterface<I2cMock>);
-impl_new_destroy!(Ads1015, new_ads1015, destroy_ads1015, I2cTrans, interface::I2cInterface<I2cMock>);
+impl_new_destroy!(Ads1013, new_ads1013, destroy_ads1013, ic::Resolution12Bit, I2cTrans, interface::I2cInterface<I2cMock>);
+impl_new_destroy!(Ads1113, new_ads1113, destroy_ads1113, ic::Resolution16Bit, I2cTrans, interface::I2cInterface<I2cMock>);
+impl_new_destroy!(Ads1014, new_ads1014, destroy_ads1014, ic::Resolution12Bit, I2cTrans, interface::I2cInterface<I2cMock>);
+impl_new_destroy!(Ads1015, new_ads1015, destroy_ads1015, ic::Resolution12Bit, I2cTrans, interface::I2cInterface<I2cMock>);
 
 #[macro_export]
 macro_rules! assert_would_block {

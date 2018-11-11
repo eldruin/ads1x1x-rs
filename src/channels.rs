@@ -35,7 +35,7 @@ pub enum ChannelSelection {
 
 macro_rules! impl_channel {
     ( $IC:ident, $CH:ident ) => {
-        impl<DI, MODE> hal::adc::Channel<Ads1x1x<DI, ic::$IC, MODE>> for channel::$CH {
+        impl<DI, CONV, MODE> hal::adc::Channel<Ads1x1x<DI, ic::$IC, CONV, MODE>> for channel::$CH {
             type ID = ChannelSelection;
 
             fn channel() -> Self::ID {

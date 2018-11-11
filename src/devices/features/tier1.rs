@@ -1,11 +1,10 @@
 //! Common functions
 
-use { Ads1x1x, DataRate, Error, Register, BitFlags, interface, ic };
+use { Ads1x1x, DataRate, Error, Register, BitFlags, interface };
 
-impl<DI, IC, MODE, E> Ads1x1x<DI, IC, MODE>
+impl<DI, IC, CONV, MODE, E> Ads1x1x<DI, IC, CONV, MODE>
 where
-    DI: interface::WriteData<Error = E>,
-    IC: ic::Resolution
+    DI: interface::WriteData<Error = E>
 {
     /// Set data rate
     pub fn set_data_rate(&mut self, rate: DataRate) -> Result<(), Error<E>> {

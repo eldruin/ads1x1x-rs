@@ -275,10 +275,11 @@ impl Default for Config {
 
 /// ADS1x1x ADC driver
 #[derive(Debug, Default)]
-pub struct Ads1x1x<DI, IC, MODE> {
+pub struct Ads1x1x<DI, IC, CONV, MODE> {
     iface: DI,
     config: Config,
     a_conversion_was_started: bool,
+    converter: CONV,
     _ic: PhantomData<IC>,
     _mode: PhantomData<MODE>
 }
@@ -288,9 +289,12 @@ pub mod interface;
 #[doc(hidden)]
 pub mod ic;
 mod channels;
+pub use channels::channel;
 mod devices;
 mod construction;
-pub use channels::channel;
+mod conversion;
+pub use conversion::ConvertThreshold;
+pub use conversion::ConvertMeasurement;
 
 mod private {
     use super::{ ic, interface };
@@ -298,6 +302,9 @@ mod private {
 
     impl<I2C> Sealed for interface::I2cInterface<I2C> {}
     impl<SPI, CS> Sealed for interface::SpiInterface<SPI, CS> {}
+
+    impl Sealed for ic::Resolution12Bit {}
+    impl Sealed for ic::Resolution16Bit {}
 
     impl Sealed for ic::Ads1013 {}
     impl Sealed for ic::Ads1113 {}

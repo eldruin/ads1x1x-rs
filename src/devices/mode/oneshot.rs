@@ -1,24 +1,24 @@
 //! Common functions
 
 use core::marker::PhantomData;
-use { Ads1x1x, mode, Error, Register, BitFlags, Config, ic };
-use { interface, hal, nb };
+use { Ads1x1x, mode, Error, Register, BitFlags, Config };
+use { interface, conversion, hal, nb };
 use devices::OperatingMode;
 use channels::ChannelSelection;
-use super::convert_measurement;
 
-impl<DI, IC, E> Ads1x1x<DI, IC, mode::OneShot>
+impl<DI, IC, CONV, E> Ads1x1x<DI, IC, CONV, mode::OneShot>
 where
     DI: interface::WriteData<Error = E> + interface::ReadData<Error = E>,
-    IC: ic::Resolution
+    CONV: conversion::ConvertMeasurement
 {
     /// Change operating mode to Continuous
-    pub fn into_continuous(mut self) -> Result<Ads1x1x<DI, IC, mode::Continuous>, Error<E>> {
+    pub fn into_continuous(mut self) -> Result<Ads1x1x<DI, IC, CONV, mode::Continuous>, Error<E>> {
         self.set_operating_mode(OperatingMode::Continuous)?;
         Ok(Ads1x1x {
             iface: self.iface,
             config: self.config,
             a_conversion_was_started: self.a_conversion_was_started,
+            converter: self.converter,
             _ic: PhantomData,
             _mode: PhantomData
         })
@@ -37,11 +37,12 @@ where
     }
 }
 
-impl<DI, IC, E, CH> hal::adc::OneShot<Ads1x1x<DI, IC, mode::OneShot>, i16, CH> for Ads1x1x<DI, IC, mode::OneShot>
+impl<DI, IC, CONV, E, CH> hal::adc::OneShot<Ads1x1x<DI, IC, CONV, mode::OneShot>, i16, CH>
+    for Ads1x1x<DI, IC, CONV, mode::OneShot>
 where
     DI: interface::ReadData<Error = E> + interface::WriteData<Error = E>,
-    IC: ic::Resolution,
-    CH: hal::adc::Channel<Ads1x1x<DI, IC, mode::OneShot>, ID = ChannelSelection>
+    CONV: conversion::ConvertMeasurement,
+    CH: hal::adc::Channel<Ads1x1x<DI, IC, CONV, mode::OneShot>, ID = ChannelSelection>
 {
     type Error = Error<E>;
 
@@ -61,7 +62,7 @@ where
             // result is ready
             let value = self.iface.read_register(Register::CONVERSION).map_err(nb::Error::Other)?;
             self.a_conversion_was_started = false;
-            return Ok(convert_measurement::<IC>(value));
+            return Ok(CONV::convert_measurement(value));
         }
         let config = self.config.with_mux_bits(CH::channel());
         self.trigger_measurement(&config).map_err(nb::Error::Other)?;

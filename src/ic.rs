@@ -1,32 +1,23 @@
 /// ICs
 use private;
 
-#[derive(PartialEq)]
-pub enum ResolutionBits {
-        _12,
-        _16
-}
+pub struct Resolution12Bit(pub(crate)());
+pub struct Resolution16Bit(pub(crate)());
 
-pub trait Resolution : private::Sealed {
-    const BITS : ResolutionBits;
-}
 
 macro_rules! ic_marker {
-    ($name:ident, $resolution:ident) => {
+    ($name:ident) => {
         /// IC marker
         pub struct $name(());
-        impl Resolution for $name {
-            const BITS: ResolutionBits = ResolutionBits::$resolution;
-        }
     };
 }
 
-ic_marker!(Ads1013, _12);
-ic_marker!(Ads1113, _16);
-ic_marker!(Ads1014, _12);
-ic_marker!(Ads1114, _16);
-ic_marker!(Ads1015, _12);
-ic_marker!(Ads1115, _16);
+ic_marker!(Ads1013);
+ic_marker!(Ads1113);
+ic_marker!(Ads1014);
+ic_marker!(Ads1114);
+ic_marker!(Ads1015);
+ic_marker!(Ads1115);
 
 pub trait Tier2Features : private::Sealed { }
 
