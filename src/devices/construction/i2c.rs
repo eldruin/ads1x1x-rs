@@ -41,3 +41,5 @@ impl_new_destroy!(Ads1013, new_ads1013, destroy_ads1013);
 impl_new_destroy!(Ads1113, new_ads1113, destroy_ads1113);
 impl_new_destroy!(Ads1014, new_ads1014, destroy_ads1014);
 impl_new_destroy!(Ads1114, new_ads1114, destroy_ads1114);
+impl_new_destroy!(Ads1015, new_ads1015, destroy_ads1015);
+impl_new_destroy!(Ads1115, new_ads1115, destroy_ads1115);
