@@ -36,3 +36,5 @@ macro_rules! tier2_features {
 
 tier2_features!(Ads1014);
 tier2_features!(Ads1114);
+tier2_features!(Ads1015);
+tier2_features!(Ads1115);
