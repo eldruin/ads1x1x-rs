@@ -1,11 +1,13 @@
 /// ICs
+use private;
+
 #[derive(PartialEq)]
 pub enum ResolutionBits {
         _12,
         _16
 }
 
-pub trait Resolution : super::private::Sealed {
+pub trait Resolution : private::Sealed {
     const BITS : ResolutionBits;
 }
 
@@ -26,7 +28,7 @@ ic_marker!(Ads1114, _16);
 ic_marker!(Ads1015, _12);
 ic_marker!(Ads1115, _16);
 
-pub trait Tier2Features : super::private::Sealed { }
+pub trait Tier2Features : private::Sealed { }
 
 macro_rules! tier2_features {
     ($name:ident) => {
