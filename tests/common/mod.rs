@@ -30,6 +30,7 @@ pub struct Config {
     pub bits: u16
 }
 
+#[allow(dead_code)]
 impl Config {
     pub fn with_high(&self, mask: u16) -> Self {
         Config { bits: self.bits | mask }
