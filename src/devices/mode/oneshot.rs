@@ -45,13 +45,19 @@ where
 {
     type Error = Error<E>;
 
-    /// Request that the ADC begin a conversion on the specified channel
+    /// Request that the ADC begin a conversion on the specified channel.
+    ///
+    /// Returns `nb::Error::WouldBlock` while a measurement is in progress.
+    ///
+    /// In case a measurement was requested and after is it is finished a
+    /// measurement on a different channel is requested, a new measurement on
+    /// using the new channel selection is triggered.
     fn read(&mut self, _channel: &mut CH) -> nb::Result<i16, Self::Error> {
-        //TODO for devices with MUX select channel, if it is the wrong one, return AlreadyInProgress or WrongChannel error
         if self.is_measurement_in_progress().map_err(nb::Error::Other)? {
             return Err(nb::Error::WouldBlock);
         }
-        if self.a_conversion_was_started {
+        let same_channel = self.config == self.config.with_mux_bits(CH::channel());
+        if self.a_conversion_was_started && same_channel {
             // result is ready
             let value = self.iface.read_register(Register::CONVERSION).map_err(nb::Error::Other)?;
             self.a_conversion_was_started = false;
