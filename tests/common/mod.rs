@@ -18,6 +18,9 @@ pub struct BitFlags;
 impl BitFlags {
     //pub const OP_MODE      : u16 = 0b0000_0001_0000_0000;
     pub const OS           : u16 = 0b1000_0000_0000_0000;
+    pub const MUX2         : u16 = 0b0100_0000_0000_0000;
+    pub const MUX1         : u16 = 0b0010_0000_0000_0000;
+    pub const MUX0         : u16 = 0b0001_0000_0000_0000;
     pub const DR2          : u16 = 0b0000_0000_1000_0000;
     pub const DR1          : u16 = 0b0000_0000_0100_0000;
     pub const DR0          : u16 = 0b0000_0000_0010_0000;
@@ -71,6 +74,7 @@ macro_rules! impl_new_destroy {
 impl_new_destroy!(Ads1013, new_ads1013, destroy_ads1013, I2cTrans, interface::I2cInterface<I2cMock>);
 impl_new_destroy!(Ads1113, new_ads1113, destroy_ads1113, I2cTrans, interface::I2cInterface<I2cMock>);
 impl_new_destroy!(Ads1014, new_ads1014, destroy_ads1014, I2cTrans, interface::I2cInterface<I2cMock>);
+impl_new_destroy!(Ads1015, new_ads1015, destroy_ads1015, I2cTrans, interface::I2cInterface<I2cMock>);
 
 #[macro_export]
 macro_rules! assert_would_block {

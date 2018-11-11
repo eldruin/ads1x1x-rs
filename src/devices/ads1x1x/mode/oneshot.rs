@@ -3,7 +3,8 @@
 use core::marker::PhantomData;
 use { Ads1x1x, mode, Error, Register, BitFlags, Config, ic };
 use { interface, hal, nb };
-use super::super::OperatingMode;
+use devices::ads1x1x::OperatingMode;
+use devices::channels::ChannelSelection;
 use super::convert_measurement;
 
 impl<DI, IC, E> Ads1x1x<DI, IC, mode::OneShot>
@@ -30,8 +31,8 @@ where
         Ok(!config.is_high(BitFlags::OS))
     }
 
-    fn trigger_measurement(&mut self) -> Result<(), Error<E>> {
-        let config = self.config.with_high(BitFlags::OS);
+    fn trigger_measurement(&mut self, config: &Config) -> Result<(), Error<E>> {
+        let config = config.with_high(BitFlags::OS);
         self.iface.write_register(Register::CONFIG, config.bits)
     }
 }
@@ -40,7 +41,7 @@ impl<DI, IC, E, CH> hal::adc::OneShot<Ads1x1x<DI, IC, mode::OneShot>, i16, CH> f
 where
     DI: interface::ReadData<Error = E> + interface::WriteData<Error = E>,
     IC: ic::Resolution,
-    CH: hal::adc::Channel<Ads1x1x<DI, IC, mode::OneShot>>
+    CH: hal::adc::Channel<Ads1x1x<DI, IC, mode::OneShot>, ID = ChannelSelection>
 {
     type Error = Error<E>;
 
@@ -56,7 +57,9 @@ where
             self.a_conversion_was_started = false;
             return Ok(convert_measurement::<IC>(value));
         }
-        self.trigger_measurement().map_err(nb::Error::Other)?;
+        let config = self.config.with_mux_bits(CH::channel());
+        self.trigger_measurement(&config).map_err(nb::Error::Other)?;
+        self.config = config;
         self.a_conversion_was_started = true;
         Err(nb::Error::WouldBlock)
     }
