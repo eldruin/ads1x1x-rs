@@ -131,9 +131,9 @@ pub mod mode {
     pub struct Continuous(());
 }
 
-/// Data rate
+/// Data rate for ADS1013, ADS1014, ADS1015, ADS1018
 #[derive(Debug, Clone, PartialEq)]
-pub enum DataRate {
+pub enum DataRate12Bit {
     /// 128 SPS
     Sps128,
     /// 250 SPS

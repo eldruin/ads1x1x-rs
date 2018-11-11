@@ -2,7 +2,7 @@ extern crate embedded_hal;
 extern crate embedded_hal_mock as hal;
 use hal::i2c::Transaction as I2cTrans;
 extern crate ads1x1x;
-use ads1x1x::DataRate;
+use ads1x1x::DataRate12Bit;
 
 #[macro_use]
 mod common;
@@ -16,7 +16,7 @@ macro_rules! test_set_data_rate {
         fn $name() {
             let transactions = [ I2cTrans::write(DEV_ADDR, vec![Register::CONFIG, $config.msb(), $config.lsb()]) ];
             let mut dev = new_ads1013(&transactions);
-            dev.set_data_rate(DataRate::$variant).unwrap();
+            dev.set_data_rate(DataRate12Bit::$variant).unwrap();
             destroy_ads1013(dev);
         }
     }
