@@ -1,6 +1,10 @@
-#[doc(hidden)]
-pub mod ic;
-mod ads1x1x;
-mod construction;
-mod channels;
-pub use self::channels::channel;
+//! Functions for all devices
+
+enum OperatingMode {
+    OneShot,
+    Continuous
+}
+
+mod common;
+mod mode;
+mod features;

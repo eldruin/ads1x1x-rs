@@ -285,12 +285,15 @@ pub struct Ads1x1x<DI, IC, MODE> {
 
 #[doc(hidden)]
 pub mod interface;
+#[doc(hidden)]
+pub mod ic;
+mod channels;
 mod devices;
-pub use devices::ic;
-pub use devices::channel;
+mod construction;
+pub use channels::channel;
 
 mod private {
-    use super::{ devices::ic, interface };
+    use super::{ ic, interface };
     pub trait Sealed {}
 
     impl<I2C> Sealed for interface::I2cInterface<I2C> {}

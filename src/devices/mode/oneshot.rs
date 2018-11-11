@@ -3,8 +3,8 @@
 use core::marker::PhantomData;
 use { Ads1x1x, mode, Error, Register, BitFlags, Config, ic };
 use { interface, hal, nb };
-use devices::ads1x1x::OperatingMode;
-use devices::channels::ChannelSelection;
+use devices::OperatingMode;
+use channels::ChannelSelection;
 use super::convert_measurement;
 
 impl<DI, IC, E> Ads1x1x<DI, IC, mode::OneShot>
