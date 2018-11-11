@@ -11,22 +11,25 @@ mod common;
 use common::{ new_ads1015 as new, destroy_ads1015 as destroy,
               DEVICE_ADDRESS as DEV_ADDR, Register, BitFlags as BF, Config };
 
-use embedded_hal::adc::OneShot;
 
 macro_rules! mux_test {
     ($name:ident, $CS:ident, $config_bits:expr) => {
-        #[test]
-        fn $name() {
-            let default_config = Config::default();
-            let config = Config::default().with_high(BF::OS).with_high($config_bits);
-            let transactions = [ I2cTrans::write_read(DEV_ADDR, vec![Register::CONFIG], vec![default_config.msb(), default_config.lsb()]),
-                                 I2cTrans::write(DEV_ADDR, vec![Register::CONFIG, config.msb(), config.lsb()]),
-                                 I2cTrans::write_read(DEV_ADDR, vec![Register::CONFIG], vec![config.msb(), config.lsb()]),
-                                 I2cTrans::write_read(DEV_ADDR, vec![Register::CONVERSION], vec![0x80, 0x00] ) ];
-            let mut dev = new(&transactions);
-            let measurement = block!(dev.read(&mut channel::$CS)).unwrap();
-            assert_eq!(-2048, measurement);
-            destroy(dev);
+        mod $name {
+            use embedded_hal::adc::OneShot;
+            use super::*;
+            #[test]
+            fn can_read() {
+                let default_config = Config::default();
+                let config = Config::default().with_high(BF::OS).with_high($config_bits);
+                let transactions = [ I2cTrans::write_read(DEV_ADDR, vec![Register::CONFIG], vec![default_config.msb(), default_config.lsb()]),
+                                    I2cTrans::write(DEV_ADDR, vec![Register::CONFIG, config.msb(), config.lsb()]),
+                                    I2cTrans::write_read(DEV_ADDR, vec![Register::CONFIG], vec![config.msb(), config.lsb()]),
+                                    I2cTrans::write_read(DEV_ADDR, vec![Register::CONVERSION], vec![0x80, 0x00] ) ];
+                let mut dev = new(&transactions);
+                let measurement = block!(dev.read(&mut channel::$CS)).unwrap();
+                assert_eq!(-2048, measurement);
+                destroy(dev);
+            }
         }
     };
 }
