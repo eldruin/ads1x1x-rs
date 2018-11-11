@@ -9,7 +9,6 @@ mod common;
 use common::{ new_ads1014, destroy_ads1014,
               DEVICE_ADDRESS as DEV_ADDR, Register, BitFlags, Config };
 
-
 macro_rules! set_value_test {
     ($name:ident, $method:ident, $value:expr, $reg:ident, $msb:expr, $lsb:expr) => {
         #[test]
@@ -26,6 +25,12 @@ macro_rules! config_test {
     ($name:ident, $method:ident, $value:expr, $config:expr) => {
         set_value_test!($name, $method, $value, CONFIG, $config.msb(), $config.lsb());
     }
+}
+
+mod can_set_comparator_thresholds {
+    use super::*;
+    set_value_test!(low,  set_low_threshold,  2047, LOW_TH,  0x7F, 0xF0);
+    set_value_test!(high, set_high_threshold, 2047, HIGH_TH, 0x7F, 0xF0);
 }
 
 mod can_set_comparator_mode {
