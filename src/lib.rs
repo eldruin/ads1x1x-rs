@@ -249,7 +249,7 @@ impl BitFlags {
 }
 
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 struct Config {
     bits: u16
 }
