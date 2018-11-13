@@ -13,4 +13,5 @@ fn main() {
     let mut adc = Ads1x1x::new_ads1013(dev, SlaveAddr::default());
     let measurement = block!(adc.read(&mut channel::DifferentialA0A1)).unwrap();
     println!("Measurement: {}", measurement);
+    let _dev = adc.destroy_ads1013(); // get I2C device back
 }
