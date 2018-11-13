@@ -5,12 +5,12 @@ sudo: required
 before_script:
   - eval git pull --rebase https://github.com/eldruin/ads1x1x-rs master
   - eval git log --pretty=oneline HEAD~5..HEAD
+  - export PATH=$HOME/.cargo/bin:$PATH
 
 matrix:
   include:
     - env: TARGET=x86_64-unknown-linux-gnu
       before_script:
-          - export PATH=$HOME/.cargo/bin:$PATH
           - cargo install cargo-update   || echo "cargo-update already installed"
           - cargo install cargo-travis   || echo "cargo-travis already installed"
           - cargo install-update -a
