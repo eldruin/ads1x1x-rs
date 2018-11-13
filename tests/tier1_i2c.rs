@@ -16,11 +16,6 @@ macro_rules! impl_tests {
         mod $IC {
             use embedded_hal::adc::OneShot;
             use super::*;
-            #[test]
-            fn can_create() {
-                let dev = $create(&[]);
-                $destroy(dev);
-            }
 
             mod would_block {
                 use super::*;
