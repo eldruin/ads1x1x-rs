@@ -4,6 +4,7 @@
 [![Docs](https://docs.rs/ads1x1x/badge.svg)](https://docs.rs/ads1x1x)
 [![Build Status](https://travis-ci.org/eldruin/ads1x1x-rs.svg?branch=master)](https://travis-ci.org/eldruin/ads1x1x-rs)
 [![Coverage Status](https://coveralls.io/repos/eldruin/ads1x1x-rs/badge.svg?branch=master)](https://coveralls.io/r/eldruin/ads1x1x-rs?branch=master)
+![Maintenance Intention](https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg)
 
 This is a platform agnostic Rust driver for the ADS1013, ADS1014, ADS1015,
 ADS1113, ADS1114, ADS1115, ADS1018 and ADS1118 ultra-small, low-power
