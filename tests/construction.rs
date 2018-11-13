@@ -1,4 +1,3 @@
-extern crate embedded_hal;
 extern crate embedded_hal_mock as hal;
 
 #[macro_use]
