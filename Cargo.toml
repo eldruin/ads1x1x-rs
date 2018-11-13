@@ -19,9 +19,8 @@ include = [
     "LICENSE-APACHE",
 ]
 
-[badges.travis-ci]
-branch = "master"
-repository = "eldruin/ads1x1x-rs"
+[badges]
+travis-ci = { repository = "eldruin/ads1x1x-rs", branch = "master" }
 
 [dependencies]
 nb = "0.1"
