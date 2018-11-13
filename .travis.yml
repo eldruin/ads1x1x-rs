@@ -14,6 +14,8 @@ matrix:
           - cargo install cargo-update   || echo "cargo-update already installed"
           - cargo install cargo-travis   || echo "cargo-travis already installed"
           - cargo install-update -a
+      after_success:
+          - cargo coveralls --verbose
 
     - env: TARGET=x86_64-unknown-linux-gnu
       rust: nightly
@@ -62,9 +64,6 @@ script:
 
 after_script: set +e
 
-after_success:
-  - cargo coveralls --verbose
-
 cache: cargo
 cache:
   directories:
@@ -72,7 +71,7 @@ cache:
 
 before_cache:
   # Travis can't cache files that are not readable by "others"
-  #- chmod -R a+r $HOME/.cargo
+  - chmod -R a+r $HOME/.cargo
   - rm -rf /home/travis/.cargo/registry
 
 branches:
