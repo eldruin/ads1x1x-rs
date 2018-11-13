@@ -21,6 +21,7 @@ include = [
 
 [badges]
 travis-ci = { repository = "eldruin/ads1x1x-rs", branch = "master" }
+coveralls = { repository = "eldruin/ads1x1x-rs", branch = "master", service = "github" }
 
 [dependencies]
 nb = "0.1"
