@@ -1,4 +1,6 @@
-# Rust ADS1x1x ultra-small, low-power analog-to-digital converters (ADC) Driver [![crates.io](https://img.shields.io/crates/v/ads1x1x.svg)](https://crates.io/crates/ads1x1x) [![Docs](https://docs.rs/ads1x1x/badge.svg)](https://docs.rs/ads1x1x) [![Build Status](https://travis-ci.org/eldruin/ads1x1x-rs.svg?branch=master)](https://travis-ci.org/eldruin/ads1x1x-rs)
+# Rust ADS1x1x ultra-small, low-power analog-to-digital converters (ADC) Driver
+
+[![crates.io](https://img.shields.io/crates/v/ads1x1x.svg)](https://crates.io/crates/ads1x1x) [![Docs](https://docs.rs/ads1x1x/badge.svg)](https://docs.rs/ads1x1x) [![Build Status](https://travis-ci.org/eldruin/ads1x1x-rs.svg?branch=master)](https://travis-ci.org/eldruin/ads1x1x-rs)
 
 This is a platform agnostic Rust driver for the ADS1013, ADS1014, ADS1015,
 ADS1113, ADS1114, ADS1115, ADS1018 and ADS1118 ultra-small, low-power
