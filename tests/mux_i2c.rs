@@ -1,4 +1,4 @@
-#[cfg_attr(test, macro_use(block))]
+#[macro_use(block)]
 extern crate nb;
 extern crate embedded_hal;
 extern crate embedded_hal_mock as hal;
