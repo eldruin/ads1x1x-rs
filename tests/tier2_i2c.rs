@@ -1,4 +1,3 @@
-extern crate embedded_hal;
 extern crate embedded_hal_mock as hal;
 use hal::i2c::Transaction as I2cTrans;
 extern crate ads1x1x;
