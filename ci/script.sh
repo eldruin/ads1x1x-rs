@@ -1,6 +1,11 @@
 set -exo pipefail
 
 main() {
+    if [ ! -z $COVERAGE ] && [ $TRAVIS_RUST_VERSION = nightly ]; then
+        export CARGO_INCREMENTAL=0;
+        export RUSTFLAGS="-Zprofile -Ccodegen-units=1";
+    fi
+
     if [[ ! $TARGET =~ .*linux.* ]]; then
         sed -i "s/linux-embedded-hal/#linux-embedded-hal/g" Cargo.toml
         sed -i "s/embedded-hal-mock/#embedded-hal-mock/g" Cargo.toml
@@ -18,7 +23,15 @@ main() {
 
     if [ -z $DISABLE_TESTS ] && [ $TRAVIS_RUST_VERSION = nightly ] && [[ $TARGET =~ .*linux.* ]]; then
         cargo test --target $TARGET $FEATURES
+        if [ ! -z $COVERAGE ]; then
+            zip -0 ccov.zip `find . \( -name "ads1x1x*.gc*" -o -name "llvmgcov.gc*" \) -print`;
+            grcov ccov.zip -s . -t lcov --llvm --branch --ignore-not-existing --ignore-dir "/*" > lcov.info;
+            bash <(curl -s https://codecov.io/bash) -f lcov.info;
+        fi
+      fi
     fi
+
+
 }
 
 main

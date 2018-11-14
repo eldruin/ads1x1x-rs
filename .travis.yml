@@ -10,15 +10,27 @@ before_script:
 matrix:
   include:
     - env: TARGET=x86_64-unknown-linux-gnu
-      before_script:
-          - cargo install cargo-update   || echo "cargo-update already installed"
-          - cargo install cargo-travis   || echo "cargo-travis already installed"
-          - cargo install-update -a
-      after_success:
-          - cargo coveralls --verbose
 
     - env: TARGET=x86_64-unknown-linux-gnu
       rust: nightly
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-7 main'
+              key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
+          packages:
+            - llvm-7-dev
+            - clang-7
+            - g++-7
+      env:
+        - GCC_CXX=g++-7
+        - GCOV=gcov-7
+        - CLANG_CXX=clang++-7
+        - LLVM_CONFIG=llvm-config-7
+        - COVERAGE=1
+      before_script:
+        - cargo install grcov
 
     - env: TARGET=x86_64-unknown-linux-musl
       rust: nightly
@@ -40,17 +52,6 @@ matrix:
       rust: beta
     - env: TARGET=thumbv7m-none-eabi
       rust: beta
-
-addons:
-  apt:
-    packages:
-      - libcurl4-openssl-dev
-      - libelf-dev
-      - libdw-dev
-      - binutils-dev
-      - cmake
-    sources:
-      - kalakris-cmake
 
 before_install:
   - set -e
