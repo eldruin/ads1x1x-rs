@@ -28,7 +28,6 @@ main() {
             grcov ccov.zip -s . -t lcov --llvm --branch --ignore-not-existing --ignore-dir "/*" > lcov.info;
             bash <(curl -s https://codecov.io/bash) -f lcov.info;
         fi
-      fi
     fi
 
 
