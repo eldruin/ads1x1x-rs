@@ -25,7 +25,7 @@ main() {
         cargo test --target $TARGET $FEATURES
         if [ ! -z $COVERAGE ]; then
             find . -name "*.gc*" -print
-            zip -0 ccov.zip `find . \( -name "ads1x1x*.gc*" -o -name "llvmgcov.gc*" \) -print`;
+            zip -0 ccov.zip `find . \( -name "ads1x1x*.gc*" -o -name "tier*.gc*" -name "mux*.gc*" -name "construction*.gc*" -name "linux-*.gc*" -o -name "llvmgcov.gc*" \) -print`;
             grcov ccov.zip -s . -t lcov --llvm --branch --ignore-not-existing --ignore-dir "/*" > lcov.info;
             bash <(curl -s https://codecov.io/bash) -f lcov.info;
         fi
