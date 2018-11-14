@@ -22,7 +22,7 @@ matrix:
           packages:
             - llvm-7-dev
       before_script:
-        - cargo install grcov
+        - if ! [ -x "$(command -v grcov)" ]; then cargo install grcov fi
 
     - env: TARGET=x86_64-unknown-linux-musl
       rust: nightly
