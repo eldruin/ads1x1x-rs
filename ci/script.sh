@@ -28,7 +28,7 @@ main() {
             zip -0 ccov.zip `find . \( -name "ads1x1x*.gc*" -o -name "tier*.gc*" -o -name "mux*.gc*" -o -name "construction*.gc*" -o -name "linux-*.gc*" -o -name "llvmgcov.gc*" \) -print`;
             grcov ccov.zip -s . -t lcov --llvm --branch --ignore-not-existing --ignore-dir "/*" > lcov.info;
             bash <(curl -s https://codecov.io/bash) -f lcov.info;
-            grcov ./target -t coveralls+ -s . --token `$COVERALLS_TOKEN` --commit-sha `$TRAVIS_COMMIT` --llvm --branch --ignore-not-existing --ignore-dir "/*"
+            grcov ./target -t coveralls+ -s . --token `echo "$COVERALLS_TOKEN"` --commit-sha `echo "$TRAVIS_COMMIT"` --llvm --branch --ignore-not-existing --ignore-dir "/*"
         fi
     fi
 
