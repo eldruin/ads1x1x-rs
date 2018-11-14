@@ -11,7 +11,7 @@ matrix:
   include:
     - env: TARGET=x86_64-unknown-linux-gnu
 
-    - env: TARGET=x86_64-unknown-linux-gnu
+    - env: TARGET=x86_64-unknown-linux-gnu COVERAGE=1 LLVM_CONFIG=llvm-config-7
       rust: nightly
       addons:
         apt:
@@ -21,14 +21,6 @@ matrix:
               key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
           packages:
             - llvm-7-dev
-            - clang-7
-            - g++-7
-      env:
-        - GCC_CXX=g++-7
-        - GCOV=gcov-7
-        - CLANG_CXX=clang++-7
-        - LLVM_CONFIG=llvm-config-7
-        - COVERAGE=1
       before_script:
         - cargo install grcov
 
