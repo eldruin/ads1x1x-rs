@@ -21,8 +21,6 @@ matrix:
               key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
           packages:
             - llvm-7-dev
-      before_script:
-        - if ! [ -x "$(command -v grcov)" ]; then cargo install grcov fi
 
     - env: TARGET=x86_64-unknown-linux-musl
       rust: nightly
