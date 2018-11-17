@@ -49,6 +49,12 @@ where
 
     /// Request that the ADC begin a conversion on the specified channel.
     ///
+    /// The output value will be within `[2047..-2048]` for 12-bit devices
+    /// (`ADS101x`) and within `[32767..-32768]` for 16-bit devices (`ADS111x`).
+    /// The voltage that these values correspond to must be calculated using
+    /// the full-scale range selected.
+    /// See [`FullScaleRange`](enum.FullScaleRange.html).
+    ///
     /// Returns `nb::Error::WouldBlock` while a measurement is in progress.
     ///
     /// In case a measurement was requested and after is it is finished a

@@ -32,12 +32,22 @@ where
     }
 
     /// Set raw comparator lower threshold
+    ///
+    /// The input value must be within `[2047..-2048]` for 12-bit devices (`ADS101x`)
+    /// and within `[32767..-32768]` for 16-bit devices (`ADS111x`). The voltage that
+    /// these values correspond to must be calculated using the full-scale range
+    /// selected. See [`FullScaleRange`](enum.FullScaleRange.html).
     pub fn set_low_threshold_raw(&mut self, value: i16) -> Result<(), Error<E>> {
         let register_value = CONV::convert_threshold(value)?;
         self.iface.write_register(Register::LOW_TH, register_value)
     }
 
     /// Set raw comparator upper threshold
+    ///
+    /// The input value must be within `[2047..-2048]` for 12-bit devices (`ADS101x`)
+    /// and within `[32767..-32768]` for 16-bit devices (`ADS111x`). The voltage that
+    /// these values correspond to must be calculated using the full-scale range
+    /// selected. See [`FullScaleRange`](enum.FullScaleRange.html).
     pub fn set_high_threshold_raw(&mut self, value: i16) -> Result<(), Error<E>> {
         let register_value = CONV::convert_threshold(value)?;
         self.iface.write_register(Register::HIGH_TH, register_value)
