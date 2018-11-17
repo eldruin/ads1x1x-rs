@@ -292,6 +292,27 @@ pub enum ComparatorQueue {
     Four,
 }
 
+/// Full-scale range configuration for the programmable gain amplifier (PGA) (only for ADS1x14, ADS1x15)
+///
+/// This sets the input voltage measurable range.
+/// The FSR is fixed at ±2.048 V in the ADS1x13.
+#[derive(Clone, Copy, Debug)]
+#[allow(non_camel_case_types)]
+pub enum FullScaleRange {
+    /// The measurable range is ±6.144V.
+    Within6_144V,
+    /// The measurable range is ±4.096V.
+    Within4_096V,
+    /// The measurable range is ±2.048V. (default)
+    Within2_048V,
+    /// The measurable range is ±1.024V.
+    Within1_024V,
+    /// The measurable range is ±0.512V.
+    Within0_512V,
+    /// The measurable range is ±0.256V.
+    Within0_256V,
+}
+
 /// Possible slave addresses
 #[derive(Debug, Clone)]
 pub enum SlaveAddr {
@@ -330,11 +351,14 @@ impl Register {
 
 struct BitFlags;
 impl BitFlags {
-    const OP_MODE      : u16 = 0b0000_0001_0000_0000;
     const OS           : u16 = 0b1000_0000_0000_0000;
     const MUX2         : u16 = 0b0100_0000_0000_0000;
     const MUX1         : u16 = 0b0010_0000_0000_0000;
     const MUX0         : u16 = 0b0001_0000_0000_0000;
+    const PGA2         : u16 = 0b0000_1000_0000_0000;
+    const PGA1         : u16 = 0b0000_0100_0000_0000;
+    const PGA0         : u16 = 0b0000_0010_0000_0000;
+    const OP_MODE      : u16 = 0b0000_0001_0000_0000;
     const DR2          : u16 = 0b0000_0000_1000_0000;
     const DR1          : u16 = 0b0000_0000_0100_0000;
     const DR0          : u16 = 0b0000_0000_0010_0000;

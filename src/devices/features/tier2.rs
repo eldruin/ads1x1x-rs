@@ -2,8 +2,9 @@
 //!
 //! These are the features included only in ADS1x14, ADS1x15
 
-use { Ads1x1x, Error, interface, ic, ComparatorMode, ComparatorPolarity,
-      ComparatorLatching, ComparatorQueue, Register, BitFlags, conversion };
+use { Ads1x1x, Error, interface, ic, FullScaleRange, ComparatorMode,
+      ComparatorPolarity, ComparatorLatching, ComparatorQueue, Register,
+      BitFlags, conversion };
 
 impl<DI, IC, CONV, MODE, E> Ads1x1x<DI, IC, CONV, MODE>
 where
@@ -11,6 +12,25 @@ where
     IC: ic::Tier2Features,
     CONV: conversion::ConvertThreshold<E>
 {
+    /// Set the input voltage measurable range
+    ///
+    /// This configures the programmable gain amplifier and determines the measurable input voltage range.
+    pub fn set_full_scale_range(&mut self, range: FullScaleRange) -> Result<(), Error<E>> {
+        use BitFlags as BF;
+        let config;
+        match range {
+            FullScaleRange::Within6_144V => config = self.config.with_low( BF::PGA2).with_low( BF::PGA1).with_low( BF::PGA0),
+            FullScaleRange::Within4_096V => config = self.config.with_low( BF::PGA2).with_low( BF::PGA1).with_high(BF::PGA0),
+            FullScaleRange::Within2_048V => config = self.config.with_low( BF::PGA2).with_high(BF::PGA1).with_low( BF::PGA0),
+            FullScaleRange::Within1_024V => config = self.config.with_low( BF::PGA2).with_high(BF::PGA1).with_high(BF::PGA0),
+            FullScaleRange::Within0_512V => config = self.config.with_high(BF::PGA2).with_low( BF::PGA1).with_low( BF::PGA0),
+            FullScaleRange::Within0_256V => config = self.config.with_high(BF::PGA2).with_low( BF::PGA1).with_high(BF::PGA0),
+        }
+        self.iface.write_register(Register::CONFIG, config.bits)?;
+        self.config = config;
+        Ok(())
+    }
+
     /// Set comparator lower threshold
     pub fn set_low_threshold(&mut self, value: i16) -> Result<(), Error<E>> {
         let register_value = CONV::convert_threshold(value)?;

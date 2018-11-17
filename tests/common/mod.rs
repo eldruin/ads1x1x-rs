@@ -20,6 +20,9 @@ impl BitFlags {
     pub const MUX2         : u16 = 0b0100_0000_0000_0000;
     pub const MUX1         : u16 = 0b0010_0000_0000_0000;
     pub const MUX0         : u16 = 0b0001_0000_0000_0000;
+    pub const PGA2         : u16 = 0b0000_1000_0000_0000;
+    pub const PGA1         : u16 = 0b0000_0100_0000_0000;
+    pub const PGA0         : u16 = 0b0000_0010_0000_0000;
     pub const OP_MODE      : u16 = 0b0000_0001_0000_0000;
     pub const DR2          : u16 = 0b0000_0000_1000_0000;
     pub const DR1          : u16 = 0b0000_0000_0100_0000;

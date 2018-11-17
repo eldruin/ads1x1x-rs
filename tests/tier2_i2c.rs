@@ -1,8 +1,8 @@
 extern crate embedded_hal_mock as hal;
 use hal::i2c::Transaction as I2cTrans;
 extern crate ads1x1x;
-use ads1x1x::{ ComparatorMode, ComparatorPolarity, ComparatorLatching,
-               ComparatorQueue };
+use ads1x1x::{ FullScaleRange, ComparatorMode, ComparatorPolarity,
+               ComparatorLatching, ComparatorQueue};
 
 #[macro_use]
 mod common;
@@ -67,3 +67,12 @@ mod can_set_comparator_queue {
     config_test!(four, set_comparator_queue, ComparatorQueue::Four, Config::default().with_high(BitFlags::COMP_QUE1).with_low( BitFlags::COMP_QUE0));
 }
 
+mod can_set_full_scale_range {
+    use super::*;
+    config_test!(fsr6,   set_full_scale_range, FullScaleRange::Within6_144V, Config::default().with_low( BitFlags::PGA2).with_low( BitFlags::PGA1).with_low( BitFlags::PGA0));
+    config_test!(fsr4,   set_full_scale_range, FullScaleRange::Within4_096V, Config::default().with_low( BitFlags::PGA2).with_low( BitFlags::PGA1).with_high(BitFlags::PGA0));
+    config_test!(fsr2,   set_full_scale_range, FullScaleRange::Within2_048V, Config::default().with_low( BitFlags::PGA2).with_high(BitFlags::PGA1).with_low( BitFlags::PGA0));
+    config_test!(fsr1,   set_full_scale_range, FullScaleRange::Within1_024V, Config::default().with_low( BitFlags::PGA2).with_high(BitFlags::PGA1).with_high(BitFlags::PGA0));
+    config_test!(fsr0_5, set_full_scale_range, FullScaleRange::Within0_512V, Config::default().with_high(BitFlags::PGA2).with_low( BitFlags::PGA1).with_low( BitFlags::PGA0));
+    config_test!(fsr0_2, set_full_scale_range, FullScaleRange::Within0_256V, Config::default().with_high(BitFlags::PGA2).with_low( BitFlags::PGA1).with_high(BitFlags::PGA0));
+}
