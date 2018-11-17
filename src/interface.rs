@@ -78,7 +78,7 @@ where
         self.i2c
             .write_read(self.address, &[register], &mut data)
             .map_err(Error::Comm)
-            .and(Ok(((data[0] as u16) << 8) | data[1] as u16))
+            .and(Ok((u16::from(data[0]) << 8) | u16::from(data[1])))
     }
 }
 
@@ -96,6 +96,6 @@ where
                          .map_err(Error::Comm);
         self.cs.set_high();
         let result = result?;
-        Ok(((result[0] as u16) << 8) | result[1] as u16)
+        Ok((u16::from(result[0]) << 8) | u16::from(result[1]))
     }
 }
