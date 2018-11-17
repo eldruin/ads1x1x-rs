@@ -50,3 +50,11 @@ mod can_set_comparator_latching {
     config_test!(lat, set_comparator_latching, ComparatorLatching::Latching,    Config::default().with_high(BitFlags::COMP_LAT));
 }
 
+#[test]
+fn can_disable_comparator() {
+    let config = Config::default().with_high(BitFlags::COMP_QUE1).with_high(BitFlags::COMP_QUE0);
+    let transactions = [ I2cTrans::write(DEV_ADDR, vec![Register::CONFIG, config.msb(), config.lsb()]) ];
+    let mut dev = new_ads1014(&transactions);
+    dev.disable_comparator().unwrap();
+    destroy_ads1014(dev);
+}

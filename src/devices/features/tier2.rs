@@ -58,4 +58,15 @@ where
         self.config = config;
         Ok(())
     }
+    /// Disable comparator (default)
+    ///
+    /// This will set the ALERT/RDY pin to high-impedance.
+    /// The comparator can be enabled by setting the comparator queue.
+    /// See [`set_comparator_queue()`](struct.Ads1x1x.html#method.set_comparator_queue)
+    pub fn disable_comparator(&mut self) -> Result<(), Error<E>> {
+        let config = self.config.with_high(BitFlags::COMP_QUE1).with_high(BitFlags::COMP_QUE0);
+        self.iface.write_register(Register::CONFIG, config.bits)?;
+        self.config = config;
+        Ok(())
+    }
 }

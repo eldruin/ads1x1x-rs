@@ -12,6 +12,7 @@
 //! - Set the comparator mode. See: [`set_comparator_mode()`].
 //! - Set the comparator polarity. See: [`set_comparator_polarity()`].
 //! - Set the comparator latching. See: [`set_comparator_latching()`].
+//! - Disable the comparator. See: [`disable_comparator()`].
 //!
 //! [`into_continuous()`]: struct.Ads1x1x.html#method.into_continuous
 //! [`read()`]: struct.Ads1x1x.html#method.read
@@ -20,6 +21,7 @@
 //! [`set_comparator_mode()`]: struct.Ads1x1x.html#method.set_comparator_mode
 //! [`set_comparator_polarity()`]: struct.Ads1x1x.html#method.set_comparator_polarity
 //! [`set_comparator_latching()`]: struct.Ads1x1x.html#method.set_comparator_latching
+//! [`disable_comparator()`]: struct.Ads1x1x.html#method.disable_comparator
 //!
 //! ## The devices
 //!
@@ -267,6 +269,8 @@ impl BitFlags {
     const COMP_MODE    : u16 = 0b0000_0000_0001_0000;
     const COMP_POL     : u16 = 0b0000_0000_0000_1000;
     const COMP_LAT     : u16 = 0b0000_0000_0000_0100;
+    const COMP_QUE1    : u16 = 0b0000_0000_0000_0010;
+    const COMP_QUE0    : u16 = 0b0000_0000_0000_0001;
 }
 
 
