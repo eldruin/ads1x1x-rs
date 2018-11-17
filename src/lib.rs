@@ -8,6 +8,7 @@
 //! - Set the operating mode to one-shot or continuous. See: [`into_continuous()`].
 //! - Make a measurement in one-shot mode. See: [`read()`].
 //! - Set the data rate. See: [`set_data_rate()`].
+//! - Set the full-scale range (gain amplifier). See [`set_full_scale_range()`].
 //! - Set the low and high thresholds. See: [`set_high_threshold()`].
 //! - Set the comparator mode. See: [`set_comparator_mode()`].
 //! - Set the comparator polarity. See: [`set_comparator_polarity()`].
@@ -18,6 +19,7 @@
 //! [`into_continuous()`]: struct.Ads1x1x.html#method.into_continuous
 //! [`read()`]: struct.Ads1x1x.html#method.read
 //! [`set_data_rate()`]: struct.Ads1x1x.html#method.set_data_rate
+//! [`set_full_scale_range()`]: struct.Ads1x1x.html#method.set_full_scale_range
 //! [`set_high_threshold()`]: struct.Ads1x1x.html#method.set_high_threshold
 //! [`set_comparator_mode()`]: struct.Ads1x1x.html#method.set_comparator_mode
 //! [`set_comparator_polarity()`]: struct.Ads1x1x.html#method.set_comparator_polarity
