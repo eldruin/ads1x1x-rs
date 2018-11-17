@@ -97,3 +97,24 @@ mod data_rate_16bit {
     test!(sps475, Sps475, Config::default().with_high(BitFlags::DR2).with_high(BitFlags::DR1).with_low( BitFlags::DR0));
     test!(sps860, Sps860, Config::default().with_high(BitFlags::DR2).with_high(BitFlags::DR1).with_high(BitFlags::DR0));
 }
+
+#[test]
+fn can_convert_to_continuous() {
+    let config = Config::default().with_low(BitFlags::OP_MODE);
+    let transactions = [ I2cTrans::write(DEV_ADDR, vec![Register::CONFIG, config.msb(), config.lsb()]) ];
+    let dev = new_ads1013(&transactions);
+    let dev = dev.into_continuous().unwrap();
+    destroy_ads1013(dev);
+}
+
+#[test]
+fn can_convert_to_one_shot() {
+    let config_cont = Config::default().with_low(BitFlags::OP_MODE);
+    let config_os = Config::default();
+    let transactions = [ I2cTrans::write(DEV_ADDR, vec![Register::CONFIG, config_cont.msb(), config_cont.lsb()]),
+                         I2cTrans::write(DEV_ADDR, vec![Register::CONFIG, config_os.msb(),   config_os.lsb()]) ];
+    let dev = new_ads1013(&transactions);
+    let dev = dev.into_continuous().unwrap();
+    let dev = dev.into_one_shot().unwrap();
+    destroy_ads1013(dev);
+}
