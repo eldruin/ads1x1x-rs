@@ -61,6 +61,34 @@ Datasheets:
 - [ADS111x](http://www.ti.com/lit/ds/symlink/ads1115.pdf)
 - [ADS1118](http://www.ti.com/lit/ds/symlink/ads1118.pdf)
 
+## Usage
+
+To use this driver, import this crate and an `embedded_hal` implementation,
+then instantiate the appropriate device.
+In the following examples an instance of the device ADS1013 will be created
+as an example. Other devices can be created with similar methods like:
+`Ads1x1x::new_ads1114(...)`.
+
+```rust
+extern crate embedded_hal;
+use embedded_hal::adc::OneShot;
+extern crate linux_embedded_hal;
+#[macro_use(block)]
+extern crate nb;
+extern crate ads1x1x;
+
+use linux_embedded_hal::I2cdev;
+use ads1x1x::{ Ads1x1x, SlaveAddr, channel };
+
+fn main() {
+    let dev = I2cdev::new("/dev/i2c-1").unwrap();
+    let mut adc = Ads1x1x::new_ads1013(dev, SlaveAddr::default());
+    let measurement = block!(adc.read(&mut channel::DifferentialA0A1)).unwrap();
+    println!("Measurement: {}", measurement);
+    let dev = adc.destroy_ads1013(); // get I2C device back
+}
+```
+
 ## License
 
 Licensed under either of
