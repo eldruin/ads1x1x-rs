@@ -2,7 +2,7 @@ extern crate embedded_hal_mock as hal;
 use hal::i2c::Transaction as I2cTrans;
 extern crate ads1x1x;
 use ads1x1x::{ FullScaleRange, ComparatorMode, ComparatorPolarity,
-               ComparatorLatching, ComparatorQueue};
+               ComparatorLatching, ComparatorQueue };
 
 #[macro_use]
 mod common;
