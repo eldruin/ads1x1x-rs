@@ -3,7 +3,7 @@
 //! These are the features included only in ADS1x14, ADS1x15
 
 use { Ads1x1x, Error, interface, ic, ComparatorMode, ComparatorPolarity,
-      ComparatorLatching, Register, BitFlags, conversion };
+      ComparatorLatching, ComparatorQueue, Register, BitFlags, conversion };
 
 impl<DI, IC, CONV, MODE, E> Ads1x1x<DI, IC, CONV, MODE>
 where
@@ -58,6 +58,22 @@ where
         self.config = config;
         Ok(())
     }
+
+    /// Activate comparator and set the alert queue
+    ///
+    /// The comparator can be disabled with [`disable_comparator()`](struct.Ads1x1x.html#method.disable_comparator)
+    pub fn set_comparator_queue(&mut self, queue: ComparatorQueue) -> Result<(), Error<E>> {
+        let config;
+        match queue {
+            ComparatorQueue::One  => config = self.config.with_low( BitFlags::COMP_QUE1).with_low( BitFlags::COMP_QUE0),
+            ComparatorQueue::Two  => config = self.config.with_low( BitFlags::COMP_QUE1).with_high(BitFlags::COMP_QUE0),
+            ComparatorQueue::Four => config = self.config.with_high(BitFlags::COMP_QUE1).with_low( BitFlags::COMP_QUE0)
+        }
+        self.iface.write_register(Register::CONFIG, config.bits)?;
+        self.config = config;
+        Ok(())
+    }
+
     /// Disable comparator (default)
     ///
     /// This will set the ALERT/RDY pin to high-impedance.

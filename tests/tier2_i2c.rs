@@ -1,7 +1,8 @@
 extern crate embedded_hal_mock as hal;
 use hal::i2c::Transaction as I2cTrans;
 extern crate ads1x1x;
-use ads1x1x::{ ComparatorMode, ComparatorPolarity, ComparatorLatching};
+use ads1x1x::{ ComparatorMode, ComparatorPolarity, ComparatorLatching,
+               ComparatorQueue };
 
 #[macro_use]
 mod common;
@@ -58,3 +59,11 @@ fn can_disable_comparator() {
     dev.disable_comparator().unwrap();
     destroy_ads1014(dev);
 }
+
+mod can_set_comparator_queue {
+    use super::*;
+    config_test!(one,  set_comparator_queue, ComparatorQueue::One,  Config::default().with_low( BitFlags::COMP_QUE1).with_low( BitFlags::COMP_QUE0));
+    config_test!(two,  set_comparator_queue, ComparatorQueue::Two,  Config::default().with_low( BitFlags::COMP_QUE1).with_high(BitFlags::COMP_QUE0));
+    config_test!(four, set_comparator_queue, ComparatorQueue::Four, Config::default().with_high(BitFlags::COMP_QUE1).with_low( BitFlags::COMP_QUE0));
+}
+

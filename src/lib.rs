@@ -12,6 +12,7 @@
 //! - Set the comparator mode. See: [`set_comparator_mode()`].
 //! - Set the comparator polarity. See: [`set_comparator_polarity()`].
 //! - Set the comparator latching. See: [`set_comparator_latching()`].
+//! - Set the comparator queue. See: [`set_comparator_queue()`].
 //! - Disable the comparator. See: [`disable_comparator()`].
 //!
 //! [`into_continuous()`]: struct.Ads1x1x.html#method.into_continuous
@@ -21,6 +22,7 @@
 //! [`set_comparator_mode()`]: struct.Ads1x1x.html#method.set_comparator_mode
 //! [`set_comparator_polarity()`]: struct.Ads1x1x.html#method.set_comparator_polarity
 //! [`set_comparator_latching()`]: struct.Ads1x1x.html#method.set_comparator_latching
+//! [`set_comparator_queue()`]: struct.Ads1x1x.html#method.set_comparator_queue
 //! [`disable_comparator()`]: struct.Ads1x1x.html#method.disable_comparator
 //!
 //! ## The devices
@@ -218,6 +220,17 @@ pub enum ComparatorLatching {
     /// the master. The device responds with its address, and it is the lowest
     /// address currently asserting the ALERT/RDY bus line.
     Latching
+}
+
+/// Comparator alert queue (only for ADS1x14, ADS1x15)
+#[derive(Debug, Clone, PartialEq)]
+pub enum ComparatorQueue {
+    /// Activate comparator and assert after one conversion exceeding thresholds
+    One,
+    /// Activate comparator and assert after two consecutive conversions exceeding thresholds
+    Two,
+    /// Activate comparator and assert after four consecutive conversions exceeding thresholds
+    Four,
 }
 
 /// Possible slave addresses
