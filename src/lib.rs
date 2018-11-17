@@ -159,6 +159,29 @@
 //! # }
 //! ```
 //!
+//! ### Configure the comparator
+//! Configure the comparator to assert when the voltage drops below -1.5V
+//! or goes above 1.5V in at least two consecutive conversions. Then the
+//! ALERT/RDY pin will be set high and it will be kept so until the
+//! measurement is read or an appropriate SMBus alert response is sent by
+//! the master.
+//!
+//! ```no_run
+//! extern crate linux_embedded_hal as hal;
+//! extern crate ads1x1x;
+//! use ads1x1x::{ Ads1x1x, SlaveAddr, ComparatorQueue, ComparatorPolarity,
+//!                ComparatorMode, ComparatorLatching };
+//!
+//! # fn main() {
+//! let dev = hal::I2cdev::new("/dev/i2c-1").unwrap();
+//! let address = SlaveAddr::default();
+//! let mut adc = Ads1x1x::new_ads1015(dev, address);
+//! adc.set_comparator_queue(ComparatorQueue::Two).unwrap();
+//! adc.set_comparator_polarity(ComparatorPolarity::ActiveHigh).unwrap();
+//! adc.set_comparator_mode(ComparatorMode::Window).unwrap();
+//! adc.set_low_threshold(-1500).unwrap();
+//! adc.set_high_threshold(1500).unwrap();
+//! adc.set_comparator_latching(ComparatorLatching::Latching).unwrap();
 //! # }
 //! ```
 
