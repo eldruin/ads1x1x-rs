@@ -394,6 +394,12 @@ impl Default for Config {
     }
 }
 
+impl Default for FullScaleRange {
+    fn default() -> Self {
+        FullScaleRange::Within2_048V
+    }
+}
+
 /// ADS1x1x ADC driver
 #[derive(Debug, Default)]
 pub struct Ads1x1x<DI, IC, CONV, MODE> {
