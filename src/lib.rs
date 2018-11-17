@@ -83,11 +83,11 @@
 //! # fn main() {
 //! let dev = hal::I2cdev::new("/dev/i2c-1").unwrap();
 //! let address = SlaveAddr::default();
-//! let rtc = Ads1x1x::new_ads1013(dev, address);
+//! let adc = Ads1x1x::new_ads1013(dev, address);
 //! // do something...
 //!
 //! // get the I2C device back
-//! let dev = rtc.destroy_ads1013();
+//! let dev = adc.destroy_ads1013();
 //! # }
 //! ```
 //!
@@ -102,7 +102,63 @@
 //! let dev = hal::I2cdev::new("/dev/i2c-1").unwrap();
 //! let (a1, a0) = (true, false);
 //! let address = SlaveAddr::Alternative(a1, a0);
-//! let rtc = Ads1x1x::new_ads1013(dev, address);
+//! let adc = Ads1x1x::new_ads1013(dev, address);
+//! # }
+//! ```
+//!
+//! ### Make a one-shot measurement
+//! ```no_run
+//! extern crate embedded_hal;
+//! use embedded_hal::adc::OneShot;
+//! extern crate linux_embedded_hal;
+//! #[macro_use(block)]
+//! extern crate nb;
+//! extern crate ads1x1x;
+//!
+//! use linux_embedded_hal::I2cdev;
+//! use ads1x1x::{ Ads1x1x, SlaveAddr, channel };
+//!
+//! # fn main() {
+//!     let dev = I2cdev::new("/dev/i2c-1").unwrap();
+//!     let mut adc = Ads1x1x::new_ads1013(dev, SlaveAddr::default());
+//!     let measurement = block!(adc.read(&mut channel::DifferentialA0A1)).unwrap();
+//!     println!("Measurement: {}", measurement);
+//!     let _dev = adc.destroy_ads1013(); // get I2C device back
+//! # }
+//! ```
+//!
+//! ### Change into continuous conversion mode
+//!
+//! ```no_run
+//! extern crate linux_embedded_hal as hal;
+//! extern crate ads1x1x;
+//! use ads1x1x::{ Ads1x1x, SlaveAddr };
+//!
+//! # fn main() {
+//! let dev = hal::I2cdev::new("/dev/i2c-1").unwrap();
+//! let address = SlaveAddr::default();
+//! let adc = Ads1x1x::new_ads1013(dev, address);
+//! let mut adc = adc.into_continuous().unwrap();
+//! # }
+//! ```
+//!
+//! ### Set the data rate
+//! For 12-bit devices, the available data rates are given by `DataRate12Bit`.
+//! For 16-bit devices, the available data rates are given by `DataRate16Bit`.
+//!
+//! ```no_run
+//! extern crate linux_embedded_hal as hal;
+//! extern crate ads1x1x;
+//! use ads1x1x::{ Ads1x1x, SlaveAddr, DataRate16Bit };
+//!
+//! # fn main() {
+//! let dev = hal::I2cdev::new("/dev/i2c-1").unwrap();
+//! let address = SlaveAddr::default();
+//! let mut adc = Ads1x1x::new_ads1115(dev, address);
+//! adc.set_data_rate(DataRate16Bit::Sps860).unwrap();
+//! # }
+//! ```
+//!
 //! # }
 //! ```
 
