@@ -22,6 +22,7 @@ pub mod channel {
     pub struct DifferentialA2A3;
 }
 
+#[derive(Debug, Clone, Copy)]
 pub enum ChannelSelection {
     SingleA0,
     SingleA1,
