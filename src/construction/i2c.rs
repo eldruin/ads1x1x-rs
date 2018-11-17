@@ -3,7 +3,7 @@
 extern crate embedded_hal as hal;
 use hal::blocking;
 use core::marker::PhantomData;
-use { Ads1x1x, DEVICE_BASE_ADDRESS, SlaveAddr, ic, Config, mode };
+use { Ads1x1x, DEVICE_BASE_ADDRESS, SlaveAddr, ic, Config, mode, FullScaleRange };
 use interface::I2cInterface;
 
 
@@ -21,6 +21,7 @@ macro_rules! impl_new_destroy {
                         address: address.addr(DEVICE_BASE_ADDRESS)
                     },
                     config: Config::default(),
+                    fsr: FullScaleRange::default(),
                     a_conversion_was_started: false,
                     _conv: PhantomData,
                     _ic: PhantomData,

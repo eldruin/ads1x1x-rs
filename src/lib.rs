@@ -405,6 +405,7 @@ impl Default for FullScaleRange {
 pub struct Ads1x1x<DI, IC, CONV, MODE> {
     iface: DI,
     config: Config,
+    fsr: FullScaleRange,
     a_conversion_was_started: bool,
     _conv: PhantomData<CONV>,
     _ic: PhantomData<IC>,

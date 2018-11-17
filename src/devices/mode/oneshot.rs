@@ -17,6 +17,7 @@ where
         Ok(Ads1x1x {
             iface: self.iface,
             config: self.config,
+            fsr: self.fsr,
             a_conversion_was_started: self.a_conversion_was_started,
             _conv: PhantomData,
             _ic: PhantomData,
