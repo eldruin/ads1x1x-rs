@@ -192,7 +192,7 @@ pub mod mode {
 }
 
 /// Data rate for ADS1013, ADS1014, ADS1015, ADS1018
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum DataRate12Bit {
     /// 128 SPS
     Sps128,
@@ -212,7 +212,7 @@ pub enum DataRate12Bit {
 
 
 /// Data rate for ADS1113, ADS1114, ADS1115, ADS1118
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum DataRate16Bit {
     /// 8 SPS
     Sps8,
@@ -232,7 +232,7 @@ pub enum DataRate16Bit {
     Sps860
 }
 /// Comparator mode (only for ADS1x14, ADS1x15)
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum ComparatorMode {
     /// Traditional comparator (default)
     ///
@@ -250,7 +250,7 @@ pub enum ComparatorMode {
 }
 
 /// Comparator polarity (only for ADS1x14, ADS1x15)
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum ComparatorPolarity {
     /// Active low (default)
     ActiveLow,
@@ -263,7 +263,7 @@ pub enum ComparatorPolarity {
 /// Select whether the ALERT/RDY pin latches after being asserted or clears
 /// after conversions are within the margin of the upper and lower
 /// threshold values.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum ComparatorLatching {
     /// Nonlatching (default)
     ///
@@ -282,7 +282,7 @@ pub enum ComparatorLatching {
 ///
 /// The default state of the comparator is deactivated. It can be activated by setting
 /// the comparator queue.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum ComparatorQueue {
     /// Activate comparator and assert after one conversion exceeding thresholds
     One,
@@ -296,7 +296,7 @@ pub enum ComparatorQueue {
 ///
 /// This sets the input voltage measurable range.
 /// The FSR is fixed at ±2.048 V in the ADS1x13.
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 #[allow(non_camel_case_types)]
 pub enum FullScaleRange {
     /// The measurable range is ±6.144V.
@@ -314,7 +314,7 @@ pub enum FullScaleRange {
 }
 
 /// Possible slave addresses
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum SlaveAddr {
     /// Default slave address
     Default,
