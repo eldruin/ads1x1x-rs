@@ -29,8 +29,8 @@ macro_rules! config_test {
 
 mod can_set_comparator_thresholds {
     use super::*;
-    set_value_test!(low,  set_low_threshold,  2047, LOW_TH,  0x7F, 0xF0);
-    set_value_test!(high, set_high_threshold, 2047, HIGH_TH, 0x7F, 0xF0);
+    set_value_test!(low,  set_low_threshold_raw,  2047, LOW_TH,  0x7F, 0xF0);
+    set_value_test!(high, set_high_threshold_raw, 2047, HIGH_TH, 0x7F, 0xF0);
 }
 
 mod can_set_comparator_mode {

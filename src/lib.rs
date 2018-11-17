@@ -9,7 +9,7 @@
 //! - Make a measurement in one-shot mode. See: [`read()`].
 //! - Set the data rate. See: [`set_data_rate()`].
 //! - Set the full-scale range (gain amplifier). See [`set_full_scale_range()`].
-//! - Set the low and high thresholds. See: [`set_high_threshold()`].
+//! - Set the low and high thresholds. See: [`set_high_threshold_raw()`].
 //! - Set the comparator mode. See: [`set_comparator_mode()`].
 //! - Set the comparator polarity. See: [`set_comparator_polarity()`].
 //! - Set the comparator latching. See: [`set_comparator_latching()`].
@@ -20,7 +20,7 @@
 //! [`read()`]: struct.Ads1x1x.html#method.read
 //! [`set_data_rate()`]: struct.Ads1x1x.html#method.set_data_rate
 //! [`set_full_scale_range()`]: struct.Ads1x1x.html#method.set_full_scale_range
-//! [`set_high_threshold()`]: struct.Ads1x1x.html#method.set_high_threshold
+//! [`set_high_threshold_raw()`]: struct.Ads1x1x.html#method.set_high_threshold_raw
 //! [`set_comparator_mode()`]: struct.Ads1x1x.html#method.set_comparator_mode
 //! [`set_comparator_polarity()`]: struct.Ads1x1x.html#method.set_comparator_polarity
 //! [`set_comparator_latching()`]: struct.Ads1x1x.html#method.set_comparator_latching
@@ -172,7 +172,7 @@
 //! extern crate linux_embedded_hal as hal;
 //! extern crate ads1x1x;
 //! use ads1x1x::{ Ads1x1x, SlaveAddr, ComparatorQueue, ComparatorPolarity,
-//!                ComparatorMode, ComparatorLatching };
+//!                ComparatorMode, ComparatorLatching, FullScaleRange };
 //!
 //! # fn main() {
 //! let dev = hal::I2cdev::new("/dev/i2c-1").unwrap();
@@ -181,8 +181,9 @@
 //! adc.set_comparator_queue(ComparatorQueue::Two).unwrap();
 //! adc.set_comparator_polarity(ComparatorPolarity::ActiveHigh).unwrap();
 //! adc.set_comparator_mode(ComparatorMode::Window).unwrap();
-//! adc.set_low_threshold(-1500).unwrap();
-//! adc.set_high_threshold(1500).unwrap();
+//! adc.set_full_scale_range(FullScaleRange::Within2_048V).unwrap();
+//! adc.set_low_threshold_raw(-1500).unwrap();
+//! adc.set_high_threshold_raw(1500).unwrap();
 //! adc.set_comparator_latching(ComparatorLatching::Latching).unwrap();
 //! # }
 //! ```

@@ -16,7 +16,7 @@ This driver allows you to:
 - Set the operating mode to one-shot or continuous. See: `into_continuous()`.
 - Make a measurement in one-shot mode. See: `read()`.
 - Set the data rate. See: `set_data_rate()`.
-- Set the low and high thresholds. See: `set_high_threshold()`.
+- Set the low and high thresholds. See: `set_high_threshold_raw()`.
 - Set the comparator mode. See: `set_comparator_mode()`.
 - Set the comparator polarity. See: `set_comparator_polarity()`.
 - Set the comparator latching. See: `set_comparator_latching()`.

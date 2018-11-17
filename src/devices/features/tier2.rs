@@ -31,14 +31,14 @@ where
         Ok(())
     }
 
-    /// Set comparator lower threshold
-    pub fn set_low_threshold(&mut self, value: i16) -> Result<(), Error<E>> {
+    /// Set raw comparator lower threshold
+    pub fn set_low_threshold_raw(&mut self, value: i16) -> Result<(), Error<E>> {
         let register_value = CONV::convert_threshold(value)?;
         self.iface.write_register(Register::LOW_TH, register_value)
     }
 
-    /// Set comparator upper threshold
-    pub fn set_high_threshold(&mut self, value: i16) -> Result<(), Error<E>> {
+    /// Set raw comparator upper threshold
+    pub fn set_high_threshold_raw(&mut self, value: i16) -> Result<(), Error<E>> {
         let register_value = CONV::convert_threshold(value)?;
         self.iface.write_register(Register::HIGH_TH, register_value)
     }
