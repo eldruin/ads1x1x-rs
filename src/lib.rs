@@ -223,6 +223,9 @@ pub enum ComparatorLatching {
 }
 
 /// Comparator alert queue (only for ADS1x14, ADS1x15)
+///
+/// The default state of the comparator is deactivated. It can be activated by setting
+/// the comparator queue.
 #[derive(Debug, Clone, PartialEq)]
 pub enum ComparatorQueue {
     /// Activate comparator and assert after one conversion exceeding thresholds
