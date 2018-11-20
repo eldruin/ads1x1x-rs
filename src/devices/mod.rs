@@ -6,6 +6,6 @@ enum OperatingMode {
     Continuous
 }
 
-mod common;
 mod mode;
 mod features;
+mod common;
