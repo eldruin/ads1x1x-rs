@@ -203,7 +203,9 @@ pub enum Error<E> {
     /// I²C/SPI bus error
     Comm(E),
     /// Invalid input data provided
-    InvalidInputData
+    InvalidInputData,
+    /// Continuous measurement was not started
+    NotStarted,
 }
 
 const DEVICE_BASE_ADDRESS : u8 = 0b100_1000;

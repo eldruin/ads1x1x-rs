@@ -7,7 +7,8 @@ use super::super::OperatingMode;
 
 impl<DI, IC, CONV, E> Ads1x1x<DI, IC, CONV, mode::Continuous>
 where
-    DI: interface::WriteData<Error = E>,
+    DI: interface::ReadData<Error = E> + interface::WriteData<Error = E>,
+    CONV: conversion::ConvertMeasurement,
 {
     /// Change operating mode to OneShot
     pub fn into_one_shot(mut self) -> Result<Ads1x1x<DI, IC, CONV, mode::OneShot>, Error<E>> {
@@ -16,7 +17,7 @@ where
             iface: self.iface,
             config: self.config,
             fsr: self.fsr,
-            a_conversion_was_started: self.a_conversion_was_started,
+            a_conversion_was_started: false,
             _conv: PhantomData,
             _ic: PhantomData,
             _mode: PhantomData
@@ -28,6 +29,15 @@ where
         self.set_operating_mode(OperatingMode::Continuous)?;
         self.a_conversion_was_started = true;
         Ok(())
+    }
+
+    /// Read the most recent measurement
+    pub fn read(&mut self) -> Result<i16, Error<E>> {
+        if !self.a_conversion_was_started {
+            return Err(Error::NotStarted);
+        }
+        let value = self.iface.read_register(Register::CONVERSION)?;
+        return Ok(CONV::convert_measurement(value));
     }
 }
 
