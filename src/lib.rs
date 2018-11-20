@@ -6,7 +6,9 @@
 //!
 //! This driver allows you to:
 //! - Set the operating mode to one-shot or continuous. See: [`into_continuous()`].
-//! - Make a measurement in one-shot mode. See: [`read()`].
+//! - Make a measurement in one-shot mode. See: [`read()`][read_os].
+//! - Start continuous conversion mode. See: [`start()`].
+//! - Read the last measurement made in continuous conversion mode. See: [`read()`][read_cont].
 //! - Set the data rate. See: [`set_data_rate()`].
 //! - Set the full-scale range (gain amplifier). See [`set_full_scale_range()`].
 //! - Set the low and high thresholds. See: [`set_high_threshold_raw()`].
@@ -17,7 +19,9 @@
 //! - Disable the comparator. See: [`disable_comparator()`].
 //!
 //! [`into_continuous()`]: struct.Ads1x1x.html#method.into_continuous
-//! [`read()`]: struct.Ads1x1x.html#method.read
+//! [read_os]: struct.Ads1x1x.html#method.read
+//! [`start()`]: struct.Ads1x1x.html#method.read
+//! [read_cont]: struct.Ads1x1x.html#impl-OneShot%3CAds1x1x%3CDI%2C%20IC%2C%20CONV%2C%20OneShot%3E%2C%20i16%2C%20CH%3E
 //! [`set_data_rate()`]: struct.Ads1x1x.html#method.set_data_rate
 //! [`set_full_scale_range()`]: struct.Ads1x1x.html#method.set_full_scale_range
 //! [`set_high_threshold_raw()`]: struct.Ads1x1x.html#method.set_high_threshold_raw

@@ -15,6 +15,8 @@ analog-to-digital converters (ADC), based on the [`embedded-hal`] traits.
 This driver allows you to:
 - Set the operating mode to one-shot or continuous. See: `into_continuous()`.
 - Make a measurement in one-shot mode. See: `read()`.
+- Start continuous conversion mode. See: `start()`.
+- Read the last measurement made in continuous conversion mode. See: `read()`.
 - Set the data rate. See: `set_data_rate()`.
 - Set the full-scale range (gain amplifier). See `set_full_scale_range()`.
 - Set the low and high thresholds. See: `set_high_threshold_raw()`.
