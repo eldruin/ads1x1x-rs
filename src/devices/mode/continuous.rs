@@ -25,6 +25,8 @@ where
     }
 
     /// Start continuous conversions
+    ///
+    /// _Note:_ this method is only available in continuous mode.
     pub fn start(&mut self) -> Result<(), Error<E>> {
         self.set_operating_mode(OperatingMode::Continuous)?;
         self.a_conversion_was_started = true;
@@ -32,6 +34,13 @@ where
     }
 
     /// Read the most recent measurement
+    ///
+    /// The continuous measurement must be started with [`start()`] before
+    /// calling this method. Otherwise, `Error::NotStarted` will be returned.
+    ///
+    /// _Note:_ this method is only available in continuous mode.
+    ///
+    /// [`start()`]: struct.Ads1x1x.html#method.start
     pub fn read(&mut self) -> Result<i16, Error<E>> {
         if !self.a_conversion_was_started {
             return Err(Error::NotStarted);
