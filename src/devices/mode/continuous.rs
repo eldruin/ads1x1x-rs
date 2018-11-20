@@ -46,7 +46,7 @@ where
             return Err(Error::NotStarted);
         }
         let value = self.iface.read_register(Register::CONVERSION)?;
-        return Ok(CONV::convert_measurement(value));
+        Ok(CONV::convert_measurement(value))
     }
 }
 
