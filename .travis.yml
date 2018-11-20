@@ -2,25 +2,30 @@ language: rust
 # sudo is required to enable kcov to use the personality syscall
 sudo: required
 
-before_script:
-  - eval git pull --rebase https://github.com/eldruin/ads1x1x-rs master
-  - eval git log --pretty=oneline HEAD~5..HEAD
-  - export PATH=$HOME/.cargo/bin:$PATH
+before_install:
+  - git clone https://github.com/eldruin/rust-driver-ci-scripts ci
+  - bash ci/before_install.sh
 
 matrix:
   include:
     - env: TARGET=x86_64-unknown-linux-gnu
-
-    - env: TARGET=x86_64-unknown-linux-gnu COVERAGE=1 LLVM_CONFIG=llvm-config-7
-      rust: nightly
+      before_script:
+        - bash ci/coverage_before_script.sh
+      after_success:
+        - bash ci/coverage_after_success.sh
       addons:
         apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-7 main'
-              key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
           packages:
-            - llvm-7-dev
+            - libcurl4-openssl-dev
+            - libelf-dev
+            - libdw-dev
+            - binutils-dev
+            - cmake
+          sources:
+            - kalakris-cmake
+
+    - env: TARGET=x86_64-unknown-linux-gnu
+      rust: nightly
 
     - env: TARGET=x86_64-unknown-linux-musl
       rust: nightly
@@ -43,15 +48,11 @@ matrix:
     - env: TARGET=thumbv7m-none-eabi
       rust: beta
 
-before_install:
-  - set -e
-  - rustup self update
-
 install:
-  - bash ci/install.sh
+  bash ci/install.sh
 
 script:
-  - bash ci/script.sh
+  bash ci/script.sh
 
 after_script: set +e
 
@@ -61,15 +62,7 @@ cache:
     - /home/travis/.cargo
 
 before_cache:
-  # Travis can't cache files that are not readable by "others"
-  - chmod -R a+r $HOME/.cargo
-  - rm -rf /home/travis/.cargo/registry
-
-branches:
-  only:
-    - master
-    - staging
-    - trying
+  bash ci/before_cache.sh
 
 notifications:
   email:
