@@ -49,6 +49,16 @@ macro_rules! mux_test {
                 assert_eq!(-2048, measurement);
                 destroy(dev);
             }
+
+            #[test]
+            fn continuous_can_select_channel() {
+                let config = Config::default().with_high($config_bits);
+                let transactions = [ I2cTrans::write(DEV_ADDR, vec![Register::CONFIG, config.msb(), config.lsb()]) ];
+                let dev = new(&transactions);
+                let mut dev = dev.into_continuous().unwrap();
+                dev.select_channel(&mut channel::$CS).unwrap();
+                destroy(dev);
+            }
         }
     };
 }
