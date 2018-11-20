@@ -3,7 +3,8 @@ language: rust
 sudo: required
 
 env:
-  - DISABLE_CLIPPY=1
+  global:
+    - DISABLE_CLIPPY=1
 
 before_install:
   - git clone https://github.com/eldruin/rust-driver-ci-scripts ci
