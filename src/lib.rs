@@ -17,6 +17,7 @@
 //! - Set the comparator latching. See: [`set_comparator_latching()`].
 //! - Set the comparator queue. See: [`set_comparator_queue()`].
 //! - Disable the comparator. See: [`disable_comparator()`].
+//! - Set the ALERT/RDY pin to be used as conversion-ready pin. See: [`use_alert_rdy_pin_as_ready()`].
 //!
 //! [`into_continuous()`]: struct.Ads1x1x.html#method.into_continuous
 //! [read_os]: struct.Ads1x1x.html#method.read
@@ -30,6 +31,7 @@
 //! [`set_comparator_latching()`]: struct.Ads1x1x.html#method.set_comparator_latching
 //! [`set_comparator_queue()`]: struct.Ads1x1x.html#method.set_comparator_queue
 //! [`disable_comparator()`]: struct.Ads1x1x.html#method.disable_comparator
+//! [`use_alert_rdy_pin_as_ready()`]: struct.Ads1x1x.html#method.use_alert_rdy_pin_as_ready
 //!
 //! ## The devices
 //!

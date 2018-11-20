@@ -115,4 +115,19 @@ where
         self.config = config;
         Ok(())
     }
+
+    /// Use the ALERT/RDY pin as conversion-ready pin.
+    ///
+    /// This the ALERT/RDY pin outputs the OS bit when in OneShot mode, and
+    /// provides a continuous-conversion ready pulse when in
+    /// continuous-conversion mode.
+    ///
+    /// When calling this the comparator will be disabled and the thresholds will be cleared.
+    pub fn use_alert_rdy_pin_as_ready(&mut self) -> Result<(), Error<E>> {
+        if self.config != self.config.with_high(BitFlags::COMP_QUE1).with_high(BitFlags::COMP_QUE0) {
+            self.disable_comparator()?;
+        }
+        self.iface.write_register(Register::HIGH_TH, 0x8000)?;
+        self.iface.write_register(Register::LOW_TH, 0)
+    }
 }

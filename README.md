@@ -25,6 +25,7 @@ This driver allows you to:
 - Set the comparator latching. See: `set_comparator_latching()`.
 - Set the comparator queue. See: `set_comparator_queue()`.
 - Disable the comparator. See: `disable_comparator()`.
+- Set the ALERT/RDY pin to be used as conversion-ready pin. See: `use_alert_rdy_pin_as_ready()`.
 
 ## The devices
 
