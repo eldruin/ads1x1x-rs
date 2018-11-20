@@ -3,7 +3,6 @@
 use core::marker::PhantomData;
 use { Ads1x1x, mode, Error, Register, BitFlags, Config };
 use { interface, conversion, hal, nb };
-use devices::OperatingMode;
 use channels::ChannelSelection;
 
 impl<DI, IC, CONV, E> Ads1x1x<DI, IC, CONV, mode::OneShot>
@@ -12,8 +11,7 @@ where
     CONV: conversion::ConvertMeasurement
 {
     /// Change operating mode to Continuous
-    pub fn into_continuous(mut self) -> Result<Ads1x1x<DI, IC, CONV, mode::Continuous>, Error<E>> {
-        self.set_operating_mode(OperatingMode::Continuous)?;
+    pub fn into_continuous(self) -> Result<Ads1x1x<DI, IC, CONV, mode::Continuous>, Error<E>> {
         Ok(Ads1x1x {
             iface: self.iface,
             config: self.config,

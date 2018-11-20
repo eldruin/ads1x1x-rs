@@ -21,4 +21,11 @@ where
             _mode: PhantomData
         })
     }
+
+    /// Start continuous conversions
+    pub fn start(&mut self) -> Result<(), Error<E>> {
+        self.set_operating_mode(OperatingMode::Continuous)?;
+        self.a_conversion_was_started = true;
+        Ok(())
+    }
 }
