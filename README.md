@@ -7,7 +7,7 @@
 ![Maintenance Intention](https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg)
 
 This is a platform agnostic Rust driver for the ADS1013, ADS1014, ADS1015,
-ADS1113, ADS1114, ADS1115, ADS1018 and ADS1118 ultra-small, low-power
+ADS1113, ADS1114 and ADS1115 ultra-small, low-power
 analog-to-digital converters (ADC), based on the [`embedded-hal`] traits.
 
 [`embedded-hal`]: https://github.com/rust-embedded/embedded-hal
@@ -54,17 +54,13 @@ Here is a comparison of the caracteristics of the devices:
 | ADS1013 | 12-bit     | Max 3300 SPS | 1        | I2C       | N/A           |                              |
 | ADS1014 | 12-bit     | Max 3300 SPS | 1        | I2C       | N/A           | Comparator, PGA              |
 | ADS1015 | 12-bit     | Max 3300 SPS | 4        | I2C       | Multiplexed   | Comparator, PGA              |
-| ADS1018 | 12-bit     | Max 3300 SPS | 4        | SPI       | Multiplexed   | Comparator, PGA, Temp sensor |
 | ADS1113 | 16-bit     | Max 860 SPS  | 1        | I2C       | N/A           |                              |
 | ADS1114 | 16-bit     | Max 860 SPS  | 1        | I2C       | N/A           | Comparator, PGA              |
 | ADS1115 | 16-bit     | Max 860 SPS  | 4        | I2C       | Multiplexed   | Comparator, PGA              |
-| ADS1118 | 16-bit     | Max 860 SPS  | 4        | SPI       | Multiplexed   | Comparator, PGA, Temp sensor |
 
 Datasheets:
 - [ADS101x](http://www.ti.com/lit/ds/symlink/ads1015.pdf)
-- [ADS1018](http://www.ti.com/lit/ds/symlink/ads1018.pdf)
 - [ADS111x](http://www.ti.com/lit/ds/symlink/ads1115.pdf)
-- [ADS1118](http://www.ti.com/lit/ds/symlink/ads1118.pdf)
 
 ## Usage
 
