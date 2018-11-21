@@ -29,7 +29,7 @@ where
         let payload: [u8; 3] = [register, (data >> 8) as u8, data as u8];
         self.i2c
             .write(self.address, &payload)
-            .map_err(Error::Comm)
+            .map_err(Error::I2C)
     }
 }
 
@@ -50,7 +50,7 @@ where
         let mut data = [0, 0];
         self.i2c
             .write_read(self.address, &[register], &mut data)
-            .map_err(Error::Comm)
+            .map_err(Error::I2C)
             .and(Ok((u16::from(data[0]) << 8) | u16::from(data[1])))
     }
 }

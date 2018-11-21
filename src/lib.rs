@@ -212,7 +212,7 @@ use core::marker::PhantomData;
 #[derive(Debug)]
 pub enum Error<E> {
     /// I²C bus error
-    Comm(E),
+    I2C(E),
     /// Invalid input data provided
     InvalidInputData,
     /// Continuous measurement was not started
