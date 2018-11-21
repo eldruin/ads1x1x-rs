@@ -1,4 +1,4 @@
-//! I2C/SPI interfaces
+//! I2C interface
 
 extern crate embedded_hal as hal;
 use hal::blocking;
