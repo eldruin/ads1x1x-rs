@@ -1,10 +1,10 @@
 extern crate embedded_hal_mock as hal;
-use self::hal::i2c::{ Mock as I2cMock, Transaction as I2cTrans };
+use self::hal::i2c::{Mock as I2cMock, Transaction as I2cTrans};
 extern crate ads1x1x;
-use self::ads1x1x::{ Ads1x1x, interface, ic, SlaveAddr, mode };
+use self::ads1x1x::{ic, interface, mode, Ads1x1x, SlaveAddr};
 
 #[allow(unused)]
-pub const DEVICE_ADDRESS : u8 = 0b100_1000;
+pub const DEVICE_ADDRESS: u8 = 0b100_1000;
 
 pub struct Register;
 #[allow(unused)]
@@ -37,16 +37,20 @@ impl BitFlags {
 }
 
 pub struct Config {
-    pub bits: u16
+    pub bits: u16,
 }
 
 #[allow(dead_code)]
 impl Config {
     pub fn with_high(&self, mask: u16) -> Self {
-        Config { bits: self.bits | mask }
+        Config {
+            bits: self.bits | mask,
+        }
     }
     pub fn with_low(&self, mask: u16) -> Self {
-        Config { bits: self.bits & !mask }
+        Config {
+            bits: self.bits & !mask,
+        }
     }
 
     pub fn msb(&self) -> u8 {
@@ -75,7 +79,7 @@ macro_rules! impl_new_destroy {
         pub fn $destroy<MODE>(dev: Ads1x1x<$iface, ic::$ic, $conv, MODE>) {
             dev.$destroy().done();
         }
-    }
+    };
 }
 
 impl_new_destroy!(Ads1013, new_ads1013, destroy_ads1013, ic::Resolution12Bit, I2cTrans, interface::I2cInterface<I2cMock>);
@@ -90,8 +94,7 @@ macro_rules! assert_would_block {
     ($result: expr) => {
         match $result {
             Err(nb::Error::WouldBlock) => (),
-            _ => panic!("Would not block.")
+            _ => panic!("Would not block."),
         }
-    }
+    };
 }
-

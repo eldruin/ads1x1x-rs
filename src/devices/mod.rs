@@ -1,7 +1,7 @@
 #[derive(Debug, Clone, Copy)]
 enum OperatingMode {
     OneShot,
-    Continuous
+    Continuous,
 }
 
 mod mode;

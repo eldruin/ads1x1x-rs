@@ -2,18 +2,17 @@
 
 extern crate embedded_hal as hal;
 use hal::blocking;
-use { private, Error };
-
+use {private, Error};
 
 /// I2C interface
 #[derive(Debug, Default)]
 pub struct I2cInterface<I2C> {
     pub(crate) i2c: I2C,
-    pub(crate) address : u8,
+    pub(crate) address: u8,
 }
 
 /// Write data
-pub trait WriteData : private::Sealed {
+pub trait WriteData: private::Sealed {
     /// Error type
     type Error;
     /// Write to an u16 register
@@ -22,19 +21,17 @@ pub trait WriteData : private::Sealed {
 
 impl<I2C, E> WriteData for I2cInterface<I2C>
 where
-    I2C: blocking::i2c::Write<Error = E>
+    I2C: blocking::i2c::Write<Error = E>,
 {
     type Error = E;
     fn write_register(&mut self, register: u8, data: u16) -> Result<(), Error<E>> {
         let payload: [u8; 3] = [register, (data >> 8) as u8, data as u8];
-        self.i2c
-            .write(self.address, &payload)
-            .map_err(Error::I2C)
+        self.i2c.write(self.address, &payload).map_err(Error::I2C)
     }
 }
 
 /// Read data
-pub trait ReadData : private::Sealed {
+pub trait ReadData: private::Sealed {
     /// Error type
     type Error;
     /// Read an u16 register
@@ -43,7 +40,7 @@ pub trait ReadData : private::Sealed {
 
 impl<I2C, E> ReadData for I2cInterface<I2C>
 where
-    I2C: blocking::i2c::WriteRead<Error = E>
+    I2C: blocking::i2c::WriteRead<Error = E>,
 {
     type Error = E;
     fn read_register(&mut self, register: u8) -> Result<u16, Error<E>> {

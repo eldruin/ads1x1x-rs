@@ -1,7 +1,7 @@
 //! Common functions
 
-use { Ads1x1x, Error, Register, BitFlags, interface, Config };
 use super::OperatingMode;
+use {interface, Ads1x1x, BitFlags, Config, Error, Register};
 
 impl<DI, IC, CONV, MODE, E> Ads1x1x<DI, IC, CONV, MODE>
 where
@@ -21,7 +21,7 @@ where
     /// Read whether a measurement is currently in progress.
     pub fn is_measurement_in_progress(&mut self) -> Result<bool, Error<E>> {
         let config = Config {
-            bits: self.iface.read_register(Register::CONFIG)?
+            bits: self.iface.read_register(Register::CONFIG)?,
         };
         Ok(!config.is_high(BitFlags::OS))
     }

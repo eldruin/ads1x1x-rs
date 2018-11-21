@@ -2,21 +2,21 @@
 //!
 //! These are the features included only in ADS1x14, ADS1x15
 
-use { Ads1x1x, Error, interface, ic, FullScaleRange, ComparatorMode,
-      ComparatorPolarity, ComparatorLatching, ComparatorQueue, Register,
-      BitFlags, conversion };
+use {
+    conversion, ic, interface, Ads1x1x, BitFlags as BF, ComparatorLatching, ComparatorMode,
+    ComparatorPolarity, ComparatorQueue, Error, FullScaleRange, Register,
+};
 
 impl<DI, IC, CONV, MODE, E> Ads1x1x<DI, IC, CONV, MODE>
 where
     DI: interface::WriteData<Error = E>,
     IC: ic::Tier2Features,
-    CONV: conversion::ConvertThreshold<E>
+    CONV: conversion::ConvertThreshold<E>,
 {
     /// Set the input voltage measurable range
     ///
     /// This configures the programmable gain amplifier and determines the measurable input voltage range.
     pub fn set_full_scale_range(&mut self, range: FullScaleRange) -> Result<(), Error<E>> {
-        use BitFlags as BF;
         let config;
         match range {
             FullScaleRange::Within6_144V => config = self.config.with_low( BF::PGA2).with_low( BF::PGA1).with_low( BF::PGA0),
@@ -57,8 +57,8 @@ where
     pub fn set_comparator_mode(&mut self, mode: ComparatorMode) -> Result<(), Error<E>> {
         let config;
         match mode {
-            ComparatorMode::Traditional => config = self.config.with_low(BitFlags::COMP_MODE),
-            ComparatorMode::Window      => config = self.config.with_high(BitFlags::COMP_MODE)
+            ComparatorMode::Traditional => config = self.config.with_low( BF::COMP_MODE),
+            ComparatorMode::Window      => config = self.config.with_high(BF::COMP_MODE),
         }
         self.iface.write_register(Register::CONFIG, config.bits)?;
         self.config = config;
@@ -66,11 +66,14 @@ where
     }
 
     /// Set comparator polarity
-    pub fn set_comparator_polarity(&mut self, polarity: ComparatorPolarity) -> Result<(), Error<E>> {
+    pub fn set_comparator_polarity(
+        &mut self,
+        polarity: ComparatorPolarity,
+    ) -> Result<(), Error<E>> {
         let config;
         match polarity {
-            ComparatorPolarity::ActiveLow  => config = self.config.with_low( BitFlags::COMP_POL),
-            ComparatorPolarity::ActiveHigh => config = self.config.with_high(BitFlags::COMP_POL)
+            ComparatorPolarity::ActiveLow  => config = self.config.with_low( BF::COMP_POL),
+            ComparatorPolarity::ActiveHigh => config = self.config.with_high(BF::COMP_POL),
         }
         self.iface.write_register(Register::CONFIG, config.bits)?;
         self.config = config;
@@ -78,11 +81,14 @@ where
     }
 
     /// Set comparator latching
-    pub fn set_comparator_latching(&mut self, latching: ComparatorLatching) -> Result<(), Error<E>> {
+    pub fn set_comparator_latching(
+        &mut self,
+        latching: ComparatorLatching,
+    ) -> Result<(), Error<E>> {
         let config;
         match latching {
-            ComparatorLatching::Nonlatching => config = self.config.with_low( BitFlags::COMP_LAT),
-            ComparatorLatching::Latching    => config = self.config.with_high(BitFlags::COMP_LAT)
+            ComparatorLatching::Nonlatching => config = self.config.with_low( BF::COMP_LAT),
+            ComparatorLatching::Latching    => config = self.config.with_high(BF::COMP_LAT),
         }
         self.iface.write_register(Register::CONFIG, config.bits)?;
         self.config = config;
@@ -95,9 +101,9 @@ where
     pub fn set_comparator_queue(&mut self, queue: ComparatorQueue) -> Result<(), Error<E>> {
         let config;
         match queue {
-            ComparatorQueue::One  => config = self.config.with_low( BitFlags::COMP_QUE1).with_low( BitFlags::COMP_QUE0),
-            ComparatorQueue::Two  => config = self.config.with_low( BitFlags::COMP_QUE1).with_high(BitFlags::COMP_QUE0),
-            ComparatorQueue::Four => config = self.config.with_high(BitFlags::COMP_QUE1).with_low( BitFlags::COMP_QUE0)
+            ComparatorQueue::One  => config = self.config.with_low( BF::COMP_QUE1).with_low( BF::COMP_QUE0),
+            ComparatorQueue::Two  => config = self.config.with_low( BF::COMP_QUE1).with_high(BF::COMP_QUE0),
+            ComparatorQueue::Four => config = self.config.with_high(BF::COMP_QUE1).with_low( BF::COMP_QUE0),
         }
         self.iface.write_register(Register::CONFIG, config.bits)?;
         self.config = config;
@@ -110,7 +116,7 @@ where
     /// The comparator can be enabled by setting the comparator queue.
     /// See [`set_comparator_queue()`](struct.Ads1x1x.html#method.set_comparator_queue)
     pub fn disable_comparator(&mut self) -> Result<(), Error<E>> {
-        let config = self.config.with_high(BitFlags::COMP_QUE1).with_high(BitFlags::COMP_QUE0);
+        let config = self.config.with_high(BF::COMP_QUE1).with_high(BF::COMP_QUE0);
         self.iface.write_register(Register::CONFIG, config.bits)?;
         self.config = config;
         Ok(())
@@ -124,7 +130,7 @@ where
     ///
     /// When calling this the comparator will be disabled and the thresholds will be cleared.
     pub fn use_alert_rdy_pin_as_ready(&mut self) -> Result<(), Error<E>> {
-        if self.config != self.config.with_high(BitFlags::COMP_QUE1).with_high(BitFlags::COMP_QUE0) {
+        if self.config != self.config.with_high(BF::COMP_QUE1).with_high(BF::COMP_QUE0) {
             self.disable_comparator()?;
         }
         self.iface.write_register(Register::HIGH_TH, 0x8000)?;

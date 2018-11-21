@@ -1,7 +1,7 @@
-use { ic, private, Error };
+use {ic, private, Error};
 
 #[doc(hidden)]
-pub trait ConvertThreshold<E> : private::Sealed {
+pub trait ConvertThreshold<E>: private::Sealed {
     fn convert_threshold(value: i16) -> Result<u16, Error<E>>;
 }
 
@@ -21,7 +21,7 @@ impl<E> ConvertThreshold<E> for ic::Resolution16Bit {
 }
 
 #[doc(hidden)]
-pub trait ConvertMeasurement : private::Sealed {
+pub trait ConvertMeasurement: private::Sealed {
     fn convert_measurement(register_data: u16) -> i16;
 }
 
@@ -32,8 +32,7 @@ impl ConvertMeasurement for ic::Resolution12Bit {
         if is_negative {
             let value = 0b1111_0000_0000_0000 | (value >> 4);
             value as i16
-        }
-        else {
+        } else {
             (value >> 4) as i16
         }
     }
@@ -69,7 +68,7 @@ mod tests {
     fn assert_invalid_input_data<E>(result: Result<u16, Error<E>>) {
         match result {
             Err(Error::InvalidInputData) => (),
-            _ => panic!("InvalidInputData error was not returned.")
+            _ => panic!("InvalidInputData error was not returned."),
         }
     }
 

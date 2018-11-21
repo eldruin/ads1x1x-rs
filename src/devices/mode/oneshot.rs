@@ -1,14 +1,14 @@
 //! Common functions
 
-use core::marker::PhantomData;
-use { Ads1x1x, mode, Error, Register, BitFlags, Config };
-use { interface, conversion, hal, nb };
 use channels::ChannelSelection;
+use core::marker::PhantomData;
+use {conversion, hal, interface, nb};
+use {mode, Ads1x1x, BitFlags, Config, Error, Register};
 
 impl<DI, IC, CONV, E> Ads1x1x<DI, IC, CONV, mode::OneShot>
 where
     DI: interface::WriteData<Error = E> + interface::ReadData<Error = E>,
-    CONV: conversion::ConvertMeasurement
+    CONV: conversion::ConvertMeasurement,
 {
     /// Change operating mode to Continuous
     pub fn into_continuous(self) -> Result<Ads1x1x<DI, IC, CONV, mode::Continuous>, Error<E>> {
@@ -19,7 +19,7 @@ where
             a_conversion_was_started: self.a_conversion_was_started,
             _conv: PhantomData,
             _ic: PhantomData,
-            _mode: PhantomData
+            _mode: PhantomData,
         })
     }
 
@@ -34,7 +34,7 @@ impl<DI, IC, CONV, E, CH> hal::adc::OneShot<Ads1x1x<DI, IC, CONV, mode::OneShot>
 where
     DI: interface::ReadData<Error = E> + interface::WriteData<Error = E>,
     CONV: conversion::ConvertMeasurement,
-    CH: hal::adc::Channel<Ads1x1x<DI, IC, CONV, mode::OneShot>, ID = ChannelSelection>
+    CH: hal::adc::Channel<Ads1x1x<DI, IC, CONV, mode::OneShot>, ID = ChannelSelection>,
 {
     type Error = Error<E>;
 
@@ -63,7 +63,8 @@ where
             return Ok(CONV::convert_measurement(value));
         }
         let config = self.config.with_mux_bits(CH::channel());
-        self.trigger_measurement(&config).map_err(nb::Error::Other)?;
+        self.trigger_measurement(&config)
+            .map_err(nb::Error::Other)?;
         self.config = config;
         self.a_conversion_was_started = true;
         Err(nb::Error::WouldBlock)

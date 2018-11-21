@@ -5,8 +5,8 @@ extern crate linux_embedded_hal;
 extern crate nb;
 extern crate ads1x1x;
 
+use ads1x1x::{channel, Ads1x1x, SlaveAddr};
 use linux_embedded_hal::I2cdev;
-use ads1x1x::{ Ads1x1x, SlaveAddr, channel };
 
 fn main() {
     let dev = I2cdev::new("/dev/i2c-1").unwrap();

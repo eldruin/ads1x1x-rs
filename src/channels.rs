@@ -1,5 +1,5 @@
 //! ADC input channels
-use { Ads1x1x, ic, hal, Config, BitFlags as BF };
+use {hal, ic, Ads1x1x, BitFlags as BF, Config};
 
 /// ADC input channel selection
 #[allow(dead_code)]
@@ -43,7 +43,7 @@ macro_rules! impl_channel {
                 ChannelSelection::$CH
             }
         }
-    }
+    };
 }
 
 impl_channel!(Ads1013, DifferentialA0A1);

@@ -1,9 +1,8 @@
 /// ICs
 use private;
 
-pub struct Resolution12Bit(pub(crate)());
-pub struct Resolution16Bit(pub(crate)());
-
+pub struct Resolution12Bit(pub(crate) ());
+pub struct Resolution16Bit(pub(crate) ());
 
 macro_rules! ic_marker {
     ($name:ident) => {
@@ -19,12 +18,12 @@ ic_marker!(Ads1114);
 ic_marker!(Ads1015);
 ic_marker!(Ads1115);
 
-pub trait Tier2Features : private::Sealed { }
+pub trait Tier2Features: private::Sealed {}
 
 macro_rules! tier2_features {
     ($name:ident) => {
         impl Tier2Features for $name {}
-    }
+    };
 }
 
 tier2_features!(Ads1014);

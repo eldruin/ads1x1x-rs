@@ -204,8 +204,8 @@
 #![deny(warnings)]
 #![no_std]
 
-extern crate nb;
 extern crate embedded_hal as hal;
+extern crate nb;
 use core::marker::PhantomData;
 
 /// All possible errors in this crate
@@ -219,7 +219,7 @@ pub enum Error<E> {
     NotStarted,
 }
 
-const DEVICE_BASE_ADDRESS : u8 = 0b100_1000;
+const DEVICE_BASE_ADDRESS: u8 = 0b100_1000;
 
 /// Mode marker types
 pub mod mode {
@@ -246,9 +246,8 @@ pub enum DataRate12Bit {
     /// 2400 SPS
     Sps2400,
     /// 3300 SPS
-    Sps3300
+    Sps3300,
 }
-
 
 /// Data rate for ADS1113, ADS1114, ADS1115
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -268,7 +267,7 @@ pub enum DataRate16Bit {
     /// 475 SPS
     Sps475,
     /// 860 SPS
-    Sps860
+    Sps860,
 }
 /// Comparator mode (only for ADS1x14, ADS1x15)
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -285,7 +284,7 @@ pub enum ComparatorMode {
     /// In this mode the ALERT/RDY pin asserts (according to selected active
     /// polarity) when the conversion data exceeds the value set as *high*
     /// threshold or goes below the value set as *low* temperature threshold.
-    Window
+    Window,
 }
 
 /// Comparator polarity (only for ADS1x14, ADS1x15)
@@ -294,7 +293,7 @@ pub enum ComparatorPolarity {
     /// Active low (default)
     ActiveLow,
     /// Active high
-    ActiveHigh
+    ActiveHigh,
 }
 
 /// Comparator polarity (only for ADS1x14, ADS1x15)
@@ -314,7 +313,7 @@ pub enum ComparatorLatching {
     /// read by the master or an appropriate SMBus alert response is sent by
     /// the master. The device responds with its address, and it is the lowest
     /// address currently asserting the ALERT/RDY bus line.
-    Latching
+    Latching,
 }
 
 /// Comparator alert queue (only for ADS1x14, ADS1x15)
@@ -358,7 +357,7 @@ pub enum SlaveAddr {
     /// Default slave address
     Default,
     /// Alternative slave address providing bit values for A1 and A0
-    Alternative(bool, bool)
+    Alternative(bool, bool),
 }
 
 impl Default for SlaveAddr {
@@ -411,19 +410,23 @@ impl BitFlags {
 
 #[derive(Debug, Clone, PartialEq)]
 struct Config {
-    bits: u16
+    bits: u16,
 }
 
 impl Config {
-    fn is_high(&self, mask : u16) -> bool {
+    fn is_high(&self, mask: u16) -> bool {
         (self.bits & mask) != 0
     }
 
     fn with_high(&self, mask: u16) -> Self {
-        Config { bits: self.bits | mask }
+        Config {
+            bits: self.bits | mask,
+        }
     }
     fn with_low(&self, mask: u16) -> Self {
-        Config { bits: self.bits & !mask }
+        Config {
+            bits: self.bits & !mask,
+        }
     }
 }
 
@@ -448,7 +451,7 @@ pub struct Ads1x1x<DI, IC, CONV, MODE> {
     a_conversion_was_started: bool,
     _conv: PhantomData<CONV>,
     _ic: PhantomData<IC>,
-    _mode: PhantomData<MODE>
+    _mode: PhantomData<MODE>,
 }
 
 #[doc(hidden)]
@@ -464,7 +467,7 @@ pub use conversion::ConvertThreshold;
 pub use conversion::ConvertMeasurement;
 
 mod private {
-    use super::{ ic, interface };
+    use super::{ic, interface};
     pub trait Sealed {}
 
     impl<I2C> Sealed for interface::I2cInterface<I2C> {}
