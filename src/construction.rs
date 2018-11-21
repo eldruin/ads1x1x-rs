@@ -1,4 +1,4 @@
-//! Constructor/destructor functions for devices using I2C interface.
+//! Constructor/destructor functions.
 
 extern crate embedded_hal as hal;
 use hal::blocking;
