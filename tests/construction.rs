@@ -1,5 +1,3 @@
-extern crate embedded_hal_mock as hal;
-
 #[macro_use]
 #[allow(unused)]
 mod common;

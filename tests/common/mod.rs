@@ -1,4 +1,5 @@
-use hal::i2c::{ Mock as I2cMock, Transaction as I2cTrans };
+extern crate embedded_hal_mock as hal;
+use self::hal::i2c::{ Mock as I2cMock, Transaction as I2cTrans };
 extern crate ads1x1x;
 use self::ads1x1x::{ Ads1x1x, interface, ic, SlaveAddr, mode };
 
