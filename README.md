@@ -46,18 +46,18 @@ thermocouples.
 The devices operate either in continuous-conversion mode, or in a
 single-shot mode that automatically powers down after a conversion.
 Single-shot mode significantly reduces current consumption during idle
-periods. Data are transferred through a I2C or SPI.
+periods. Data is transferred through I2C.
 
 Here is a comparison of the caracteristics of the devices:
 
-| Device  | Resolution | Sample Rate  | Channels | Interface | Multi-channel | Features                     |
-|---------|------------|--------------|----------|-----------|---------------|------------------------------|
-| ADS1013 | 12-bit     | Max 3300 SPS | 1        | I2C       | N/A           |                              |
-| ADS1014 | 12-bit     | Max 3300 SPS | 1        | I2C       | N/A           | Comparator, PGA              |
-| ADS1015 | 12-bit     | Max 3300 SPS | 4        | I2C       | Multiplexed   | Comparator, PGA              |
-| ADS1113 | 16-bit     | Max 860 SPS  | 1        | I2C       | N/A           |                              |
-| ADS1114 | 16-bit     | Max 860 SPS  | 1        | I2C       | N/A           | Comparator, PGA              |
-| ADS1115 | 16-bit     | Max 860 SPS  | 4        | I2C       | Multiplexed   | Comparator, PGA              |
+| Device  | Resolution | Sample Rate  | Channels | Multi-channel | Features                     |
+|---------|------------|--------------|----------|---------------|------------------------------|
+| ADS1013 | 12-bit     | Max 3300 SPS | 1        | N/A           |                              |
+| ADS1014 | 12-bit     | Max 3300 SPS | 1        | N/A           | Comparator, PGA              |
+| ADS1015 | 12-bit     | Max 3300 SPS | 4        | Multiplexed   | Comparator, PGA              |
+| ADS1113 | 16-bit     | Max 860 SPS  | 1        | N/A           |                              |
+| ADS1114 | 16-bit     | Max 860 SPS  | 1        | N/A           | Comparator, PGA              |
+| ADS1115 | 16-bit     | Max 860 SPS  | 4        | Multiplexed   | Comparator, PGA              |
 
 Datasheets:
 - [ADS101x](http://www.ti.com/lit/ds/symlink/ads1015.pdf)
