@@ -74,6 +74,17 @@ mod tests {
     }
 
     #[test]
+    fn check_assert_matches() {
+        assert_invalid_input_data::<()>(Err(Error::InvalidInputData));
+    }
+
+    #[test]
+    #[should_panic]
+    fn check_assert_fails() {
+        assert_invalid_input_data::<()>(Ok(0));
+    }
+
+    #[test]
     fn convert_threshold_12_bits() {
         assert_invalid_input_data::<()>(ic::Resolution12Bit::convert_threshold(2048));
         assert_invalid_input_data::<()>(ic::Resolution12Bit::convert_threshold(-2049));
