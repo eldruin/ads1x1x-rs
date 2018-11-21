@@ -20,13 +20,14 @@ This driver allows you to:
 - Set the data rate. See: `set_data_rate()`.
 - Set the full-scale range (gain amplifier). See `set_full_scale_range()`.
 - Read whether a measurement is in progress. See: `is_measurement_in_progress()`.
-- Set the low and high thresholds. See: `set_high_threshold_raw()`.
-- Set the comparator mode. See: `set_comparator_mode()`.
-- Set the comparator polarity. See: `set_comparator_polarity()`.
-- Set the comparator latching. See: `set_comparator_latching()`.
-- Set the comparator queue. See: `set_comparator_queue()`.
-- Disable the comparator. See: `disable_comparator()`.
 - Set the ALERT/RDY pin to be used as conversion-ready pin. See: `use_alert_rdy_pin_as_ready()`.
+- Comparator:
+    - Set the low and high thresholds. See: `set_high_threshold_raw()`.
+    - Set the comparator mode. See: `set_comparator_mode()`.
+    - Set the comparator polarity. See: `set_comparator_polarity()`.
+    - Set the comparator latching. See: `set_comparator_latching()`.
+    - Set the comparator queue. See: `set_comparator_queue()`.
+    - Disable the comparator. See: `disable_comparator()`.
 
 ## The devices
 
