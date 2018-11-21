@@ -4,7 +4,6 @@ extern crate ads1x1x;
 use ads1x1x::{ FullScaleRange, ComparatorMode, ComparatorPolarity,
                ComparatorLatching, ComparatorQueue };
 
-#[macro_use]
 mod common;
 use common::{ new_ads1014, destroy_ads1014,
               DEVICE_ADDRESS as DEV_ADDR, Register, BitFlags, Config };

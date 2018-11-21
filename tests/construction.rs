@@ -1,4 +1,3 @@
-#[macro_use]
 #[allow(unused)]
 mod common;
 use common::{ new_ads1013, destroy_ads1013, new_ads1113, destroy_ads1113,

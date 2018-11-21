@@ -6,7 +6,6 @@ use hal::i2c::Transaction as I2cTrans;
 extern crate ads1x1x;
 use ads1x1x::channel;
 
-#[macro_use]
 mod common;
 use common::{ new_ads1015 as new, destroy_ads1015 as destroy,
               DEVICE_ADDRESS as DEV_ADDR, Register, BitFlags as BF, Config };
