@@ -1,4 +1,4 @@
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug)]
 enum OperatingMode {
     OneShot,
     Continuous
