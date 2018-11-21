@@ -16,7 +16,7 @@ pub struct I2cInterface<I2C> {
 pub trait WriteData : private::Sealed {
     /// Error type
     type Error;
-    /// Write to an u8 register
+    /// Write to an u16 register
     fn write_register(&mut self, register: u8, data: u16) -> Result<(), Error<Self::Error>>;
 }
 
@@ -37,7 +37,7 @@ where
 pub trait ReadData : private::Sealed {
     /// Error type
     type Error;
-    /// Read an u8 register
+    /// Read an u16 register
     fn read_register(&mut self, register: u8) -> Result<u16, Error<Self::Error>>;
 }
 
