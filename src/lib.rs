@@ -133,7 +133,7 @@
 //! # }
 //! ```
 //!
-//! ### Change into continuous conversion mode
+//! ### Change into continuous conversion mode and read the last measurement
 //!
 //! ```no_run
 //! extern crate linux_embedded_hal as hal;
@@ -145,8 +145,14 @@
 //! let address = SlaveAddr::default();
 //! let adc = Ads1x1x::new_ads1013(dev, address);
 //! let mut adc = adc.into_continuous().unwrap();
+//! adc.start().unwrap();
+//! while(!adc.is_measurement_in_progress().unwrap()) {
+//!     // some delay...
+//! }
+//! let measurement = adc.read().unwrap();
 //! # }
 //! ```
+//!
 //!
 //! ### Set the data rate
 //! For 12-bit devices, the available data rates are given by `DataRate12Bit`.
