@@ -147,7 +147,7 @@
 //! let adc = Ads1x1x::new_ads1013(dev, address);
 //! let mut adc = adc.into_continuous().unwrap();
 //! adc.start().unwrap();
-//! while(!adc.is_measurement_in_progress().unwrap()) {
+//! while(adc.is_measurement_in_progress().unwrap()) {
 //!     // some delay...
 //! }
 //! let measurement = adc.read().unwrap();
