@@ -1,4 +1,4 @@
-# Rust ADS1x1x ultra-small, low-power analog-to-digital converters (ADC) Driver
+# Rust ADS1x1x ultra-small, low-power analog-to-digital converters (ADC) driver
 
 [![crates.io](https://img.shields.io/crates/v/ads1x1x.svg)](https://crates.io/crates/ads1x1x)
 [![Docs](https://docs.rs/ads1x1x/badge.svg)](https://docs.rs/ads1x1x)
