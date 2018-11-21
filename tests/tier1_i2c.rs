@@ -112,6 +112,24 @@ mod data_rate_16bit {
 }
 
 #[test]
+fn can_read_measurement_in_progress() {
+    let config_os = Config::default().with_low(BitFlags::OS);
+    let transactions = [ I2cTrans::write_read(DEV_ADDR, vec![Register::CONFIG], vec![config_os.msb(), config_os.lsb()]) ];
+    let mut dev = new_ads1013(&transactions);
+    assert!(dev.is_measurement_in_progress().unwrap());
+    destroy_ads1013(dev);
+}
+
+#[test]
+fn can_read_measurement_not_in_progress() {
+    let config_os = Config::default().with_high(BitFlags::OS);
+    let transactions = [ I2cTrans::write_read(DEV_ADDR, vec![Register::CONFIG], vec![config_os.msb(), config_os.lsb()]) ];
+    let mut dev = new_ads1013(&transactions);
+    assert!(!dev.is_measurement_in_progress().unwrap());
+    destroy_ads1013(dev);
+}
+
+#[test]
 fn can_convert_to_continuous() {
     let dev = new_ads1013(&[]);
     let dev = dev.into_continuous().unwrap();

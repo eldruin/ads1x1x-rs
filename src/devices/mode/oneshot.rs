@@ -23,13 +23,6 @@ where
         })
     }
 
-    fn is_measurement_in_progress(&mut self) -> Result<bool, Error<E>> {
-        let config = Config {
-            bits: self.iface.read_register(Register::CONFIG)?
-        };
-        Ok(!config.is_high(BitFlags::OS))
-    }
-
     fn trigger_measurement(&mut self, config: &Config) -> Result<(), Error<E>> {
         let config = config.with_high(BitFlags::OS);
         self.iface.write_register(Register::CONFIG, config.bits)

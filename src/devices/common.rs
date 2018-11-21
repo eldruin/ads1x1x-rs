@@ -5,7 +5,7 @@ use super::OperatingMode;
 
 impl<DI, IC, CONV, MODE, E> Ads1x1x<DI, IC, CONV, MODE>
 where
-    DI: interface::WriteData<Error = E>
+    DI: interface::WriteData<Error = E> + interface::ReadData<Error = E>,
 {
     pub(super) fn set_operating_mode(&mut self, mode: OperatingMode) -> Result<(), Error<E>> {
         let config;
@@ -16,6 +16,14 @@ where
         self.iface.write_register(Register::CONFIG, config.bits)?;
         self.config = config;
         Ok(())
+    }
+
+    /// Read whether a measurement is currently in progress.
+    pub fn is_measurement_in_progress(&mut self) -> Result<bool, Error<E>> {
+        let config = Config {
+            bits: self.iface.read_register(Register::CONFIG)?
+        };
+        Ok(!config.is_high(BitFlags::OS))
     }
 
     /// Reset the internal state of this driver to the default values.

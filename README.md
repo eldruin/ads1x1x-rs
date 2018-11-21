@@ -19,6 +19,7 @@ This driver allows you to:
 - Read the last measurement made in continuous conversion mode. See: `read()`.
 - Set the data rate. See: `set_data_rate()`.
 - Set the full-scale range (gain amplifier). See `set_full_scale_range()`.
+- Read whether a measurement is in progress. See: `is_measurement_in_progress()`.
 - Set the low and high thresholds. See: `set_high_threshold_raw()`.
 - Set the comparator mode. See: `set_comparator_mode()`.
 - Set the comparator polarity. See: `set_comparator_polarity()`.

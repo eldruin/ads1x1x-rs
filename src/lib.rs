@@ -12,6 +12,7 @@
 //! - Set the data rate. See: [`set_data_rate()`].
 //! - Set the full-scale range (gain amplifier). See [`set_full_scale_range()`].
 //! - Set the low and high thresholds. See: [`set_high_threshold_raw()`].
+//! - Read whether a measurement is in progress. See: [`is_measurement_in_progress()`].
 //! - Set the comparator mode. See: [`set_comparator_mode()`].
 //! - Set the comparator polarity. See: [`set_comparator_polarity()`].
 //! - Set the comparator latching. See: [`set_comparator_latching()`].
@@ -25,6 +26,7 @@
 //! [read_cont]: struct.Ads1x1x.html#impl-OneShot%3CAds1x1x%3CDI%2C%20IC%2C%20CONV%2C%20OneShot%3E%2C%20i16%2C%20CH%3E
 //! [`set_data_rate()`]: struct.Ads1x1x.html#method.set_data_rate
 //! [`set_full_scale_range()`]: struct.Ads1x1x.html#method.set_full_scale_range
+//! [`is_measurement_in_progress()`]: struct.Ads1x1x.html#method.is_measurement_in_progress
 //! [`set_high_threshold_raw()`]: struct.Ads1x1x.html#method.set_high_threshold_raw
 //! [`set_comparator_mode()`]: struct.Ads1x1x.html#method.set_comparator_mode
 //! [`set_comparator_polarity()`]: struct.Ads1x1x.html#method.set_comparator_polarity
