@@ -3,6 +3,7 @@ use self::hal::i2c::{ Mock as I2cMock, Transaction as I2cTrans };
 extern crate ads1x1x;
 use self::ads1x1x::{ Ads1x1x, interface, ic, SlaveAddr, mode };
 
+#[allow(unused)]
 pub const DEVICE_ADDRESS : u8 = 0b100_1000;
 
 pub struct Register;
