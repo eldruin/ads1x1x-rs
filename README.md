@@ -52,14 +52,14 @@ periods. Data is transferred through I2C.
 
 Here is a comparison of the caracteristics of the devices:
 
-| Device  | Resolution | Sample Rate  | Channels | Multi-channel | Features                     |
-|---------|------------|--------------|----------|---------------|------------------------------|
-| ADS1013 | 12-bit     | Max 3300 SPS | 1        | N/A           |                              |
-| ADS1014 | 12-bit     | Max 3300 SPS | 1        | N/A           | Comparator, PGA              |
-| ADS1015 | 12-bit     | Max 3300 SPS | 4        | Multiplexed   | Comparator, PGA              |
-| ADS1113 | 16-bit     | Max 860 SPS  | 1        | N/A           |                              |
-| ADS1114 | 16-bit     | Max 860 SPS  | 1        | N/A           | Comparator, PGA              |
-| ADS1115 | 16-bit     | Max 860 SPS  | 4        | Multiplexed   | Comparator, PGA              |
+| Device  | Resolution | Sample Rate  | Channels | Multi-channel | Features        |
+|---------|------------|--------------|----------|---------------|-----------------|
+| ADS1013 | 12-bit     | Max 3300 SPS | 1        | N/A           |                 |
+| ADS1014 | 12-bit     | Max 3300 SPS | 1        | N/A           | Comparator, PGA |
+| ADS1015 | 12-bit     | Max 3300 SPS | 4        | Multiplexed   | Comparator, PGA |
+| ADS1113 | 16-bit     | Max 860 SPS  | 1        | N/A           |                 |
+| ADS1114 | 16-bit     | Max 860 SPS  | 1        | N/A           | Comparator, PGA |
+| ADS1115 | 16-bit     | Max 860 SPS  | 4        | Multiplexed   | Comparator, PGA |
 
 Datasheets:
 - [ADS101x](http://www.ti.com/lit/ds/symlink/ads1015.pdf)
