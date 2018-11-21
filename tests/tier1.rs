@@ -6,7 +6,6 @@ use hal::i2c::Transaction as I2cTrans;
 extern crate ads1x1x;
 use ads1x1x::{ channel, DataRate12Bit, DataRate16Bit, Error };
 
-#[macro_use]
 mod common;
 use common::{ new_ads1013, destroy_ads1013, new_ads1113, destroy_ads1113,
               DEVICE_ADDRESS as DEV_ADDR, Register, BitFlags, Config };
