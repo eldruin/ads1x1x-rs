@@ -12,13 +12,6 @@ pub struct I2cInterface<I2C> {
     pub(crate) address : u8,
 }
 
-/// SPI interface
-#[derive(Debug, Default)]
-pub struct SpiInterface<SPI, CS> {
-    pub(crate) spi: SPI,
-    pub(crate) cs: CS
-}
-
 /// Write data
 pub trait WriteData : private::Sealed {
     /// Error type
@@ -40,26 +33,6 @@ where
     }
 }
 
-impl<SPI, CS, E> WriteData for SpiInterface<SPI, CS>
-where
-    SPI: blocking::spi::Write<u8, Error = E>,
-    CS:  hal::digital::OutputPin
-{
-    type Error = E;
-    fn write_register(&mut self, register: u8, data: u16) -> Result<(), Error<E>> {
-        self.cs.set_low();
-
-        let payload: [u8; 3] = [register + 0x80, (data >> 8) as u8, data as u8];
-        let result = self.spi
-                         .write(&payload)
-                         .map_err(Error::Comm);
-
-        self.cs.set_high();
-        result
-    }
-}
-
-
 /// Read data
 pub trait ReadData : private::Sealed {
     /// Error type
@@ -79,23 +52,5 @@ where
             .write_read(self.address, &[register], &mut data)
             .map_err(Error::Comm)
             .and(Ok((u16::from(data[0]) << 8) | u16::from(data[1])))
-    }
-}
-
-impl<SPI, CS, E> ReadData for SpiInterface<SPI, CS>
-where
-    SPI: blocking::spi::Transfer<u8, Error = E>,
-    CS:  hal::digital::OutputPin
-{
-    type Error = E;
-    fn read_register(&mut self, register: u8) -> Result<u16, Error<E>> {
-        self.cs.set_low();
-        let mut data = [register, 0, 0];
-        let result = self.spi
-                         .transfer(&mut data)
-                         .map_err(Error::Comm);
-        self.cs.set_high();
-        let result = result?;
-        Ok((u16::from(result[0]) << 8) | u16::from(result[1]))
     }
 }

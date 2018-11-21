@@ -459,7 +459,6 @@ mod private {
     pub trait Sealed {}
 
     impl<I2C> Sealed for interface::I2cInterface<I2C> {}
-    impl<SPI, CS> Sealed for interface::SpiInterface<SPI, CS> {}
 
     impl Sealed for ic::Resolution12Bit {}
     impl Sealed for ic::Resolution16Bit {}
