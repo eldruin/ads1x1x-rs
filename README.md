@@ -73,6 +73,10 @@ In the following examples an instance of the device ADS1013 will be created
 as an example. Other devices can be created with similar methods like:
 `Ads1x1x::new_ads1114(...)`.
 
+Please find additional examples using hardware in this repository: [driver-examples]
+
+[driver-examples]: https://github.com/eldruin/driver-examples
+
 ```rust
 extern crate embedded_hal;
 use embedded_hal::adc::OneShot;

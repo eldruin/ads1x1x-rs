@@ -80,6 +80,10 @@
 //! as an example. Other devices can be created with similar methods like:
 //! `Ads1x1x::new_ads1114(...)`.
 //!
+//! Please find additional examples using hardware in this repository: [driver-examples]
+//!
+//! [driver-examples]: https://github.com/eldruin/driver-examples
+//!
 //! ### Create a driver instance for the ADS1013
 //!
 //! ```no_run
