@@ -388,9 +388,7 @@ impl SlaveAddr {
     fn addr(self, default: u8) -> u8 {
         match self {
             SlaveAddr::Default => default,
-            SlaveAddr::Alternative(a1, a0) => default           |
-                                              ((a1 as u8) << 1) |
-                                                a0 as u8
+            SlaveAddr::Alternative(a1, a0) => default | ((a1 as u8) << 1) | a0 as u8,
         }
     }
 }
@@ -398,32 +396,31 @@ impl SlaveAddr {
 struct Register;
 
 impl Register {
-    const CONVERSION : u8 = 0x00;
-    const CONFIG     : u8 = 0x01;
-    const LOW_TH     : u8 = 0x02;
-    const HIGH_TH    : u8 = 0x03;
+    const CONVERSION: u8 = 0x00;
+    const CONFIG: u8 = 0x01;
+    const LOW_TH: u8 = 0x02;
+    const HIGH_TH: u8 = 0x03;
 }
 
 struct BitFlags;
 impl BitFlags {
-    const OS           : u16 = 0b1000_0000_0000_0000;
-    const MUX2         : u16 = 0b0100_0000_0000_0000;
-    const MUX1         : u16 = 0b0010_0000_0000_0000;
-    const MUX0         : u16 = 0b0001_0000_0000_0000;
-    const PGA2         : u16 = 0b0000_1000_0000_0000;
-    const PGA1         : u16 = 0b0000_0100_0000_0000;
-    const PGA0         : u16 = 0b0000_0010_0000_0000;
-    const OP_MODE      : u16 = 0b0000_0001_0000_0000;
-    const DR2          : u16 = 0b0000_0000_1000_0000;
-    const DR1          : u16 = 0b0000_0000_0100_0000;
-    const DR0          : u16 = 0b0000_0000_0010_0000;
-    const COMP_MODE    : u16 = 0b0000_0000_0001_0000;
-    const COMP_POL     : u16 = 0b0000_0000_0000_1000;
-    const COMP_LAT     : u16 = 0b0000_0000_0000_0100;
-    const COMP_QUE1    : u16 = 0b0000_0000_0000_0010;
-    const COMP_QUE0    : u16 = 0b0000_0000_0000_0001;
+    const OS: u16 = 0b1000_0000_0000_0000;
+    const MUX2: u16 = 0b0100_0000_0000_0000;
+    const MUX1: u16 = 0b0010_0000_0000_0000;
+    const MUX0: u16 = 0b0001_0000_0000_0000;
+    const PGA2: u16 = 0b0000_1000_0000_0000;
+    const PGA1: u16 = 0b0000_0100_0000_0000;
+    const PGA0: u16 = 0b0000_0010_0000_0000;
+    const OP_MODE: u16 = 0b0000_0001_0000_0000;
+    const DR2: u16 = 0b0000_0000_1000_0000;
+    const DR1: u16 = 0b0000_0000_0100_0000;
+    const DR0: u16 = 0b0000_0000_0010_0000;
+    const COMP_MODE: u16 = 0b0000_0000_0001_0000;
+    const COMP_POL: u16 = 0b0000_0000_0000_1000;
+    const COMP_LAT: u16 = 0b0000_0000_0000_0100;
+    const COMP_QUE1: u16 = 0b0000_0000_0000_0010;
+    const COMP_QUE0: u16 = 0b0000_0000_0000_0001;
 }
-
 
 #[derive(Debug, Clone, PartialEq)]
 struct Config {
@@ -471,17 +468,17 @@ pub struct Ads1x1x<DI, IC, CONV, MODE> {
     _mode: PhantomData<MODE>,
 }
 
-#[doc(hidden)]
-pub mod interface;
+mod channels;
 #[doc(hidden)]
 pub mod ic;
-mod channels;
+#[doc(hidden)]
+pub mod interface;
 pub use channels::channel;
-mod devices;
 mod construction;
 mod conversion;
-pub use conversion::ConvertThreshold;
+mod devices;
 pub use conversion::ConvertMeasurement;
+pub use conversion::ConvertThreshold;
 
 mod private {
     use super::{ic, interface};

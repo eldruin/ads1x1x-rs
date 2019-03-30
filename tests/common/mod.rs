@@ -9,31 +9,31 @@ pub const DEVICE_ADDRESS: u8 = 0b100_1000;
 pub struct Register;
 #[allow(unused)]
 impl Register {
-    pub const CONVERSION : u8 = 0x00;
-    pub const CONFIG     : u8 = 0x01;
-    pub const LOW_TH     : u8 = 0x02;
-    pub const HIGH_TH    : u8 = 0x03;
+    pub const CONVERSION: u8 = 0x00;
+    pub const CONFIG: u8 = 0x01;
+    pub const LOW_TH: u8 = 0x02;
+    pub const HIGH_TH: u8 = 0x03;
 }
 
 pub struct BitFlags;
 #[allow(unused)]
 impl BitFlags {
-    pub const OS           : u16 = 0b1000_0000_0000_0000;
-    pub const MUX2         : u16 = 0b0100_0000_0000_0000;
-    pub const MUX1         : u16 = 0b0010_0000_0000_0000;
-    pub const MUX0         : u16 = 0b0001_0000_0000_0000;
-    pub const PGA2         : u16 = 0b0000_1000_0000_0000;
-    pub const PGA1         : u16 = 0b0000_0100_0000_0000;
-    pub const PGA0         : u16 = 0b0000_0010_0000_0000;
-    pub const OP_MODE      : u16 = 0b0000_0001_0000_0000;
-    pub const DR2          : u16 = 0b0000_0000_1000_0000;
-    pub const DR1          : u16 = 0b0000_0000_0100_0000;
-    pub const DR0          : u16 = 0b0000_0000_0010_0000;
-    pub const COMP_MODE    : u16 = 0b0000_0000_0001_0000;
-    pub const COMP_POL     : u16 = 0b0000_0000_0000_1000;
-    pub const COMP_LAT     : u16 = 0b0000_0000_0000_0100;
-    pub const COMP_QUE1    : u16 = 0b0000_0000_0000_0010;
-    pub const COMP_QUE0    : u16 = 0b0000_0000_0000_0001;
+    pub const OS: u16 = 0b1000_0000_0000_0000;
+    pub const MUX2: u16 = 0b0100_0000_0000_0000;
+    pub const MUX1: u16 = 0b0010_0000_0000_0000;
+    pub const MUX0: u16 = 0b0001_0000_0000_0000;
+    pub const PGA2: u16 = 0b0000_1000_0000_0000;
+    pub const PGA1: u16 = 0b0000_0100_0000_0000;
+    pub const PGA0: u16 = 0b0000_0010_0000_0000;
+    pub const OP_MODE: u16 = 0b0000_0001_0000_0000;
+    pub const DR2: u16 = 0b0000_0000_1000_0000;
+    pub const DR1: u16 = 0b0000_0000_0100_0000;
+    pub const DR0: u16 = 0b0000_0000_0010_0000;
+    pub const COMP_MODE: u16 = 0b0000_0000_0001_0000;
+    pub const COMP_POL: u16 = 0b0000_0000_0000_1000;
+    pub const COMP_LAT: u16 = 0b0000_0000_0000_0100;
+    pub const COMP_QUE1: u16 = 0b0000_0000_0000_0010;
+    pub const COMP_QUE0: u16 = 0b0000_0000_0000_0001;
 }
 
 pub struct Config {

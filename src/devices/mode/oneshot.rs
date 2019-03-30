@@ -58,13 +58,19 @@ where
     /// measurement on a different channel is requested, a new measurement on
     /// using the new channel selection is triggered.
     fn read(&mut self, _channel: &mut CH) -> nb::Result<i16, Self::Error> {
-        if self.is_measurement_in_progress().map_err(nb::Error::Other)? {
+        if self
+            .is_measurement_in_progress()
+            .map_err(nb::Error::Other)?
+        {
             return Err(nb::Error::WouldBlock);
         }
         let same_channel = self.config == self.config.with_mux_bits(CH::channel());
         if self.a_conversion_was_started && same_channel {
             // result is ready
-            let value = self.iface.read_register(Register::CONVERSION).map_err(nb::Error::Other)?;
+            let value = self
+                .iface
+                .read_register(Register::CONVERSION)
+                .map_err(nb::Error::Other)?;
             self.a_conversion_was_started = false;
             return Ok(CONV::convert_measurement(value));
         }

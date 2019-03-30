@@ -44,25 +44,24 @@ impl ConvertMeasurement for ic::Resolution16Bit {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
     fn convert_measurement_12_bits() {
-        assert_eq!(    0, ic::Resolution12Bit::convert_measurement(0));
-        assert_eq!( 2047, ic::Resolution12Bit::convert_measurement(0x7FFF));
+        assert_eq!(0, ic::Resolution12Bit::convert_measurement(0));
+        assert_eq!(2047, ic::Resolution12Bit::convert_measurement(0x7FFF));
         assert_eq!(-2048, ic::Resolution12Bit::convert_measurement(0x8000));
-        assert_eq!(   -1, ic::Resolution12Bit::convert_measurement(0xFFFF));
+        assert_eq!(-1, ic::Resolution12Bit::convert_measurement(0xFFFF));
     }
 
     #[test]
     fn convert_measurement_16_bits() {
-        assert_eq!(     0, ic::Resolution16Bit::convert_measurement(0));
-        assert_eq!( 32767, ic::Resolution16Bit::convert_measurement(0x7FFF));
+        assert_eq!(0, ic::Resolution16Bit::convert_measurement(0));
+        assert_eq!(32767, ic::Resolution16Bit::convert_measurement(0x7FFF));
         assert_eq!(-32768, ic::Resolution16Bit::convert_measurement(0x8000));
-        assert_eq!(    -1, ic::Resolution16Bit::convert_measurement(0xFFFF));
+        assert_eq!(-1, ic::Resolution16Bit::convert_measurement(0xFFFF));
     }
 
     fn assert_invalid_input_data<E>(result: Result<u16, Error<E>>) {

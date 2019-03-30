@@ -74,14 +74,38 @@ impl Config {
     pub(crate) fn with_mux_bits(&self, ch: ChannelSelection) -> Self {
         use self::ChannelSelection as CS;
         match ch {
-            CS::DifferentialA0A1 => self.with_low( BF::MUX2).with_low( BF::MUX1).with_low( BF::MUX0),
-            CS::DifferentialA0A3 => self.with_low( BF::MUX2).with_low( BF::MUX1).with_high(BF::MUX0),
-            CS::DifferentialA1A3 => self.with_low( BF::MUX2).with_high(BF::MUX1).with_low( BF::MUX0),
-            CS::DifferentialA2A3 => self.with_low( BF::MUX2).with_high(BF::MUX1).with_high(BF::MUX0),
-            CS::SingleA0         => self.with_high(BF::MUX2).with_low( BF::MUX1).with_low( BF::MUX0),
-            CS::SingleA1         => self.with_high(BF::MUX2).with_low( BF::MUX1).with_high(BF::MUX0),
-            CS::SingleA2         => self.with_high(BF::MUX2).with_high(BF::MUX1).with_low( BF::MUX0),
-            CS::SingleA3         => self.with_high(BF::MUX2).with_high(BF::MUX1).with_high(BF::MUX0),
+            CS::DifferentialA0A1 => self
+                .with_low(BF::MUX2)
+                .with_low(BF::MUX1)
+                .with_low(BF::MUX0),
+            CS::DifferentialA0A3 => self
+                .with_low(BF::MUX2)
+                .with_low(BF::MUX1)
+                .with_high(BF::MUX0),
+            CS::DifferentialA1A3 => self
+                .with_low(BF::MUX2)
+                .with_high(BF::MUX1)
+                .with_low(BF::MUX0),
+            CS::DifferentialA2A3 => self
+                .with_low(BF::MUX2)
+                .with_high(BF::MUX1)
+                .with_high(BF::MUX0),
+            CS::SingleA0 => self
+                .with_high(BF::MUX2)
+                .with_low(BF::MUX1)
+                .with_low(BF::MUX0),
+            CS::SingleA1 => self
+                .with_high(BF::MUX2)
+                .with_low(BF::MUX1)
+                .with_high(BF::MUX0),
+            CS::SingleA2 => self
+                .with_high(BF::MUX2)
+                .with_high(BF::MUX1)
+                .with_low(BF::MUX0),
+            CS::SingleA3 => self
+                .with_high(BF::MUX2)
+                .with_high(BF::MUX1)
+                .with_high(BF::MUX0),
         }
     }
 }

@@ -128,7 +128,10 @@ where
     /// The comparator can be enabled by setting the comparator queue.
     /// See [`set_comparator_queue()`](struct.Ads1x1x.html#method.set_comparator_queue)
     pub fn disable_comparator(&mut self) -> Result<(), Error<E>> {
-        let config = self.config.with_high(BF::COMP_QUE1).with_high(BF::COMP_QUE0);
+        let config = self
+            .config
+            .with_high(BF::COMP_QUE1)
+            .with_high(BF::COMP_QUE0);
         self.iface.write_register(Register::CONFIG, config.bits)?;
         self.config = config;
         Ok(())
@@ -142,7 +145,12 @@ where
     ///
     /// When calling this the comparator will be disabled and the thresholds will be cleared.
     pub fn use_alert_rdy_pin_as_ready(&mut self) -> Result<(), Error<E>> {
-        if self.config != self.config.with_high(BF::COMP_QUE1).with_high(BF::COMP_QUE0) {
+        if self.config
+            != self
+                .config
+                .with_high(BF::COMP_QUE1)
+                .with_high(BF::COMP_QUE0)
+        {
             self.disable_comparator()?;
         }
         self.iface.write_register(Register::HIGH_TH, 0x8000)?;
