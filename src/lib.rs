@@ -502,19 +502,20 @@ mod private {
 
 #[cfg(test)]
 mod tests {
+    use super::DEVICE_BASE_ADDRESS as ADDR;
     use super::*;
 
     #[test]
     fn can_get_default_address() {
         let addr = SlaveAddr::default();
-        assert_eq!(DEVICE_BASE_ADDRESS, addr.addr(DEVICE_BASE_ADDRESS));
+        assert_eq!(ADDR, addr.addr(ADDR));
     }
 
     #[test]
     fn can_generate_alternative_addresses() {
-        assert_eq!(0b100_1000, SlaveAddr::Alternative(false, false).addr(DEVICE_BASE_ADDRESS));
-        assert_eq!(0b100_1001, SlaveAddr::Alternative(false,  true).addr(DEVICE_BASE_ADDRESS));
-        assert_eq!(0b100_1010, SlaveAddr::Alternative(true, false).addr(DEVICE_BASE_ADDRESS));
-        assert_eq!(0b100_1011, SlaveAddr::Alternative(true,  true).addr(DEVICE_BASE_ADDRESS));
+        assert_eq!(0b100_1000, SlaveAddr::Alternative(false, false).addr(ADDR));
+        assert_eq!(0b100_1001, SlaveAddr::Alternative(false, true).addr(ADDR));
+        assert_eq!(0b100_1010, SlaveAddr::Alternative(true, false).addr(ADDR));
+        assert_eq!(0b100_1011, SlaveAddr::Alternative(true, true).addr(ADDR));
     }
 }
