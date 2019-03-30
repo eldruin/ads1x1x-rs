@@ -82,12 +82,25 @@ macro_rules! impl_new_destroy {
     };
 }
 
-impl_new_destroy!(Ads1013, new_ads1013, destroy_ads1013, ic::Resolution12Bit, I2cTrans, interface::I2cInterface<I2cMock>);
-impl_new_destroy!(Ads1113, new_ads1113, destroy_ads1113, ic::Resolution16Bit, I2cTrans, interface::I2cInterface<I2cMock>);
-impl_new_destroy!(Ads1014, new_ads1014, destroy_ads1014, ic::Resolution12Bit, I2cTrans, interface::I2cInterface<I2cMock>);
-impl_new_destroy!(Ads1114, new_ads1114, destroy_ads1114, ic::Resolution16Bit, I2cTrans, interface::I2cInterface<I2cMock>);
-impl_new_destroy!(Ads1015, new_ads1015, destroy_ads1015, ic::Resolution12Bit, I2cTrans, interface::I2cInterface<I2cMock>);
-impl_new_destroy!(Ads1115, new_ads1115, destroy_ads1115, ic::Resolution16Bit, I2cTrans, interface::I2cInterface<I2cMock>);
+macro_rules! impl_new_destroy_i2c {
+    ($ic:ident, $create:ident, $destroy:ident, $conv:ty) => {
+        impl_new_destroy!(
+            $ic,
+            $create,
+            $destroy,
+            $conv,
+            I2cTrans,
+            interface::I2cInterface<I2cMock>
+        );
+    };
+}
+
+impl_new_destroy_i2c!(Ads1013, new_ads1013, destroy_ads1013, ic::Resolution12Bit);
+impl_new_destroy_i2c!(Ads1113, new_ads1113, destroy_ads1113, ic::Resolution16Bit);
+impl_new_destroy_i2c!(Ads1014, new_ads1014, destroy_ads1014, ic::Resolution12Bit);
+impl_new_destroy_i2c!(Ads1114, new_ads1114, destroy_ads1114, ic::Resolution16Bit);
+impl_new_destroy_i2c!(Ads1015, new_ads1015, destroy_ads1015, ic::Resolution12Bit);
+impl_new_destroy_i2c!(Ads1115, new_ads1115, destroy_ads1115, ic::Resolution16Bit);
 
 #[macro_export]
 macro_rules! assert_would_block {
