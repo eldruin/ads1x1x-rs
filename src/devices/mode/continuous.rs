@@ -56,6 +56,10 @@ where
     CONV: conversion::ConvertMeasurement,
 {
     /// Select the channel for measurements.
+    ///
+    /// Note that when changing the channel in continuous conversion mode, the
+    /// ongoing conversion will be completed.
+    /// The following conversions will use the new channel configuration.
     pub fn select_channel<CH>(&mut self, _channel: &mut CH) -> Result<(), Error<E>>
     where
         CH: hal::adc::Channel<Ads1x1x<DI, IC, CONV, mode::OneShot>, ID = ChannelSelection>,
