@@ -83,19 +83,23 @@ mod tests {
         assert_invalid_input_data::<()>(Ok(0));
     }
 
+    fn convert_threshold<T: ConvertThreshold<()>>(value: i16) -> u16 {
+        T::convert_threshold(value).unwrap()
+    }
+
     #[test]
     fn convert_threshold_12_bits() {
         assert_invalid_input_data::<()>(ic::Resolution12Bit::convert_threshold(2048));
         assert_invalid_input_data::<()>(ic::Resolution12Bit::convert_threshold(-2049));
-        assert_eq!(     0, <ic::Resolution12Bit as ConvertThreshold<()>>::convert_threshold(0).unwrap());
-        assert_eq!(0x7FF0, <ic::Resolution12Bit as ConvertThreshold<()>>::convert_threshold(2047).unwrap());
-        assert_eq!(0x8000, <ic::Resolution12Bit as ConvertThreshold<()>>::convert_threshold(-2048).unwrap());
-        assert_eq!(0xFFF0, <ic::Resolution12Bit as ConvertThreshold<()>>::convert_threshold(-1).unwrap());
+        assert_eq!(0, convert_threshold::<ic::Resolution12Bit>(0));
+        assert_eq!(0x7FF0, convert_threshold::<ic::Resolution12Bit>(2047));
+        assert_eq!(0x8000, convert_threshold::<ic::Resolution12Bit>(-2048));
+        assert_eq!(0xFFF0, convert_threshold::<ic::Resolution12Bit>(-1));
     }
 
     #[test]
     fn convert_threshold_16_bits() {
-        assert_eq!(0x7FFF, <ic::Resolution16Bit as ConvertThreshold<()>>::convert_threshold(32767).unwrap());
-        assert_eq!(0x8000, <ic::Resolution16Bit as ConvertThreshold<()>>::convert_threshold(-32768).unwrap());
+        assert_eq!(0x7FFF, convert_threshold::<ic::Resolution16Bit>(32767));
+        assert_eq!(0x8000, convert_threshold::<ic::Resolution16Bit>(-32768));
     }
 }
