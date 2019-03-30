@@ -140,21 +140,25 @@
 //!
 //! ### Change into continuous conversion mode and read the last measurement
 //!
+//! Changing the mode may fail in case there was a communication error.
+//! In this case, you can retrieve the unchanged device from the error type.
+//!
 //! ```no_run
 //! extern crate linux_embedded_hal as hal;
 //! extern crate ads1x1x;
-//! use ads1x1x::{ Ads1x1x, SlaveAddr };
+//! use ads1x1x::{ Ads1x1x, SlaveAddr, ModeChangeError };
 //!
 //! # fn main() {
 //! let dev = hal::I2cdev::new("/dev/i2c-1").unwrap();
 //! let address = SlaveAddr::default();
 //! let adc = Ads1x1x::new_ads1013(dev, address);
-//! let mut adc = adc.into_continuous().unwrap();
-//! adc.start().unwrap();
-//! while(adc.is_measurement_in_progress().unwrap()) {
-//!     // some delay...
+//! match adc.into_continuous() {
+//!     Err(ModeChangeError::I2C(e, adc)) => /* mode change failed handling */ panic!(),
+//!     Ok(mut adc) => {
+//!         let measurement = adc.read().unwrap();
+//!         // ...
+//!     }
 //! }
-//! let measurement = adc.read().unwrap();
 //! # }
 //! ```
 //!
@@ -212,15 +216,24 @@ extern crate embedded_hal as hal;
 extern crate nb;
 use core::marker::PhantomData;
 
-/// All possible errors in this crate
+/// Errors in this crate
 #[derive(Debug)]
 pub enum Error<E> {
     /// I²C bus error
     I2C(E),
     /// Invalid input data provided
     InvalidInputData,
-    /// Continuous measurement was not started
-    NotStarted,
+}
+
+/// Error type for mode changes.
+///
+/// This allows to retrieve the unchanged device in case of an error.
+pub enum ModeChangeError<E, DEV> {
+    /// I²C bus error while changing mode.
+    ///
+    /// `E` is the error that happened.
+    /// `DEV` is the device with the mode unchanged.
+    I2C(E, DEV),
 }
 
 const DEVICE_BASE_ADDRESS: u8 = 0b100_1000;

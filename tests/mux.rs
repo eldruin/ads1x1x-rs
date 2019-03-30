@@ -51,10 +51,16 @@ macro_rules! mux_test {
 
             #[test]
             fn continuous_can_select_channel() {
-                let config = Config::default().with_high($config_bits);
-                let transactions = [ I2cTrans::write(DEV_ADDR, vec![Register::CONFIG, config.msb(), config.lsb()]) ];
+                let config1 = Config::default().with_low(BF::OP_MODE);
+                let config2 = config1.with_high($config_bits);
+                let transactions = [
+                    I2cTrans::write(DEV_ADDR,
+                    vec![Register::CONFIG, config1.msb(), config1.lsb()]),
+                    I2cTrans::write(DEV_ADDR,
+                    vec![Register::CONFIG, config2.msb(), config2.lsb()])
+                ];
                 let dev = new(&transactions);
-                let mut dev = dev.into_continuous().unwrap();
+                let mut dev = dev.into_continuous().ok().unwrap();
                 dev.select_channel(&mut channel::$CS).unwrap();
                 destroy(dev);
             }

@@ -1,9 +1,10 @@
 //! Common functions
 
+use super::super::OperatingMode;
 use channels::ChannelSelection;
 use core::marker::PhantomData;
 use {conversion, hal, interface, nb};
-use {mode, Ads1x1x, BitFlags, Config, Error, Register};
+use {mode, Ads1x1x, BitFlags, Config, Error, ModeChangeError, Register};
 
 impl<DI, IC, CONV, E> Ads1x1x<DI, IC, CONV, mode::OneShot>
 where
@@ -11,12 +12,17 @@ where
     CONV: conversion::ConvertMeasurement,
 {
     /// Change operating mode to Continuous
-    pub fn into_continuous(self) -> Result<Ads1x1x<DI, IC, CONV, mode::Continuous>, Error<E>> {
+    pub fn into_continuous(
+        mut self,
+    ) -> Result<Ads1x1x<DI, IC, CONV, mode::Continuous>, ModeChangeError<E, Self>> {
+        if let Err(Error::I2C(e)) = self.set_operating_mode(OperatingMode::Continuous) {
+            return Err(ModeChangeError::I2C(e, self));
+        }
         Ok(Ads1x1x {
             iface: self.iface,
             config: self.config,
             fsr: self.fsr,
-            a_conversion_was_started: self.a_conversion_was_started,
+            a_conversion_was_started: true,
             _conv: PhantomData,
             _ic: PhantomData,
             _mode: PhantomData,

@@ -4,7 +4,7 @@ extern crate embedded_hal;
 extern crate embedded_hal_mock as hal;
 use hal::i2c::Transaction as I2cTrans;
 extern crate ads1x1x;
-use ads1x1x::{ channel, DataRate12Bit, DataRate16Bit, Error };
+use ads1x1x::{channel, DataRate12Bit, DataRate16Bit};
 
 mod common;
 use common::{ new_ads1013, destroy_ads1013, new_ads1113, destroy_ads1113,
@@ -49,8 +49,7 @@ macro_rules! measure_tests {
                 let transactions = [ I2cTrans::write(DEV_ADDR, vec![Register::CONFIG, config.msb(), config.lsb()]),
                                     I2cTrans::write_read(DEV_ADDR, vec![Register::CONVERSION], vec![0x80, 0x00] ) ];
                 let dev = $create(&transactions);
-                let mut dev = dev.into_continuous().unwrap();
-                dev.start().unwrap();
+                let mut dev = dev.into_continuous().ok().unwrap();
                 let measurement = dev.read().unwrap();
                 assert_eq!($expected, measurement);
                 $destroy(dev);
@@ -130,55 +129,29 @@ fn can_read_measurement_not_in_progress() {
 
 #[test]
 fn can_convert_to_continuous() {
-    let dev = new_ads1013(&[]);
-    let dev = dev.into_continuous().unwrap();
+    let config = Config::default().with_low(BitFlags::OP_MODE);
+    let transactions = [I2cTrans::write(
+        DEV_ADDR,
+        vec![Register::CONFIG, config.msb(), config.lsb()],
+    )];
+    let dev = new_ads1013(&transactions);
+    let dev = dev.into_continuous().ok().unwrap();
     destroy_ads1013(dev);
 }
 
 #[test]
 fn can_convert_to_one_shot() {
+    let config_cont = Config::default().with_low(BitFlags::OP_MODE);
     let config_os = Config::default();
-    let transactions = [ I2cTrans::write(DEV_ADDR, vec![Register::CONFIG, config_os.msb(),   config_os.lsb()]) ];
+    let transactions = [I2cTrans::write(
+        DEV_ADDR,
+        vec![Register::CONFIG, config_cont.msb(), config_cont.lsb()]),
+        I2cTrans::write(
+        DEV_ADDR,
+        vec![Register::CONFIG, config_os.msb(), config_os.lsb()],
+    )];
     let dev = new_ads1013(&transactions);
-    let dev = dev.into_continuous().unwrap();
-    let dev = dev.into_one_shot().unwrap();
+    let dev = dev.into_continuous().ok().unwrap();
+    let dev = dev.into_one_shot().ok().unwrap();
     destroy_ads1013(dev);
-}
-
-mod continuous {
-    use super::*;
-    #[test]
-    fn can_start() {
-        let config = Config::default().with_low(BitFlags::OP_MODE);
-        let transactions = [ I2cTrans::write(DEV_ADDR, vec![Register::CONFIG, config.msb(), config.lsb()]) ];
-        let dev = new_ads1013(&transactions);
-        let mut dev = dev.into_continuous().unwrap();
-        dev.start().unwrap();
-        destroy_ads1013(dev);
-    }
-
-    fn assert_not_started<T, E>(result: Result<T, Error<E>>) {
-        match result {
-            Err(Error::NotStarted) => (),
-            _ => panic!("Error::NotStarted not returned.")
-        }
-    }
-    #[test]
-    fn check_assert_matches() {
-        assert_not_started::<(), ()>(Err(Error::NotStarted));
-    }
-
-    #[test]
-    #[should_panic]
-    fn check_assert_fails() {
-        assert_not_started::<(), ()>(Ok(()));
-    }
-
-    #[test]
-    fn cannot_read_if_not_started() {
-        let dev = new_ads1013(&[]);
-        let mut dev = dev.into_continuous().unwrap();
-        assert_not_started(dev.read());
-        destroy_ads1013(dev);
-    }
 }
