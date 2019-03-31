@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ...
 
-## [0.2.0] - 2013-03-31
+## [0.2.0] - 2019-03-31
 
 ### Changed
 - [breaking-change] Mode change has been integrated into `into_continuous` and
