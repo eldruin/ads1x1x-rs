@@ -10,7 +10,7 @@ This is a platform agnostic Rust driver for the ADS1013, ADS1014, ADS1015,
 ADS1113, ADS1114 and ADS1115 ultra-small, low-power
 analog-to-digital converters (ADC), based on the [`embedded-hal`] traits.
 
-[`embedded-hal`]: https://github.com/rust-embedded/embedded-hal
+[Introductory blog post]
 
 This driver allows you to:
 - Set the operating mode to one-shot or continuous. See: `into_continuous()`.
@@ -121,3 +121,6 @@ Unless you explicitly state otherwise, any contribution intentionally submitted
 for inclusion in the work by you, as defined in the Apache-2.0 license, shall
 be dual licensed as above, without any additional terms or conditions.
 
+[`embedded-hal`]: https://github.com/rust-embedded/embedded-hal
+
+[Introductory blog post]: https://blog.eldruin.com/ads1x1x-analog-to-digital-converter-driver-in-rust/
