@@ -11,7 +11,7 @@ categories = ["embedded", "hardware-support", "no-std"]
 homepage = "https://github.com/eldruin/ads1x1x-rs"
 documentation = "https://docs.rs/ads1x1x"
 include = [
-    "**/*.rs",
+    "/**/*.rs",
     "/Cargo.toml",
     "/README.md",
     "/CHANGELOG.md",
