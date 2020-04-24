@@ -2,7 +2,7 @@
 // look in a type signature.
 
 #[macro_use(block)]
-use nb;
+extern crate nb;
 
 use embedded_hal;
 use embedded_hal::adc::OneShot;
@@ -14,6 +14,7 @@ use ads1x1x::{
     interface::I2cInterface,
     Ads1x1x, SlaveAddr,
 };
+
 use linux_embedded_hal::I2cdev;
 
 type Adc = Ads1x1x<I2cInterface<I2cdev>, Ads1115, Resolution16Bit, ads1x1x::mode::OneShot>;
