@@ -1,5 +1,9 @@
 language: rust
 
+env:
+  global:
+    - RUSTFLAGS="-D warnings"
+
 before_install:
   - git clone https://github.com/eldruin/rust-driver-ci-scripts ci
   - bash ci/before_install.sh
