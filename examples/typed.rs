@@ -1,13 +1,15 @@
-// This example demonstrates how the `Ads1x1x` struct may 
-// look in a type signature.
+// This example demonstrates the use of a type alias for the `Ads1x1x` struct
+// to ease usage in signatures.
 
 #[macro_use(block)]
 extern crate nb;
 
-use embedded_hal;
+extern crate embedded_hal;
 use embedded_hal::adc::OneShot;
-use linux_embedded_hal;
+extern crate linux_embedded_hal;
+use linux_embedded_hal::I2cdev;
 
+extern crate ads1x1x;
 use ads1x1x::{
     channel::SingleA0,
     ic::{Ads1115, Resolution16Bit},
@@ -15,8 +17,7 @@ use ads1x1x::{
     Ads1x1x, SlaveAddr,
 };
 
-use linux_embedded_hal::I2cdev;
-
+/// Type alias
 type Adc = Ads1x1x<I2cInterface<I2cdev>, Ads1115, Resolution16Bit, ads1x1x::mode::OneShot>;
 
 /// Read a single value from channel A.
