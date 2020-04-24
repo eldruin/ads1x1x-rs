@@ -19,9 +19,10 @@ use linux_embedded_hal::I2cdev;
 
 type Adc = Ads1x1x<I2cInterface<I2cdev>, Ads1115, Resolution16Bit, ads1x1x::mode::OneShot>;
 
-/// Read a single value from channel A
-pub fn read(adc: &mut Adc) -> f32 {
-    block!(adc.read(&mut SingleA0));
+/// Read a single value from channel A.
+/// Returns 0 on Error.
+pub fn read(adc: &mut Adc) -> i16 {
+    block!(adc.read(&mut SingleA0)).unwrap_or(0)
 }
 
 fn main() {
