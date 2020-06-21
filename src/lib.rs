@@ -90,7 +90,6 @@
 //! use linux_embedded_hal::I2cdev;
 //! use ads1x1x::{Ads1x1x, SlaveAddr};
 //!
-//! # fn main() {
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
 //! let address = SlaveAddr::default();
 //! let adc = Ads1x1x::new_ads1013(dev, address);
@@ -98,7 +97,6 @@
 //!
 //! // get the I2C device back
 //! let dev = adc.destroy_ads1013();
-//! # }
 //! ```
 //!
 //! ### Create a driver instance for the ADS1013 with an alternative address
@@ -107,12 +105,10 @@
 //! use linux_embedded_hal::I2cdev;
 //! use ads1x1x::{Ads1x1x, SlaveAddr};
 //!
-//! # fn main() {
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
 //! let (a1, a0) = (true, false);
 //! let address = SlaveAddr::Alternative(a1, a0);
 //! let adc = Ads1x1x::new_ads1013(dev, address);
-//! # }
 //! ```
 //!
 //! ### Make a one-shot measurement
@@ -122,13 +118,11 @@
 //! use linux_embedded_hal::I2cdev;
 //! use nb::block;
 //!
-//! # fn main() {
-//!     let dev = I2cdev::new("/dev/i2c-1").unwrap();
-//!     let mut adc = Ads1x1x::new_ads1013(dev, SlaveAddr::default());
-//!     let measurement = block!(adc.read(&mut channel::DifferentialA0A1)).unwrap();
-//!     println!("Measurement: {}", measurement);
-//!     let _dev = adc.destroy_ads1013(); // get I2C device back
-//! # }
+//! let dev = I2cdev::new("/dev/i2c-1").unwrap();
+//! let mut adc = Ads1x1x::new_ads1013(dev, SlaveAddr::default());
+//! let measurement = block!(adc.read(&mut channel::DifferentialA0A1)).unwrap();
+//! println!("Measurement: {}", measurement);
+//! let _dev = adc.destroy_ads1013(); // get I2C device back
 //! ```
 //!
 //! ### Change into continuous conversion mode and read the last measurement
@@ -140,7 +134,6 @@
 //! use linux_embedded_hal::I2cdev;
 //! use ads1x1x::{Ads1x1x, ModeChangeError, SlaveAddr};
 //!
-//! # fn main() {
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
 //! let address = SlaveAddr::default();
 //! let adc = Ads1x1x::new_ads1013(dev, address);
@@ -151,7 +144,6 @@
 //!         // ...
 //!     }
 //! }
-//! # }
 //! ```
 //!
 //!
@@ -163,12 +155,10 @@
 //! use linux_embedded_hal::I2cdev;
 //! use ads1x1x::{Ads1x1x, DataRate16Bit, SlaveAddr};
 //!
-//! # fn main() {
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
 //! let address = SlaveAddr::default();
 //! let mut adc = Ads1x1x::new_ads1115(dev, address);
 //! adc.set_data_rate(DataRate16Bit::Sps860).unwrap();
-//! # }
 //! ```
 //!
 //! ### Configure the comparator
@@ -185,7 +175,6 @@
 //!     ComparatorMode, ComparatorLatching, FullScaleRange
 //! };
 //!
-//! # fn main() {
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
 //! let address = SlaveAddr::default();
 //! let mut adc = Ads1x1x::new_ads1015(dev, address);
@@ -196,7 +185,6 @@
 //! adc.set_low_threshold_raw(-1500).unwrap();
 //! adc.set_high_threshold_raw(1500).unwrap();
 //! adc.set_comparator_latching(ComparatorLatching::Latching).unwrap();
-//! # }
 //! ```
 
 #![deny(unsafe_code)]
