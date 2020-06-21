@@ -236,8 +236,6 @@ pub enum ModeChangeError<E, DEV> {
     I2C(E, DEV),
 }
 
-const DEVICE_BASE_ADDRESS: u8 = 0b100_1000;
-
 /// Mode marker types
 pub mod mode {
     /// One-shot operating mode / power-down state (default)
@@ -368,30 +366,36 @@ pub enum FullScaleRange {
     Within0_256V,
 }
 
-/// Possible slave addresses
+/// Possible device slace addresses, based on which which pin the ADDR pin is
+/// wired to. Reference Table 4 of the datasheet.
 #[derive(Debug, Clone, Copy, PartialEq)]
+#[repr(u8)]
 pub enum SlaveAddr {
-    /// Default slave address
-    Default,
-    /// Alternative slave address providing bit values for A1 and A0
-    Alternative(bool, bool),
+    /// GND pin: 0x48
+    Gnd = 0b100_1000,
+    /// VDD pin: 0x49
+    Vdd = 0b100_1001,
+    /// SDA pin: 0x50
+    Sda = 0b100_1010,
+    /// SCL pin: 0x51
+    Scl = 0b100_1011,
 }
 
 impl Default for SlaveAddr {
     /// Default slave address
     fn default() -> Self {
-        SlaveAddr::Default
+        SlaveAddr::Gnd
     }
 }
 
-impl SlaveAddr {
-    fn addr(self, default: u8) -> u8 {
-        match self {
-            SlaveAddr::Default => default,
-            SlaveAddr::Alternative(a1, a0) => default | ((a1 as u8) << 1) | a0 as u8,
-        }
-    }
-}
+//impl SlaveAddr {
+//    fn addr(self, default: u8) -> u8 {
+//        match self {
+//            SlaveAddr::Default => default,
+//            SlaveAddr::Alternative(a1, a0) => default | ((a1 as u8) << 1) | a0 as u8,
+//        }
+//    }
+//}
 
 struct Register;
 

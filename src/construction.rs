@@ -4,7 +4,7 @@ extern crate embedded_hal as hal;
 use core::marker::PhantomData;
 use hal::blocking;
 use interface::I2cInterface;
-use {ic, mode, Ads1x1x, Config, FullScaleRange, SlaveAddr, DEVICE_BASE_ADDRESS};
+use {ic, mode, Ads1x1x, Config, FullScaleRange, SlaveAddr};
 
 macro_rules! impl_new_destroy {
     ( $IC:ident, $create:ident, $destroy:ident, $conv:ty ) => {
@@ -17,7 +17,7 @@ macro_rules! impl_new_destroy {
                 Ads1x1x {
                     iface: I2cInterface {
                         i2c,
-                        address: address.addr(DEVICE_BASE_ADDRESS),
+                        address: address as u8,
                     },
                     config: Config::default(),
                     fsr: FullScaleRange::default(),
