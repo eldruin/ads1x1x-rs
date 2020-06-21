@@ -176,6 +176,38 @@ impl SlaveAddr {
             SlaveAddr::Alternative(a1, a0) => default | ((a1 as u8) << 1) | a0 as u8,
         }
     }
+
+    /// Create `SlaveAddr` instance corresponding to the address
+    /// effective when connecting the pin `ADDR` to GND (0x48).
+    ///
+    /// See [Table 4 in the datasheet](https://www.ti.com/lit/ds/symlink/ads1115.pdf#%5B%7B%22num%22%3A716%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C0%2C602.2%2C0%5D).
+    pub fn new_gnd() -> Self {
+        SlaveAddr::default()
+    }
+
+    /// Create `SlaveAddr` instance corresponding to the address
+    /// effective when connecting the pin `ADDR` to VDD (0x49).
+    ///
+    /// See [Table 4 in the datasheet](https://www.ti.com/lit/ds/symlink/ads1115.pdf#%5B%7B%22num%22%3A716%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C0%2C602.2%2C0%5D).
+    pub fn new_vdd() -> Self {
+        SlaveAddr::Alternative(false, true)
+    }
+
+    /// Create `SlaveAddr` instance corresponding to the address
+    /// effective when connecting the pin `ADDR` to SDA (0x4A).
+    ///
+    /// See [Table 4 in the datasheet](https://www.ti.com/lit/ds/symlink/ads1115.pdf#%5B%7B%22num%22%3A716%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C0%2C602.2%2C0%5D).
+    pub fn new_sda() -> Self {
+        SlaveAddr::Alternative(true, false)
+    }
+
+    /// Create `SlaveAddr` instance corresponding to the address
+    /// effective when connecting the pin `ADDR` to SCL (0x4B).
+    ///
+    /// See [Table 4 in the datasheet](https://www.ti.com/lit/ds/symlink/ads1115.pdf#%5B%7B%22num%22%3A716%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C0%2C602.2%2C0%5D).
+    pub fn new_scl() -> Self {
+        SlaveAddr::Alternative(true, true)
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -242,5 +274,13 @@ mod tests {
         assert_eq!(0b100_1001, SlaveAddr::Alternative(false, true).addr(ADDR));
         assert_eq!(0b100_1010, SlaveAddr::Alternative(true, false).addr(ADDR));
         assert_eq!(0b100_1011, SlaveAddr::Alternative(true, true).addr(ADDR));
+    }
+
+    #[test]
+    fn can_generate_alternative_addresses_using_helper_constructors() {
+        assert_eq!(0b100_1000, SlaveAddr::new_gnd().addr(ADDR));
+        assert_eq!(0b100_1001, SlaveAddr::new_vdd().addr(ADDR));
+        assert_eq!(0b100_1010, SlaveAddr::new_sda().addr(ADDR));
+        assert_eq!(0b100_1011, SlaveAddr::new_scl().addr(ADDR));
     }
 }
