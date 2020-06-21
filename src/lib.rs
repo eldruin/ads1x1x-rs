@@ -99,7 +99,7 @@
 //! let dev = adc.destroy_ads1013();
 //! ```
 //!
-//! ### Create a driver instance for the ADS1013 with an alternative address
+//! ### Create a driver instance for the ADS1013 with an alternative address (method 1)
 //!
 //! ```no_run
 //! use linux_embedded_hal::I2cdev;
@@ -108,6 +108,21 @@
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
 //! let (a1, a0) = (true, false);
 //! let address = SlaveAddr::Alternative(a1, a0);
+//! let adc = Ads1x1x::new_ads1013(dev, address);
+//! ```
+
+//! ### Create a driver instance for the ADS1013 with an alternative address (method 2)
+//!
+//! Using helper `SlaveAddr` creation method depending on the connection of
+//! the `ADDR` pin.
+//!
+//! ```no_run
+//! use linux_embedded_hal::I2cdev;
+//! use ads1x1x::{Ads1x1x, SlaveAddr};
+//!
+//! let dev = I2cdev::new("/dev/i2c-1").unwrap();
+//! // `ADDR` pin connected to SDA results in the 0x4A effective address
+//! let address = SlaveAddr::new_sda();
 //! let adc = Ads1x1x::new_ads1013(dev, address);
 //! ```
 //!
