@@ -157,7 +157,8 @@ pub enum FullScaleRange {
 pub enum SlaveAddr {
     /// Default slave address
     Default,
-    /// Alternative slave address providing bit values for A1 and A0
+    /// Alternative slave address using the provided values
+    /// for the last two bits (A1, A0)
     Alternative(bool, bool),
 }
 
