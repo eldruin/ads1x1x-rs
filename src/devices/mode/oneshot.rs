@@ -5,7 +5,6 @@ use crate::{
 };
 use core::marker::PhantomData;
 use embedded_hal::adc;
-use nb;
 
 impl<DI, IC, CONV, E> Ads1x1x<DI, IC, CONV, mode::OneShot>
 where
