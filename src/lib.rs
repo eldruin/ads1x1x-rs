@@ -221,22 +221,22 @@ impl BitFlags {
     const COMP_QUE0: u16 = 0b0000_0000_0000_0001;
 }
 
+mod channels;
+pub use crate::channels::channel;
+mod construction;
+mod conversion;
+pub use crate::conversion::{ConvertMeasurement, ConvertThreshold};
+mod devices;
+#[doc(hidden)]
+pub mod ic;
+#[doc(hidden)]
+pub mod interface;
 mod types;
 use crate::types::Config;
 pub use crate::types::{
     mode, Ads1x1x, ComparatorLatching, ComparatorMode, ComparatorPolarity, ComparatorQueue,
     DataRate12Bit, DataRate16Bit, Error, FullScaleRange, ModeChangeError, SlaveAddr,
 };
-mod channels;
-#[doc(hidden)]
-pub mod ic;
-#[doc(hidden)]
-pub mod interface;
-pub use crate::channels::channel;
-mod construction;
-mod conversion;
-mod devices;
-pub use crate::conversion::{ConvertMeasurement, ConvertThreshold};
 
 mod private {
     use super::{ic, interface};
