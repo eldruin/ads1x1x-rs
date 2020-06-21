@@ -388,15 +388,6 @@ impl Default for SlaveAddr {
     }
 }
 
-//impl SlaveAddr {
-//    fn addr(self, default: u8) -> u8 {
-//        match self {
-//            SlaveAddr::Default => default,
-//            SlaveAddr::Alternative(a1, a0) => default | ((a1 as u8) << 1) | a0 as u8,
-//        }
-//    }
-//}
-
 struct Register;
 
 impl Register {
