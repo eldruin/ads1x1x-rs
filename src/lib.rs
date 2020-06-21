@@ -194,7 +194,6 @@
 const DEVICE_BASE_ADDRESS: u8 = 0b100_1000;
 
 struct Register;
-
 impl Register {
     const CONVERSION: u8 = 0x00;
     const CONFIG: u8 = 0x01;
