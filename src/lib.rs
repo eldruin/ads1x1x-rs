@@ -106,8 +106,8 @@
 //! use ads1x1x::{Ads1x1x, SlaveAddr};
 //!
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
-//! let (a1, a0) = (true, false);
-//! let address = SlaveAddr::Alternative(a1, a0);
+//! let (bit1, bit0) = (true, false); // last two bits of address
+//! let address = SlaveAddr::Alternative(bit1, bit0);
 //! let adc = Ads1x1x::new_ads1013(dev, address);
 //! ```
 
