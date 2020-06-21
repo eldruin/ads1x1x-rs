@@ -191,8 +191,6 @@
 #![deny(missing_docs)]
 #![no_std]
 
-extern crate embedded_hal as hal;
-extern crate nb;
 use core::marker::PhantomData;
 
 /// Errors in this crate
