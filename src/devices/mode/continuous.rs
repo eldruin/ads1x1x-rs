@@ -1,9 +1,10 @@
 //! Continuous measurement mode
 
-use super::super::OperatingMode;
-use channels::ChannelSelection;
+use crate::{
+    channels::ChannelSelection, conversion, devices::OperatingMode, hal, interface, mode, Ads1x1x,
+    Error, ModeChangeError, Register,
+};
 use core::marker::PhantomData;
-use {conversion, hal, interface, mode, Ads1x1x, Error, ModeChangeError, Register};
 
 impl<DI, IC, CONV, E> Ads1x1x<DI, IC, CONV, mode::Continuous>
 where

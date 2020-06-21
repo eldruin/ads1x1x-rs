@@ -1,5 +1,5 @@
 /// ICs
-use private;
+use crate::private;
 
 pub struct Resolution12Bit(pub(crate) ());
 pub struct Resolution16Bit(pub(crate) ());

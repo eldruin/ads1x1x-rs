@@ -1,12 +1,10 @@
-extern crate embedded_hal_mock;
-use embedded_hal_mock::i2c::Transaction as I2cTrans;
-extern crate ads1x1x;
 use ads1x1x::{
     ComparatorLatching, ComparatorMode, ComparatorPolarity, ComparatorQueue, FullScaleRange,
 };
+use embedded_hal_mock::i2c::Transaction as I2cTrans;
 
 mod common;
-use common::{
+use crate::common::{
     destroy_ads1014, new_ads1014, BitFlags as BF, Config, Register, DEVICE_ADDRESS as DEV_ADDR,
 };
 

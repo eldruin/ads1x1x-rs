@@ -2,7 +2,7 @@
 //!
 //! These are the features included only in ADS1x14, ADS1x15
 
-use {
+use crate::{
     conversion, ic, interface, Ads1x1x, BitFlags as BF, ComparatorLatching, ComparatorMode,
     ComparatorPolarity, ComparatorQueue, Error, FullScaleRange, Register,
 };
@@ -17,7 +17,7 @@ where
     ///
     /// This configures the programmable gain amplifier and determines the measurable input voltage range.
     pub fn set_full_scale_range(&mut self, range: FullScaleRange) -> Result<(), Error<E>> {
-        use FullScaleRange as FSR;
+        use crate::FullScaleRange as FSR;
         let cfg = self.config.clone();
         let config = match range {
             FSR::Within6_144V => cfg.with_low(BF::PGA2).with_low(BF::PGA1).with_low(BF::PGA0),

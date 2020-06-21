@@ -1,5 +1,6 @@
 //! ADC input channels
-use {hal, ic, Ads1x1x, BitFlags as BF, Config};
+use crate::{ic, Ads1x1x, BitFlags as BF, Config};
+use embedded_hal::adc;
 
 /// ADC input channel selection
 #[allow(dead_code)]
@@ -36,7 +37,7 @@ pub enum ChannelSelection {
 
 macro_rules! impl_channel {
     ( $IC:ident, $CH:ident ) => {
-        impl<DI, CONV, MODE> hal::adc::Channel<Ads1x1x<DI, ic::$IC, CONV, MODE>> for channel::$CH {
+        impl<DI, CONV, MODE> adc::Channel<Ads1x1x<DI, ic::$IC, CONV, MODE>> for channel::$CH {
             type ID = ChannelSelection;
 
             fn channel() -> Self::ID {

@@ -1,6 +1,8 @@
 //! Common functions
 
-use {ic, interface, Ads1x1x, BitFlags as BF, DataRate12Bit, DataRate16Bit, Error, Register};
+use crate::{
+    ic, interface, Ads1x1x, BitFlags as BF, DataRate12Bit, DataRate16Bit, Error, Register,
+};
 
 impl<DI, IC, MODE, E> Ads1x1x<DI, IC, ic::Resolution12Bit, MODE>
 where
@@ -8,7 +10,7 @@ where
 {
     /// Set data rate
     pub fn set_data_rate(&mut self, rate: DataRate12Bit) -> Result<(), Error<E>> {
-        use DataRate12Bit as DR;
+        use crate::DataRate12Bit as DR;
         let cfg = self.config.clone();
         let config = match rate {
             DR::Sps128 => cfg.with_low(BF::DR2).with_low(BF::DR1).with_low(BF::DR0),
@@ -31,7 +33,7 @@ where
 {
     /// Set data rate
     pub fn set_data_rate(&mut self, rate: DataRate16Bit) -> Result<(), Error<E>> {
-        use DataRate16Bit as DR;
+        use crate::DataRate16Bit as DR;
         let cfg = self.config.clone();
         let config = match rate {
             DR::Sps8 => cfg.with_low(BF::DR2).with_low(BF::DR1).with_low(BF::DR0),

@@ -87,12 +87,11 @@
 //! ### Create a driver instance for the ADS1013
 //!
 //! ```no_run
-//! extern crate linux_embedded_hal as hal;
-//! extern crate ads1x1x;
-//! use ads1x1x::{ Ads1x1x, SlaveAddr };
+//! use linux_embedded_hal::I2cdev;
+//! use ads1x1x::{Ads1x1x, SlaveAddr};
 //!
 //! # fn main() {
-//! let dev = hal::I2cdev::new("/dev/i2c-1").unwrap();
+//! let dev = I2cdev::new("/dev/i2c-1").unwrap();
 //! let address = SlaveAddr::default();
 //! let adc = Ads1x1x::new_ads1013(dev, address);
 //! // do something...
@@ -105,12 +104,11 @@
 //! ### Create a driver instance for the ADS1013 with an alternative address
 //!
 //! ```no_run
-//! extern crate linux_embedded_hal as hal;
-//! extern crate ads1x1x;
-//! use ads1x1x::{ Ads1x1x, SlaveAddr };
+//! use linux_embedded_hal::I2cdev;
+//! use ads1x1x::{Ads1x1x, SlaveAddr};
 //!
 //! # fn main() {
-//! let dev = hal::I2cdev::new("/dev/i2c-1").unwrap();
+//! let dev = I2cdev::new("/dev/i2c-1").unwrap();
 //! let (a1, a0) = (true, false);
 //! let address = SlaveAddr::Alternative(a1, a0);
 //! let adc = Ads1x1x::new_ads1013(dev, address);
@@ -119,15 +117,10 @@
 //!
 //! ### Make a one-shot measurement
 //! ```no_run
-//! extern crate embedded_hal;
+//! use ads1x1x::{channel, Ads1x1x, SlaveAddr};
 //! use embedded_hal::adc::OneShot;
-//! extern crate linux_embedded_hal;
-//! #[macro_use(block)]
-//! extern crate nb;
-//! extern crate ads1x1x;
-//!
 //! use linux_embedded_hal::I2cdev;
-//! use ads1x1x::{ Ads1x1x, SlaveAddr, channel };
+//! use nb::block;
 //!
 //! # fn main() {
 //!     let dev = I2cdev::new("/dev/i2c-1").unwrap();
@@ -144,12 +137,11 @@
 //! In this case, you can retrieve the unchanged device from the error type.
 //!
 //! ```no_run
-//! extern crate linux_embedded_hal as hal;
-//! extern crate ads1x1x;
-//! use ads1x1x::{ Ads1x1x, SlaveAddr, ModeChangeError };
+//! use linux_embedded_hal::I2cdev;
+//! use ads1x1x::{Ads1x1x, ModeChangeError, SlaveAddr};
 //!
 //! # fn main() {
-//! let dev = hal::I2cdev::new("/dev/i2c-1").unwrap();
+//! let dev = I2cdev::new("/dev/i2c-1").unwrap();
 //! let address = SlaveAddr::default();
 //! let adc = Ads1x1x::new_ads1013(dev, address);
 //! match adc.into_continuous() {
@@ -168,12 +160,11 @@
 //! For 16-bit devices, the available data rates are given by `DataRate16Bit`.
 //!
 //! ```no_run
-//! extern crate linux_embedded_hal as hal;
-//! extern crate ads1x1x;
-//! use ads1x1x::{ Ads1x1x, SlaveAddr, DataRate16Bit };
+//! use linux_embedded_hal::I2cdev;
+//! use ads1x1x::{Ads1x1x, DataRate16Bit, SlaveAddr};
 //!
 //! # fn main() {
-//! let dev = hal::I2cdev::new("/dev/i2c-1").unwrap();
+//! let dev = I2cdev::new("/dev/i2c-1").unwrap();
 //! let address = SlaveAddr::default();
 //! let mut adc = Ads1x1x::new_ads1115(dev, address);
 //! adc.set_data_rate(DataRate16Bit::Sps860).unwrap();
@@ -188,13 +179,14 @@
 //! the master.
 //!
 //! ```no_run
-//! extern crate linux_embedded_hal as hal;
-//! extern crate ads1x1x;
-//! use ads1x1x::{ Ads1x1x, SlaveAddr, ComparatorQueue, ComparatorPolarity,
-//!                ComparatorMode, ComparatorLatching, FullScaleRange };
+//! use linux_embedded_hal::I2cdev;
+//! use ads1x1x::{
+//!     Ads1x1x, SlaveAddr, ComparatorQueue, ComparatorPolarity,
+//!     ComparatorMode, ComparatorLatching, FullScaleRange
+//! };
 //!
 //! # fn main() {
-//! let dev = hal::I2cdev::new("/dev/i2c-1").unwrap();
+//! let dev = I2cdev::new("/dev/i2c-1").unwrap();
 //! let address = SlaveAddr::default();
 //! let mut adc = Ads1x1x::new_ads1015(dev, address);
 //! adc.set_comparator_queue(ComparatorQueue::Two).unwrap();
@@ -472,12 +464,12 @@ mod channels;
 pub mod ic;
 #[doc(hidden)]
 pub mod interface;
-pub use channels::channel;
+pub use crate::channels::channel;
 mod construction;
 mod conversion;
 mod devices;
-pub use conversion::ConvertMeasurement;
-pub use conversion::ConvertThreshold;
+pub use crate::conversion::ConvertMeasurement;
+pub use crate::conversion::ConvertThreshold;
 
 mod private {
     use super::{ic, interface};

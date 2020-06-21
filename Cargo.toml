@@ -18,6 +18,7 @@ include = [
     "/LICENSE-MIT",
     "/LICENSE-APACHE",
 ]
+edition = "2018"
 
 [badges]
 travis-ci = { repository = "eldruin/ads1x1x-rs", branch = "master" }

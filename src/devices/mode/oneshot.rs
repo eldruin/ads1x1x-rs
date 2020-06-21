@@ -1,10 +1,11 @@
 //! Common functions
-
-use super::super::OperatingMode;
-use channels::ChannelSelection;
+use crate::{
+    channels::ChannelSelection, conversion, devices::OperatingMode, interface, mode, Ads1x1x,
+    BitFlags, Config, Error, ModeChangeError, Register,
+};
 use core::marker::PhantomData;
-use {conversion, hal, interface, nb};
-use {mode, Ads1x1x, BitFlags, Config, Error, ModeChangeError, Register};
+use embedded_hal::adc;
+use nb;
 
 impl<DI, IC, CONV, E> Ads1x1x<DI, IC, CONV, mode::OneShot>
 where
@@ -35,12 +36,12 @@ where
     }
 }
 
-impl<DI, IC, CONV, E, CH> hal::adc::OneShot<Ads1x1x<DI, IC, CONV, mode::OneShot>, i16, CH>
+impl<DI, IC, CONV, E, CH> adc::OneShot<Ads1x1x<DI, IC, CONV, mode::OneShot>, i16, CH>
     for Ads1x1x<DI, IC, CONV, mode::OneShot>
 where
     DI: interface::ReadData<Error = E> + interface::WriteData<Error = E>,
     CONV: conversion::ConvertMeasurement,
-    CH: hal::adc::Channel<Ads1x1x<DI, IC, CONV, mode::OneShot>, ID = ChannelSelection>,
+    CH: adc::Channel<Ads1x1x<DI, IC, CONV, mode::OneShot>, ID = ChannelSelection>,
 {
     type Error = Error<E>;
 

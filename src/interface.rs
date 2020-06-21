@@ -1,8 +1,7 @@
 //! I2C interface
 
-extern crate embedded_hal as hal;
-use hal::blocking;
-use {private, Error};
+use crate::{private, Error};
+use embedded_hal::blocking;
 
 /// I2C interface
 #[derive(Debug, Default)]

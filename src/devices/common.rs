@@ -1,7 +1,6 @@
 //! Common functions
 
-use super::OperatingMode;
-use {interface, Ads1x1x, BitFlags, Config, Error, Register};
+use crate::{devices::OperatingMode, interface, Ads1x1x, BitFlags, Config, Error, Register};
 
 impl<DI, IC, CONV, MODE, E> Ads1x1x<DI, IC, CONV, MODE>
 where

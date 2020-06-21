@@ -1,4 +1,4 @@
-use {ic, private, Error};
+use crate::{ic, private, Error};
 
 #[doc(hidden)]
 pub trait ConvertThreshold<E>: private::Sealed {

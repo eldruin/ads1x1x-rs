@@ -1,13 +1,9 @@
-#[macro_use(block)]
-extern crate nb;
-extern crate embedded_hal;
-extern crate embedded_hal_mock as hal;
-use hal::i2c::Transaction as I2cTrans;
-extern crate ads1x1x;
 use ads1x1x::{channel, DataRate12Bit, DataRate16Bit};
+use embedded_hal_mock::i2c::Transaction as I2cTrans;
+use nb::block;
 
 mod common;
-use common::{
+use crate::common::{
     destroy_ads1013, destroy_ads1113, new_ads1013, new_ads1113, BitFlags as BF, Config, Register,
     DEVICE_ADDRESS as DEV_ADDR,
 };

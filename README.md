@@ -77,15 +77,11 @@ Please find additional examples using hardware in this repository: [driver-examp
 [driver-examples]: https://github.com/eldruin/driver-examples
 
 ```rust
-extern crate embedded_hal;
 use embedded_hal::adc::OneShot;
-extern crate linux_embedded_hal;
-#[macro_use(block)]
-extern crate nb;
-extern crate ads1x1x;
+use linux_embedded_hal::I2cdev;
+use nb::block;
 
 use ads1x1x::{channel, Ads1x1x, SlaveAddr};
-use linux_embedded_hal::I2cdev;
 
 fn main() {
     let dev = I2cdev::new("/dev/i2c-1").unwrap();
