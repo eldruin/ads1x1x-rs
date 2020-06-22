@@ -259,8 +259,8 @@ pub struct Ads1x1x<DI, IC, CONV, MODE> {
 
 #[cfg(test)]
 mod tests {
-    use crate::SlaveAddr;
     use crate::DEVICE_BASE_ADDRESS as ADDR;
+    use crate::{FullScaleRange, SlaveAddr};
 
     #[test]
     fn can_get_default_address() {
@@ -282,5 +282,10 @@ mod tests {
         assert_eq!(0b100_1001, SlaveAddr::new_vdd().addr(ADDR));
         assert_eq!(0b100_1010, SlaveAddr::new_sda().addr(ADDR));
         assert_eq!(0b100_1011, SlaveAddr::new_scl().addr(ADDR));
+    }
+
+    #[test]
+    fn default_full_scale_range() {
+        assert_eq!(FullScaleRange::Within2_048V, FullScaleRange::default());
     }
 }
