@@ -72,7 +72,7 @@ macro_rules! impl_new_destroy {
     ($ic:ident, $create:ident, $destroy:ident, $conv:ty, $trans:ty, $iface:ty) => {
         #[allow(unused)]
         pub fn $create(transactions: &[$trans]) -> Ads1x1x<$iface, ic::$ic, $conv, mode::OneShot> {
-            Ads1x1x::$create(I2cMock::new(&transactions), SlaveAddr::default())
+            Ads1x1x::$create(I2cMock::new(transactions), SlaveAddr::default())
         }
 
         #[allow(unused)]
