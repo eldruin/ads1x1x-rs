@@ -25,7 +25,7 @@ coveralls = { repository = "eldruin/ads1x1x-rs", branch = "master", service = "g
 maintenance = { status = "actively-developed" }
 
 [dependencies]
-nb = "0.1"
+nb = "0.1"  # Old version of `nb` until `embedded-hal` is released with the new one.
 embedded-hal = { version = "0.2.2", features = ["unproven"] }
 
 [dev-dependencies]
