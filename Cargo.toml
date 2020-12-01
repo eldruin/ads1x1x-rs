@@ -25,7 +25,7 @@ travis-ci = { repository = "eldruin/ads1x1x-rs", branch = "master" }
 coveralls = { repository = "eldruin/ads1x1x-rs", branch = "master", service = "github" }
 
 [dependencies]
-nb = "0.1"
+nb = "1"
 embedded-hal = { version = "0.2.2", features = ["unproven"] }
 
 [dev-dependencies]
