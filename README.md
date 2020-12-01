@@ -2,7 +2,7 @@
 
 [![crates.io](https://img.shields.io/crates/v/ads1x1x.svg)](https://crates.io/crates/ads1x1x)
 [![Docs](https://docs.rs/ads1x1x/badge.svg)](https://docs.rs/ads1x1x)
-[![Build Status](https://travis-ci.org/eldruin/ads1x1x-rs.svg?branch=master)](https://travis-ci.org/eldruin/ads1x1x-rs)
+[![Build Status](https://github.com/eldruin/ads1x1x-rs/workflows/Build/badge.svg)](https://github.com/eldruin/ads1x1x-rs/actions?query=workflow%3ABuild)
 [![Coverage Status](https://coveralls.io/repos/github/eldruin/ads1x1x-rs/badge.svg?branch=master)](https://coveralls.io/github/eldruin/ads1x1x-rs?branch=master)
 
 This is a platform agnostic Rust driver for the ADS1013, ADS1014, ADS1015,
