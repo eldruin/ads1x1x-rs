@@ -1,10 +1,10 @@
 //! Common functions
-
-use super::super::OperatingMode;
-use channels::ChannelSelection;
+use crate::{
+    channels::ChannelSelection, conversion, devices::OperatingMode, interface, mode, Ads1x1x,
+    BitFlags, Config, Error, ModeChangeError, Register,
+};
 use core::marker::PhantomData;
-use {conversion, hal, interface, nb};
-use {mode, Ads1x1x, BitFlags, Config, Error, ModeChangeError, Register};
+use embedded_hal::adc;
 
 impl<DI, IC, CONV, E> Ads1x1x<DI, IC, CONV, mode::OneShot>
 where
@@ -35,12 +35,12 @@ where
     }
 }
 
-impl<DI, IC, CONV, E, CH> hal::adc::OneShot<Ads1x1x<DI, IC, CONV, mode::OneShot>, i16, CH>
+impl<DI, IC, CONV, E, CH> adc::OneShot<Ads1x1x<DI, IC, CONV, mode::OneShot>, i16, CH>
     for Ads1x1x<DI, IC, CONV, mode::OneShot>
 where
     DI: interface::ReadData<Error = E> + interface::WriteData<Error = E>,
     CONV: conversion::ConvertMeasurement,
-    CH: hal::adc::Channel<Ads1x1x<DI, IC, CONV, mode::OneShot>, ID = ChannelSelection>,
+    CH: adc::Channel<Ads1x1x<DI, IC, CONV, mode::OneShot>, ID = ChannelSelection>,
 {
     type Error = Error<E>;
 
@@ -83,12 +83,41 @@ where
     }
 }
 
-impl<DI, IC, CONV, E, CH> hal::adc::OneShot<Ads1x1x<DI, IC, CONV, mode::OneShot>, i16, CH>
+impl<DI, IC, CONV, E> Ads1x1x<DI, IC, CONV, mode::OneShot>
+where
+    DI: interface::WriteData<Error = E> + interface::ReadData<Error = E>,
+    CONV: conversion::ConvertMeasurement,
+{
+    /// Change operating mode to Continuous
+    pub fn into_continuous(
+        mut self,
+    ) -> Result<Ads1x1x<DI, IC, CONV, mode::Continuous>, ModeChangeError<E, Self>> {
+        if let Err(Error::I2C(e)) = self.set_operating_mode(OperatingMode::Continuous) {
+            return Err(ModeChangeError::I2C(e, self));
+        }
+        Ok(Ads1x1x {
+            iface: self.iface,
+            config: self.config,
+            fsr: self.fsr,
+            a_conversion_was_started: true,
+            _conv: PhantomData,
+            _ic: PhantomData,
+            _mode: PhantomData,
+        })
+    }
+
+    fn trigger_measurement(&mut self, config: &Config) -> Result<(), Error<E>> {
+        let config = config.with_high(BitFlags::OS);
+        self.iface.write_register(Register::CONFIG, config.bits)
+    }
+}
+
+impl<DI, IC, CONV, E, CH> adc::OneShot<Ads1x1x<DI, IC, CONV, mode::OneShot>, i16, CH>
     for &mut Ads1x1x<DI, IC, CONV, mode::OneShot>
 where
     DI: interface::ReadData<Error = E> + interface::WriteData<Error = E>,
     CONV: conversion::ConvertMeasurement,
-    CH: hal::adc::Channel<Ads1x1x<DI, IC, CONV, mode::OneShot>, ID = ChannelSelection>,
+    CH: adc::Channel<Ads1x1x<DI, IC, CONV, mode::OneShot>, ID = ChannelSelection>,
 {
     type Error = Error<E>;
 
