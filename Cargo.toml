@@ -24,8 +24,9 @@ edition = "2018"
 coveralls = { repository = "eldruin/ads1x1x-rs", branch = "master", service = "github" }
 
 [dependencies]
-nb = "1"
-embedded-hal = { version = "0.2.2", features = ["unproven"] }
+# nb = "1"
+nb = "0.1.2"  # temp old version of nb, until the `embedded-hal` release updates
+embedded-hal = { version = "0.2.4", features = ["unproven"] }
 
 [dev-dependencies]
 linux-embedded-hal = "0.3"
