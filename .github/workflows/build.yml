@@ -1,8 +1,6 @@
 on:
   push:
   pull_request:
-  schedule:
-    - cron: 0 0 * * 0
 
 name: Build
 
@@ -15,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        rust: [stable, beta, nightly, 1.31.0]
+        rust: [stable, 1.31.0]
         TARGET:
           - x86_64-unknown-linux-gnu
           - x86_64-unknown-linux-musl
@@ -26,11 +24,6 @@ jobs:
           - thumbv7em-none-eabi
           - thumbv7em-none-eabihf
           - thumbv7m-none-eabi
-
-        include:
-          # Test nightly but don't fail
-          - rust: nightly
-            experimental: true
 
     steps:
       - uses: actions/checkout@v2
@@ -62,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        rust: [stable, beta]
+        rust: [stable]
         TARGET:
           - x86_64-unknown-linux-gnu
 
@@ -74,7 +67,7 @@ jobs:
           toolchain: ${{ matrix.rust }}
           target: ${{ matrix.TARGET }}
           override: true
-          components: clippy, rustfmt
+          components: rustfmt
 
       - name: Doc
         uses: actions-rs/cargo@v1
@@ -87,6 +80,25 @@ jobs:
           command: fmt
           args: --all -- --check
 
+  clippy:
+    name: Clippy
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust: [1.52.1]
+        TARGET:
+          - x86_64-unknown-linux-gnu
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.rust }}
+          target: ${{ matrix.TARGET }}
+          override: true
+          components: clippy
+
       - name: Clippy
         uses: actions-rs/clippy-check@v1
         with:
@@ -97,11 +109,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        rust: [stable, beta, nightly]
+        rust: [stable, beta]
         TARGET: [x86_64-unknown-linux-gnu, x86_64-unknown-linux-musl]
-        include:
-          - rust: nightly
-            experimental: true
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
@@ -116,13 +125,6 @@ jobs:
         with:
           command: test
           args: --target=${{ matrix.TARGET }}
-
-      - name: Build examples
-        uses: actions-rs/cargo@v1
-        if: contains(matrix.TARGET, 'x86_64')
-        with:
-          command: build
-          args: --target=${{ matrix.TARGET }} --examples
 
   coverage:
     name: Coverage
