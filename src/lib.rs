@@ -237,7 +237,7 @@ impl BitFlags {
 }
 
 mod channels;
-pub use crate::channels::channel;
+pub use crate::channels::{channel, ChannelSelection};
 mod construction;
 mod conversion;
 pub use crate::conversion::{ConvertMeasurement, ConvertThreshold};
@@ -250,14 +250,16 @@ mod types;
 use crate::types::Config;
 pub use crate::types::{
     mode, Ads1x1x, ComparatorLatching, ComparatorMode, ComparatorPolarity, ComparatorQueue,
-    DataRate12Bit, DataRate16Bit, Error, FullScaleRange, ModeChangeError, SlaveAddr,
+    DataRate12Bit, DataRate16Bit, DynamicOneShot, Error, FullScaleRange, ModeChangeError,
+    SlaveAddr,
 };
 
 mod private {
-    use super::{ic, interface};
+    use super::{ic, interface, Ads1x1x};
     pub trait Sealed {}
 
     impl<I2C> Sealed for interface::I2cInterface<I2C> {}
+    impl<DI, IC, CONV, MODE> Sealed for Ads1x1x<DI, IC, CONV, MODE> {}
 
     impl Sealed for ic::Resolution12Bit {}
     impl Sealed for ic::Resolution16Bit {}

@@ -1,5 +1,6 @@
 //! Type definitions.
 
+use crate::{channels::ChannelSelection, private};
 use core::marker::PhantomData;
 
 /// Errors in this crate
@@ -70,6 +71,7 @@ pub enum DataRate16Bit {
     /// 860 SPS
     Sps860,
 }
+
 /// Comparator mode (only for ADS1x14, ADS1x15)
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum ComparatorMode {
@@ -255,6 +257,15 @@ pub struct Ads1x1x<DI, IC, CONV, MODE> {
     pub(crate) _conv: PhantomData<CONV>,
     pub(crate) _ic: PhantomData<IC>,
     pub(crate) _mode: PhantomData<MODE>,
+}
+
+/// Multi channel One-shot ADC
+pub trait DynamicOneShot: private::Sealed {
+    /// Error type
+    type Error;
+
+    /// Read a measurement
+    fn read(&mut self, channel: ChannelSelection) -> nb::Result<i16, Self::Error>;
 }
 
 #[cfg(test)]

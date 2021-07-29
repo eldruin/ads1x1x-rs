@@ -23,15 +23,24 @@ pub mod channel {
     pub struct DifferentialA2A3;
 }
 
+/// ADC input channel selection
 #[derive(Debug, Clone, Copy)]
 pub enum ChannelSelection {
+    /// Measure single-ended signal on input channel 0
     SingleA0,
+    /// Measure single-ended signal on input channel 1
     SingleA1,
+    /// Measure single-ended signal on input channel 2
     SingleA2,
+    /// Measure single-ended signal on input channel 3
     SingleA3,
+    /// Measure signal on input channel 0 differentially to signal on input channel 1
     DifferentialA0A1,
+    /// Measure signal on input channel 0 differentially to signal on input channel 3
     DifferentialA0A3,
+    /// Measure signal on input channel 1 differentially to signal on input channel 3
     DifferentialA1A3,
+    /// Measure signal on input channel 2 differentially to signal on input channel 3
     DifferentialA2A3,
 }
 

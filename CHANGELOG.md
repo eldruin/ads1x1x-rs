@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+- `DynamicOneShot` trait to ease usage of driver in functions. See `trait` example.
+
 ### Changed
 - Updated `nb` dependency to version `1`.
 
