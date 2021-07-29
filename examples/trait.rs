@@ -1,5 +1,5 @@
-// This example demonstrates the use of a type alias for the `Ads1x1x` struct
-// to ease usage in signatures.
+// This example demonstrates the use of the `DynamicOneSot` trait to ease the usage
+// of the `Ads1x1x` struct in functions.
 
 use linux_embedded_hal::I2cdev;
 use nb::block;
