@@ -202,7 +202,7 @@
 //! adc.set_comparator_latching(ComparatorLatching::Latching).unwrap();
 //! ```
 
-#![doc(html_root_url = "https://docs.rs/ads1x1x/0.2.1")]
+#![doc(html_root_url = "https://docs.rs/ads1x1x/0.2.2")]
 #![deny(unsafe_code)]
 #![deny(missing_docs)]
 #![no_std]
