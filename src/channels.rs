@@ -1,26 +1,24 @@
 //! ADC input channels
-use crate::{ic, Ads1x1x, BitFlags as BF, Config};
-use embedded_hal::adc;
+use crate::{ic, BitFlags as BF, Config};
 
 /// ADC input channel selection
-#[allow(dead_code)]
 pub mod channel {
     /// Measure single-ended signal on input channel 0
-    pub struct SingleA0;
+    pub enum SingleA0 {}
     /// Measure single-ended signal on input channel 1
-    pub struct SingleA1;
+    pub enum SingleA1 {}
     /// Measure single-ended signal on input channel 2
-    pub struct SingleA2;
+    pub enum SingleA2 {}
     /// Measure single-ended signal on input channel 3
-    pub struct SingleA3;
+    pub enum SingleA3 {}
     /// Measure signal on input channel 0 differentially to signal on input channel 1
-    pub struct DifferentialA0A1;
+    pub enum DifferentialA0A1 {}
     /// Measure signal on input channel 0 differentially to signal on input channel 3
-    pub struct DifferentialA0A3;
+    pub enum DifferentialA0A3 {}
     /// Measure signal on input channel 1 differentially to signal on input channel 3
-    pub struct DifferentialA1A3;
+    pub enum DifferentialA1A3 {}
     /// Measure signal on input channel 3 differentially to signal on input channel 3
-    pub struct DifferentialA2A3;
+    pub enum DifferentialA2A3 {}
 }
 
 /// ADC input channel selection
@@ -44,14 +42,20 @@ pub enum ChannelSelection {
     DifferentialA2A3,
 }
 
+/// Channel selection trait.
+///
+/// This trait allows restricting the channels and modes the ADCs can be started in to correct ones
+/// in compile-time. If you get a channel compilation error, you may be attempting to use an
+/// unsuitable mode for the chip selected.
+pub trait Channel<IC> {
+    /// Channel ID
+    const ID: ChannelSelection;
+}
+
 macro_rules! impl_channel {
     ( $IC:ident, $CH:ident ) => {
-        impl<DI, CONV, MODE> adc::Channel<Ads1x1x<DI, ic::$IC, CONV, MODE>> for channel::$CH {
-            type ID = ChannelSelection;
-
-            fn channel() -> Self::ID {
-                ChannelSelection::$CH
-            }
+        impl crate::Channel<ic::$IC> for channel::$CH {
+            const ID: ChannelSelection = ChannelSelection::$CH;
         }
     };
 }

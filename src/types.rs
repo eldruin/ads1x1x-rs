@@ -1,6 +1,6 @@
 //! Type definitions.
 
-use crate::{channels::ChannelSelection, private};
+use crate::private;
 use core::marker::PhantomData;
 
 /// Errors in this crate
@@ -260,12 +260,14 @@ pub struct Ads1x1x<DI, IC, CONV, MODE> {
 }
 
 /// Multi channel One-shot ADC
-pub trait DynamicOneShot: private::Sealed {
+pub trait DynamicOneShot<IC>: private::Sealed {
     /// Error type
     type Error;
 
     /// Read a measurement
-    fn read(&mut self, channel: ChannelSelection) -> nb::Result<i16, Self::Error>;
+    fn read<CH>(&mut self, _channel: &mut CH) -> nb::Result<i16, Self::Error>
+    where
+        CH: crate::Channel<IC>;
 }
 
 #[cfg(test)]

@@ -5,13 +5,13 @@ use crate::{
     DEVICE_BASE_ADDRESS,
 };
 use core::marker::PhantomData;
-use embedded_hal::blocking;
+use embedded_hal::i2c::blocking::I2cDevice;
 
 macro_rules! impl_new_destroy {
     ( $IC:ident, $create:ident, $destroy:ident, $conv:ty ) => {
         impl<I2C, E> Ads1x1x<I2cInterface<I2C>, ic::$IC, $conv, mode::OneShot>
         where
-            I2C: blocking::i2c::Write<Error = E> + blocking::i2c::WriteRead<Error = E>,
+            I2C: I2cDevice<Error = E>,
         {
             /// Create a new instance of the device in OneShot mode.
             pub fn $create(i2c: I2C, address: SlaveAddr) -> Self {

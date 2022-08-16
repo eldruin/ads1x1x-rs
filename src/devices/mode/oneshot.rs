@@ -1,10 +1,9 @@
 //! Common functions
 use crate::{
-    conversion, devices::OperatingMode, interface, mode, Ads1x1x, BitFlags, ChannelSelection,
-    Config, DynamicOneShot, Error, ModeChangeError, Register,
+    conversion, devices::OperatingMode, interface, mode, types::DynamicOneShot, Ads1x1x, BitFlags,
+    Channel, Config, Error, ModeChangeError, Register,
 };
 use core::marker::PhantomData;
-use embedded_hal::adc;
 
 impl<DI, IC, CONV, E> Ads1x1x<DI, IC, CONV, mode::OneShot>
 where
@@ -35,12 +34,10 @@ where
     }
 }
 
-impl<DI, IC, CONV, E, CH> adc::OneShot<Ads1x1x<DI, IC, CONV, mode::OneShot>, i16, CH>
-    for Ads1x1x<DI, IC, CONV, mode::OneShot>
+impl<DI, IC, CONV, E> DynamicOneShot<IC> for Ads1x1x<DI, IC, CONV, mode::OneShot>
 where
     DI: interface::ReadData<Error = E> + interface::WriteData<Error = E>,
     CONV: conversion::ConvertMeasurement,
-    CH: adc::Channel<Ads1x1x<DI, IC, CONV, mode::OneShot>, ID = ChannelSelection>,
 {
     type Error = Error<E>;
 
@@ -57,26 +54,17 @@ where
     /// In case a measurement was requested and after is it is finished a
     /// measurement on a different channel is requested, a new measurement on
     /// using the new channel selection is triggered.
-    fn read(&mut self, _channel: &mut CH) -> nb::Result<i16, Self::Error> {
-        <Self as DynamicOneShot>::read(self, CH::channel())
-    }
-}
-
-impl<DI, IC, CONV, E> DynamicOneShot for Ads1x1x<DI, IC, CONV, mode::OneShot>
-where
-    DI: interface::ReadData<Error = E> + interface::WriteData<Error = E>,
-    CONV: conversion::ConvertMeasurement,
-{
-    type Error = Error<E>;
-
-    fn read(&mut self, channel: ChannelSelection) -> nb::Result<i16, Self::Error> {
+    fn read<CH>(&mut self, _channel: &mut CH) -> nb::Result<i16, Self::Error>
+    where
+        CH: Channel<IC>,
+    {
         if self
             .is_measurement_in_progress()
             .map_err(nb::Error::Other)?
         {
             return Err(nb::Error::WouldBlock);
         }
-        let same_channel = self.config == self.config.with_mux_bits(channel);
+        let same_channel = self.config == self.config.with_mux_bits(CH::ID);
         if self.a_conversion_was_started && same_channel {
             // result is ready
             let value = self
@@ -86,7 +74,7 @@ where
             self.a_conversion_was_started = false;
             return Ok(CONV::convert_measurement(value));
         }
-        let config = self.config.with_mux_bits(channel);
+        let config = self.config.with_mux_bits(CH::ID);
         self.trigger_measurement(&config)
             .map_err(nb::Error::Other)?;
         self.config = config;

@@ -25,7 +25,7 @@ coveralls = { repository = "eldruin/ads1x1x-rs", branch = "master", service = "g
 
 [dependencies]
 nb = "1"
-embedded-hal = { version = "0.2.2", features = ["unproven"] }
+embedded-hal = { git = "https://github.com/Dirbaio/embedded-hal", branch="i2c-bus-device" }
 
 [dev-dependencies]
 linux-embedded-hal = "0.3"
