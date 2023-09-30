@@ -7,11 +7,10 @@ where
     DI: interface::WriteData<Error = E> + interface::ReadData<Error = E>,
 {
     pub(super) fn set_operating_mode(&mut self, mode: OperatingMode) -> Result<(), Error<E>> {
-        let config;
-        match mode {
-            OperatingMode::OneShot => config = self.config.with_high(BitFlags::OP_MODE),
-            OperatingMode::Continuous => config = self.config.with_low(BitFlags::OP_MODE),
-        }
+        let config = match mode {
+            OperatingMode::OneShot => self.config.with_high(BitFlags::OP_MODE),
+            OperatingMode::Continuous => self.config.with_low(BitFlags::OP_MODE),
+        };
         self.iface.write_register(Register::CONFIG, config.bits)?;
         self.config = config;
         Ok(())

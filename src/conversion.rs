@@ -7,7 +7,7 @@ pub trait ConvertThreshold<E>: private::Sealed {
 
 impl<E> ConvertThreshold<E> for ic::Resolution12Bit {
     fn convert_threshold(value: i16) -> Result<u16, Error<E>> {
-        if value < -2048 || value > 2047 {
+        if !(-2048..=2047).contains(&value) {
             return Err(Error::InvalidInputData);
         }
         Ok((value << 4) as u16)

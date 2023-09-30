@@ -1,11 +1,12 @@
 //! I2C interface
 
 use crate::{private, Error};
-use embedded_hal::blocking;
+use embedded_hal::i2c::I2c;
 
 /// I2C interface
 #[derive(Debug, Default)]
-pub struct I2cInterface<I2C> {
+pub struct I2cInterface<I2C>
+where I2C: I2c {
     pub(crate) i2c: I2C,
     pub(crate) address: u8,
 }
@@ -20,7 +21,7 @@ pub trait WriteData: private::Sealed {
 
 impl<I2C, E> WriteData for I2cInterface<I2C>
 where
-    I2C: blocking::i2c::Write<Error = E>,
+    I2C: I2c<Error = E>,
 {
     type Error = E;
     fn write_register(&mut self, register: u8, data: u16) -> Result<(), Error<E>> {
@@ -39,7 +40,7 @@ pub trait ReadData: private::Sealed {
 
 impl<I2C, E> ReadData for I2cInterface<I2C>
 where
-    I2C: blocking::i2c::WriteRead<Error = E>,
+    I2C: I2c<Error = E>,
 {
     type Error = E;
     fn read_register(&mut self, register: u8) -> Result<u16, Error<E>> {
