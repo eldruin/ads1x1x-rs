@@ -139,12 +139,14 @@ pub enum ComparatorQueue {
 /// The FSR is fixed at ±2.048 V in the ADS1x13.
 #[derive(Clone, Copy, Debug, PartialEq)]
 #[allow(non_camel_case_types)]
+#[derive(Default)]
 pub enum FullScaleRange {
     /// The measurable range is ±6.144V.
     Within6_144V,
     /// The measurable range is ±4.096V.
     Within4_096V,
     /// The measurable range is ±2.048V. (default)
+    #[default]
     Within2_048V,
     /// The measurable range is ±1.024V.
     Within1_024V,
@@ -241,11 +243,7 @@ impl Default for Config {
     }
 }
 
-impl Default for FullScaleRange {
-    fn default() -> Self {
-        FullScaleRange::Within2_048V
-    }
-}
+
 
 /// ADS1x1x ADC driver
 #[derive(Debug, Default)]
