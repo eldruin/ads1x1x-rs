@@ -4,7 +4,7 @@ use crate::{
     Config, DynamicOneShot, Error, ModeChangeError, Register,
 };
 use core::marker::PhantomData;
-use embedded_hal::adc;
+use crate::adc;
 
 impl<DI, IC, CONV, E> Ads1x1x<DI, IC, CONV, mode::OneShot>
 where

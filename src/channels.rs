@@ -1,6 +1,6 @@
 //! ADC input channels
 use crate::{ic, Ads1x1x, BitFlags as BF, Config};
-use embedded_hal::adc;
+use crate::adc;
 
 /// ADC input channel selection
 #[allow(dead_code)]

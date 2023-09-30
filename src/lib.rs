@@ -202,7 +202,7 @@
 //! adc.set_comparator_latching(ComparatorLatching::Latching).unwrap();
 //! ```
 
-#![doc(html_root_url = "https://docs.rs/ads1x1x/0.2.2")]
+#![doc(html_root_url = "https://docs.rs/ads1x1x/0.3.0")]
 #![deny(unsafe_code)]
 #![deny(missing_docs)]
 #![no_std]
@@ -238,6 +238,7 @@ impl BitFlags {
 }
 
 mod channels;
+mod adc;
 pub use crate::channels::{channel, ChannelSelection};
 mod construction;
 mod conversion;
@@ -259,7 +260,8 @@ mod private {
     use super::{ic, interface, Ads1x1x};
     pub trait Sealed {}
 
-    impl<I2C> Sealed for interface::I2cInterface<I2C> {}
+    impl<I2C> Sealed for interface::I2cInterface<I2C>
+    where I2C: embedded_hal::i2c::I2c {}
     impl<DI, IC, CONV, MODE> Sealed for Ads1x1x<DI, IC, CONV, MODE> {}
 
     impl Sealed for ic::Resolution12Bit {}
