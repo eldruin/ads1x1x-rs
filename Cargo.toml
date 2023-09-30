@@ -18,7 +18,7 @@ include = [
     "/LICENSE-MIT",
     "/LICENSE-APACHE",
 ]
-edition = "2018"
+edition = "2021"
 
 [badges]
 coveralls = { repository = "eldruin/ads1x1x-rs", branch = "master", service = "github" }
