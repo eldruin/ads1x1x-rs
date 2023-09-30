@@ -238,7 +238,7 @@ impl BitFlags {
 }
 
 mod channels;
-mod adc;
+pub mod adc;
 pub use crate::channels::{channel, ChannelSelection};
 mod construction;
 mod conversion;
