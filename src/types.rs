@@ -1,7 +1,8 @@
 //! Type definitions.
 
-use crate::{channels::ChannelSelection, private};
 use core::marker::PhantomData;
+
+use crate::{private, ChannelSelection};
 
 /// Errors in this crate
 #[derive(Debug)]

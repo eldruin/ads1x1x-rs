@@ -129,13 +129,12 @@
 //! ### Make a one-shot measurement
 //! ```no_run
 //! use ads1x1x::{channel, Ads1x1x, SlaveAddr};
-//! use embedded_hal::adc::OneShot;
 //! use linux_embedded_hal::I2cdev;
 //! use nb::block;
 //!
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
 //! let mut adc = Ads1x1x::new_ads1013(dev, SlaveAddr::default());
-//! let measurement = block!(adc.read(&mut channel::DifferentialA0A1)).unwrap();
+//! let measurement = block!(adc.read(channel::DifferentialA0A1)).unwrap();
 //! println!("Measurement: {}", measurement);
 //! let _dev = adc.destroy_ads1013(); // get I2C device back
 //! ```
@@ -201,8 +200,6 @@
 //! adc.set_high_threshold_raw(1500).unwrap();
 //! adc.set_comparator_latching(ComparatorLatching::Latching).unwrap();
 //! ```
-
-#![doc(html_root_url = "https://docs.rs/ads1x1x/0.2.2")]
 #![deny(unsafe_code)]
 #![deny(missing_docs)]
 #![no_std]
@@ -237,8 +234,8 @@ impl BitFlags {
     const COMP_QUE0: u16 = 0b0000_0000_0000_0001;
 }
 
-mod channels;
-pub use crate::channels::{channel, ChannelSelection};
+pub mod channel;
+pub use channel::{ChannelId, ChannelSelection};
 mod construction;
 mod conversion;
 pub use crate::conversion::{ConvertMeasurement, ConvertThreshold};

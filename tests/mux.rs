@@ -1,5 +1,5 @@
 use ads1x1x::channel;
-use embedded_hal_mock::i2c::Transaction as I2cTrans;
+use embedded_hal_mock::eh1::i2c::Transaction as I2cTrans;
 use nb::block;
 
 mod common;
@@ -12,7 +12,6 @@ macro_rules! mux_test {
     ($name:ident, $CS:ident, $config_bits:expr, $other_CS:ident, $other_config_bits:expr) => {
         mod $name {
             use super::*;
-            use embedded_hal::adc::OneShot;
 
             #[test]
             fn can_read() {
@@ -33,7 +32,7 @@ macro_rules! mux_test {
                     I2cTrans::write_read(DEV_ADDR, vec![Register::CONVERSION], vec![0x80, 0x00]),
                 ];
                 let mut dev = new(&transactions);
-                let measurement = block!(dev.read(&mut channel::$CS)).unwrap();
+                let measurement = block!(dev.read(channel::$CS)).unwrap();
                 assert_eq!(-2048, measurement);
                 destroy(dev);
             }
@@ -67,8 +66,8 @@ macro_rules! mux_test {
                     I2cTrans::write_read(DEV_ADDR, vec![Register::CONVERSION], vec![0x80, 0x00]),
                 ];
                 let mut dev = new(&transactions);
-                assert_would_block!(dev.read(&mut channel::$CS));
-                let measurement = block!(dev.read(&mut channel::$other_CS)).unwrap();
+                assert_would_block!(dev.read(channel::$CS));
+                let measurement = block!(dev.read(channel::$other_CS)).unwrap();
                 assert_eq!(-2048, measurement);
                 destroy(dev);
             }
@@ -89,7 +88,7 @@ macro_rules! mux_test {
                 ];
                 let dev = new(&transactions);
                 let mut dev = dev.into_continuous().ok().unwrap();
-                dev.select_channel(&mut channel::$CS).unwrap();
+                dev.select_channel(channel::$CS).unwrap();
                 destroy(dev);
             }
         }
