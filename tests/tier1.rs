@@ -1,5 +1,5 @@
 use ads1x1x::{channel, DataRate12Bit, DataRate16Bit};
-use embedded_hal_mock::i2c::Transaction as I2cTrans;
+use embedded_hal_mock::eh1::i2c::Transaction as I2cTrans;
 use nb::block;
 
 mod common;
@@ -12,7 +12,6 @@ macro_rules! measure_tests {
     ($IC:ident, $create:ident, $destroy:ident, $expected:expr) => {
         mod $IC {
             use super::*;
-            use embedded_hal::adc::OneShot;
 
             mod would_block {
                 use super::*;
@@ -26,7 +25,7 @@ macro_rules! measure_tests {
                         vec![config.msb(), config.lsb()],
                     )];
                     let mut dev = $create(&transactions);
-                    assert_would_block!(dev.read(&mut channel::DifferentialA0A1));
+                    assert_would_block!(dev.read(channel::DifferentialA0A1));
                     $destroy(dev);
                 }
             }
@@ -53,7 +52,7 @@ macro_rules! measure_tests {
                     I2cTrans::write_read(DEV_ADDR, vec![Register::CONVERSION], vec![0x80, 0x00]),
                 ];
                 let mut dev = $create(&transactions);
-                let measurement = block!(dev.read(&mut channel::DifferentialA0A1)).unwrap();
+                let measurement = block!(dev.read(channel::DifferentialA0A1)).unwrap();
                 assert_eq!($expected, measurement);
                 $destroy(dev);
             }

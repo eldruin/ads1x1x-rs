@@ -18,18 +18,18 @@ include = [
     "/LICENSE-MIT",
     "/LICENSE-APACHE",
 ]
-edition = "2018"
+edition = "2021"
 
 [badges]
 coveralls = { repository = "eldruin/ads1x1x-rs", branch = "master", service = "github" }
 
 [dependencies]
 nb = "1"
-embedded-hal = { version = "0.2.2", features = ["unproven"] }
+embedded-hal = "1"
 
 [dev-dependencies]
-linux-embedded-hal = "0.3"
-embedded-hal-mock = "0.7"
+embedded-hal-mock = { version = "0.10", default-features = false, features = ["eh1"] }
+linux-embedded-hal = "0.4"
 
 [profile.release]
 lto = true

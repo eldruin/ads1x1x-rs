@@ -77,7 +77,6 @@ Please find additional examples using hardware in this repository: [driver-examp
 [driver-examples]: https://github.com/eldruin/driver-examples
 
 ```rust
-use embedded_hal::adc::OneShot;
 use linux_embedded_hal::I2cdev;
 use nb::block;
 
@@ -87,7 +86,7 @@ fn main() {
     let dev = I2cdev::new("/dev/i2c-1").unwrap();
     let address = SlaveAddr::default();
     let mut adc = Ads1x1x::new_ads1013(dev, address);
-    let value = block!(adc.read(&mut channel::DifferentialA0A1)).unwrap();
+    let value = block!(adc.read(channel::DifferentialA0A1)).unwrap();
     println!("Measurement: {}", value);
     // get I2C device back
     let _dev = adc.destroy_ads1013();

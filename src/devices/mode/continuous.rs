@@ -1,11 +1,10 @@
 //! Continuous measurement mode
 
 use crate::{
-    channels::ChannelSelection, conversion, devices::OperatingMode, interface, mode, Ads1x1x,
-    Error, ModeChangeError, Register,
+    conversion, devices::OperatingMode, interface, mode, Ads1x1x, ChannelId, Error,
+    ModeChangeError, Register,
 };
 use core::marker::PhantomData;
-use embedded_hal::adc;
 
 impl<DI, IC, CONV, E> Ads1x1x<DI, IC, CONV, mode::Continuous>
 where
@@ -41,11 +40,9 @@ where
     /// Note that when changing the channel in continuous conversion mode, the
     /// ongoing conversion will be completed.
     /// The following conversions will use the new channel configuration.
-    pub fn select_channel<CH>(&mut self, _channel: &mut CH) -> Result<(), Error<E>>
-    where
-        CH: adc::Channel<Ads1x1x<DI, IC, CONV, mode::OneShot>, ID = ChannelSelection>,
-    {
-        let config = self.config.with_mux_bits(CH::channel());
+    #[allow(unused_variables)]
+    pub fn select_channel<CH: ChannelId<Self>>(&mut self, channel: CH) -> Result<(), Error<E>> {
+        let config = self.config.with_mux_bits(CH::channel_id());
         self.iface.write_register(Register::CONFIG, config.bits)?;
         self.config = config;
         Ok(())
