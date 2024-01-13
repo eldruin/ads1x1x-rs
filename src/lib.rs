@@ -36,7 +36,7 @@
 //! [`disable_comparator()`]: struct.Ads1x1x.html#method.disable_comparator
 //! [`use_alert_rdy_pin_as_ready()`]: struct.Ads1x1x.html#method.use_alert_rdy_pin_as_ready
 //!
-//! ## The devices
+//! # The devices
 //!
 //! The devices are precision, low power, 12/16-bit analog-to-digital
 //! converters (ADC) that provide all features necessary to measure the most
@@ -55,7 +55,7 @@
 //! The devices operate either in continuous-conversion mode, or in a
 //! single-shot mode that automatically powers down after a conversion.
 //! Single-shot mode significantly reduces current consumption during idle
-//! periods. Data is transferred through I2C.
+//! periods. Data is transferred through I²C.
 //!
 //! Here is a comparison of the caracteristics of the devices:
 //!
@@ -72,19 +72,17 @@
 //! - [ADS101x](http://www.ti.com/lit/ds/symlink/ads1015.pdf)
 //! - [ADS111x](http://www.ti.com/lit/ds/symlink/ads1115.pdf)
 //!
-//! ## Usage examples (see also examples folder)
+//! # Examples
 //!
 //! To use this driver, import this crate and an `embedded_hal` implementation,
 //! then instantiate the appropriate device.
-//! In the following examples an instance of the device ADS1013 will be created
-//! as an example. Other devices can be created with similar methods like:
-//! `Ads1x1x::new_ads1114(...)`.
+//! In the following examples an instance of the device ADS1013 will be created.
 //!
 //! Please find additional examples using hardware in this repository: [driver-examples]
 //!
 //! [driver-examples]: https://github.com/eldruin/driver-examples
 //!
-//! ### Create a driver instance for an ADS1013 with the default address.
+//! ## Creating a Driver Instance for an ADS1013
 //!
 //! ```no_run
 //! use linux_embedded_hal::I2cdev;
@@ -98,7 +96,7 @@
 //! let dev = adc.destroy_ads1013();
 //! ```
 //!
-//! ### Create a driver instance for an ADS1013 with the ADDR pin connected to SDA.
+//! ## Creating a driver instance for an ADS1013 with the ADDR pin connected to SDA.
 //!
 //! ```no_run
 //! use linux_embedded_hal::I2cdev;
@@ -108,7 +106,8 @@
 //! let adc = Ads1x1x::new_ads1013(dev, TargetAddr::Sda);
 //! ```
 //!
-//! ### Make a one-shot measurement
+//! ## Taking a One-Shot Measurement
+//!
 //! ```no_run
 //! use ads1x1x::{channel, Ads1x1x, TargetAddr};
 //! use linux_embedded_hal::I2cdev;
@@ -121,7 +120,7 @@
 //! let _dev = adc.destroy_ads1013(); // get I2C device back
 //! ```
 //!
-//! ### Change into continuous conversion mode and read the last measurement
+//! ## Changing to Continuous Conversion Mode and Reading the Last Measurement
 //!
 //! Changing the mode may fail in case there was a communication error.
 //! In this case, you can retrieve the unchanged device from the error type.
@@ -133,7 +132,9 @@
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
 //! let adc = Ads1x1x::new_ads1013(dev, TargetAddr::default());
 //! match adc.into_continuous() {
-//!     Err(ModeChangeError::I2C(e, adc)) => /* mode change failed handling */ panic!(),
+//!     Err(ModeChangeError::I2C(e, adc)) => {
+//!         panic!("Mode change failed: {e}")
+//!     },
 //!     Ok(mut adc) => {
 //!         let measurement = adc.read().unwrap();
 //!         // ...
@@ -142,7 +143,7 @@
 //! ```
 //!
 //!
-//! ### Set the data rate
+//! ## Setting the Data Rate
 //! For 12-bit devices, the available data rates are given by `DataRate12Bit`.
 //! For 16-bit devices, the available data rates are given by `DataRate16Bit`.
 //!
@@ -155,7 +156,8 @@
 //! adc.set_data_rate(DataRate16Bit::Sps860).unwrap();
 //! ```
 //!
-//! ### Configure the comparator
+//! ## Configuring the Comparator
+//!
 //! Configure the comparator to assert when the voltage drops below -1.5V
 //! or goes above 1.5V in at least two consecutive conversions. Then the
 //! ALERT/RDY pin will be set high and it will be kept so until the

@@ -31,7 +31,7 @@ pub mod mode {
     pub struct Continuous(());
 }
 
-/// Data rate for ADS1013, ADS1014, ADS1015
+/// Data rate for ADS101x.
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub enum DataRate12Bit {
     /// 128 SPS
@@ -51,7 +51,7 @@ pub enum DataRate12Bit {
     Sps3300,
 }
 
-/// Data rate for ADS1113, ADS1114, ADS1115
+/// Data rate for ADS111x.
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub enum DataRate16Bit {
     /// 8 SPS
@@ -73,7 +73,7 @@ pub enum DataRate16Bit {
     Sps860,
 }
 
-/// Comparator mode (only for ADS1x14, ADS1x15)
+/// Comparator mode (only for ADS1x14, ADS1x15).
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub enum ComparatorMode {
     #[default]
@@ -92,7 +92,7 @@ pub enum ComparatorMode {
     Window,
 }
 
-/// Comparator polarity (only for ADS1x14, ADS1x15)
+/// Comparator polarity (only for ADS1x14, ADS1x15).
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub enum ComparatorPolarity {
     #[default]
@@ -102,7 +102,7 @@ pub enum ComparatorPolarity {
     ActiveHigh,
 }
 
-/// Comparator latching (only for ADS1x14, ADS1x15)
+/// Comparator latching (only for ADS1x14, ADS1x15).
 ///
 /// Select whether the ALERT/RDY pin latches after being asserted or clears
 /// after conversions are within the margin of the upper and lower
@@ -123,7 +123,7 @@ pub enum ComparatorLatching {
     Latching,
 }
 
-/// Comparator alert queue (only for ADS1x14, ADS1x15)
+/// Comparator alert queue (only for ADS1x14, ADS1x15).
 ///
 /// The default state of the comparator is deactivated. It can be activated by setting
 /// the comparator queue.
@@ -138,7 +138,7 @@ pub enum ComparatorQueue {
     Four,
 }
 
-/// Full-scale range configuration for the programmable gain amplifier (PGA) (only for ADS1x14, ADS1x15)
+/// Full-scale range configuration for the programmable gain amplifier (PGA) (only for ADS1x14, ADS1x15).
 ///
 /// This sets the input voltage measurable range.
 /// The FSR is fixed at ±2.048 V in the ADS1x13.
