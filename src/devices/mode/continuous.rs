@@ -2,7 +2,7 @@
 
 use crate::{
     devices::OperatingMode, ic, mode, Ads1013, Ads1014, Ads1015, Ads1113, Ads1114, Ads1115,
-    ChannelId, Error, ModeChangeError, Register,
+    ChannelId, Error, Register,
 };
 use core::marker::PhantomData;
 
@@ -13,11 +13,11 @@ macro_rules! impl_continuous {
             I2C: embedded_hal::i2c::I2c<Error = E>,
         {
             /// Changes operating mode to `OneShot`.
-            pub fn into_one_shot(
-                mut self,
-            ) -> Result<$Ads<I2C, mode::OneShot>, ModeChangeError<E, Self>> {
-                if let Err(Error::I2C(e)) = self.set_operating_mode(OperatingMode::OneShot) {
-                    return Err(ModeChangeError::I2C(e, self));
+            ///
+            /// On error, returns a pair of the error and the current instance.
+            pub fn into_one_shot(mut self) -> Result<$Ads<I2C, mode::OneShot>, (Error<E>, Self)> {
+                if let Err(e) = self.set_operating_mode(OperatingMode::OneShot) {
+                    return Err((e, self));
                 }
                 Ok($Ads {
                     i2c: self.i2c,

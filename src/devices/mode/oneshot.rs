@@ -3,7 +3,7 @@ use core::marker::PhantomData;
 
 use crate::{
     devices::OperatingMode, ic, mode, Ads1013, Ads1014, Ads1015, Ads1113, Ads1114, Ads1115,
-    BitFlags, ChannelId, Config, Error, ModeChangeError, Register,
+    BitFlags, ChannelId, Config, Error, Register,
 };
 
 macro_rules! impl_one_shot {
@@ -13,11 +13,13 @@ macro_rules! impl_one_shot {
             I2C: embedded_hal::i2c::I2c<Error = E>,
         {
             /// Change operating mode to Continuous
+            ///
+            /// On error, returns a pair of the error and the current instance.
             pub fn into_continuous(
                 mut self,
-            ) -> Result<$Ads<I2C, mode::Continuous>, ModeChangeError<E, Self>> {
-                if let Err(Error::I2C(e)) = self.set_operating_mode(OperatingMode::Continuous) {
-                    return Err(ModeChangeError::I2C(e, self));
+            ) -> Result<$Ads<I2C, mode::Continuous>, (Error<E>, Self)> {
+                if let Err(e) = self.set_operating_mode(OperatingMode::Continuous) {
+                    return Err((e, self));
                 }
                 Ok($Ads {
                     i2c: self.i2c,
