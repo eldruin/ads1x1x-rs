@@ -1,9 +1,9 @@
 //! Type definitions.
 
-use core::marker::PhantomData;
+use crate::BitFlags as BF;
 
 /// Errors in this crate
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum Error<E> {
     /// I²C bus error
     I2C(E),
@@ -25,10 +25,12 @@ pub enum ModeChangeError<E, DEV> {
 /// Mode marker types
 pub mod mode {
     /// One-shot operating mode / power-down state (default)
-    pub struct OneShot(());
+    #[non_exhaustive]
+    pub struct OneShot;
 
     /// Continuous conversion mode
-    pub struct Continuous(());
+    #[non_exhaustive]
+    pub struct Continuous;
 }
 
 /// Data rate for ADS101x.
@@ -51,6 +53,20 @@ pub enum DataRate12Bit {
     Sps3300,
 }
 
+impl DataRate12Bit {
+    pub(crate) fn configure(self, cfg: &mut Config) {
+        *cfg = match self {
+            Self::Sps128 => cfg.with_low(BF::DR2).with_low(BF::DR1).with_low(BF::DR0),
+            Self::Sps250 => cfg.with_low(BF::DR2).with_low(BF::DR1).with_high(BF::DR0),
+            Self::Sps490 => cfg.with_low(BF::DR2).with_high(BF::DR1).with_low(BF::DR0),
+            Self::Sps920 => cfg.with_low(BF::DR2).with_high(BF::DR1).with_high(BF::DR0),
+            Self::Sps1600 => cfg.with_high(BF::DR2).with_low(BF::DR1).with_low(BF::DR0),
+            Self::Sps2400 => cfg.with_high(BF::DR2).with_low(BF::DR1).with_high(BF::DR0),
+            Self::Sps3300 => cfg.with_high(BF::DR2).with_high(BF::DR1).with_low(BF::DR0),
+        };
+    }
+}
+
 /// Data rate for ADS111x.
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub enum DataRate16Bit {
@@ -71,6 +87,21 @@ pub enum DataRate16Bit {
     Sps475,
     /// 860 SPS
     Sps860,
+}
+
+impl DataRate16Bit {
+    pub(crate) fn configure(self, cfg: &mut Config) {
+        *cfg = match self {
+            Self::Sps8 => cfg.with_low(BF::DR2).with_low(BF::DR1).with_low(BF::DR0),
+            Self::Sps16 => cfg.with_low(BF::DR2).with_low(BF::DR1).with_high(BF::DR0),
+            Self::Sps32 => cfg.with_low(BF::DR2).with_high(BF::DR1).with_low(BF::DR0),
+            Self::Sps64 => cfg.with_low(BF::DR2).with_high(BF::DR1).with_high(BF::DR0),
+            Self::Sps128 => cfg.with_high(BF::DR2).with_low(BF::DR1).with_low(BF::DR0),
+            Self::Sps250 => cfg.with_high(BF::DR2).with_low(BF::DR1).with_high(BF::DR0),
+            Self::Sps475 => cfg.with_high(BF::DR2).with_high(BF::DR1).with_low(BF::DR0),
+            Self::Sps860 => cfg.with_high(BF::DR2).with_high(BF::DR1).with_high(BF::DR0),
+        };
+    }
 }
 
 /// Comparator mode (only for ADS1x14, ADS1x15).
@@ -218,19 +249,6 @@ impl Default for Config {
     fn default() -> Self {
         Config { bits: 0x8583 }
     }
-}
-
-/// ADS1x1x ADC driver
-#[derive(Debug, Default)]
-pub struct Ads1x1x<I2C, IC, CONV, MODE> {
-    pub(crate) i2c: I2C,
-    pub(crate) address: u8,
-    pub(crate) config: Config,
-    pub(crate) fsr: FullScaleRange,
-    pub(crate) a_conversion_was_started: bool,
-    pub(crate) _conv: PhantomData<CONV>,
-    pub(crate) _ic: PhantomData<IC>,
-    pub(crate) _mode: PhantomData<MODE>,
 }
 
 #[cfg(test)]

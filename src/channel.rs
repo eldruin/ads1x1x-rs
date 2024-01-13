@@ -1,18 +1,20 @@
 //! ADC input channels.
 
-use crate::{ic, Ads1x1x, BitFlags as BF, Config};
+use crate::{Ads1013, Ads1014, Ads1015, Ads1113, Ads1114, Ads1115, BitFlags as BF, Config};
 
 use private::ChannelSelection;
 
 /// Marker type for an ADC input channel.
-pub trait ChannelId<T> {
+pub trait ChannelId<T>: private::Sealed {
     /// Get the channel.
     fn channel_id() -> ChannelSelection;
 }
 
 macro_rules! impl_channels {
-    ($(#[doc = $doc:expr] $CH:ident => [$($IC:ident),+]),+ $(,)?) => {
+    ($(#[doc = $doc:expr] $CH:ident => [$($Ads:ident),+]),+ $(,)?) => {
         mod private {
+            pub trait Sealed {}
+
             #[derive(Debug, Clone, Copy)]
             /// ADC input channel selection.
             pub enum ChannelSelection {
@@ -27,8 +29,10 @@ macro_rules! impl_channels {
             #[doc = $doc]
             pub struct $CH;
 
+            impl private::Sealed for $CH {}
+
             $(
-                impl<I2C, CONV, MODE> ChannelId<Ads1x1x<I2C, ic::$IC, CONV, MODE>> for $CH {
+                impl<I2C, MODE> ChannelId<$Ads<I2C, MODE>> for $CH {
                     fn channel_id() -> ChannelSelection {
                         ChannelSelection::$CH
                     }

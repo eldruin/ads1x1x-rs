@@ -24,9 +24,9 @@ macro_rules! measure_tests {
                         vec![Register::CONFIG],
                         vec![config.msb(), config.lsb()],
                     )];
-                    let mut dev = $create(&transactions);
-                    assert_would_block!(dev.read(channel::DifferentialA0A1));
-                    $destroy(dev);
+                    let mut adc = $create(&transactions);
+                    assert_would_block!(adc.read(channel::DifferentialA0A1));
+                    $destroy(adc);
                 }
             }
 
@@ -51,10 +51,10 @@ macro_rules! measure_tests {
                     ),
                     I2cTrans::write_read(DEV_ADDR, vec![Register::CONVERSION], vec![0x80, 0x00]),
                 ];
-                let mut dev = $create(&transactions);
-                let measurement = block!(dev.read(channel::DifferentialA0A1)).unwrap();
+                let mut adc = $create(&transactions);
+                let measurement = block!(adc.read(channel::DifferentialA0A1)).unwrap();
                 assert_eq!($expected, measurement);
-                $destroy(dev);
+                $destroy(adc);
             }
 
             #[test]
@@ -64,11 +64,11 @@ macro_rules! measure_tests {
                     I2cTrans::write(DEV_ADDR, vec![Register::CONFIG, config.msb(), config.lsb()]),
                     I2cTrans::write_read(DEV_ADDR, vec![Register::CONVERSION], vec![0x80, 0x00]),
                 ];
-                let dev = $create(&transactions);
-                let mut dev = dev.into_continuous().ok().unwrap();
-                let measurement = dev.read().unwrap();
+                let adc = $create(&transactions);
+                let mut adc = adc.into_continuous().ok().unwrap();
+                let measurement = adc.read().unwrap();
                 assert_eq!($expected, measurement);
-                $destroy(dev);
+                $destroy(adc);
             }
         }
     };
@@ -88,9 +88,9 @@ mod data_rate_12bit {
                     DEV_ADDR,
                     vec![Register::CONFIG, $config.msb(), $config.lsb()],
                 )];
-                let mut dev = new_ads1013(&transactions);
-                dev.set_data_rate(DataRate12Bit::$variant).unwrap();
-                destroy_ads1013(dev);
+                let mut adc = new_ads1013(&transactions);
+                adc.set_data_rate(DataRate12Bit::$variant).unwrap();
+                destroy_ads1013(adc);
             }
         };
     }
@@ -164,9 +164,9 @@ mod data_rate_16bit {
                     DEV_ADDR,
                     vec![Register::CONFIG, $config.msb(), $config.lsb()],
                 )];
-                let mut dev = new_ads1113(&transactions);
-                dev.set_data_rate(DataRate16Bit::$variant).unwrap();
-                destroy_ads1113(dev);
+                let mut adc = new_ads1113(&transactions);
+                adc.set_data_rate(DataRate16Bit::$variant).unwrap();
+                destroy_ads1113(adc);
             }
         };
     }
@@ -245,9 +245,9 @@ fn can_read_measurement_in_progress() {
         vec![Register::CONFIG],
         vec![config_os.msb(), config_os.lsb()],
     )];
-    let mut dev = new_ads1013(&transactions);
-    assert!(dev.is_measurement_in_progress().unwrap());
-    destroy_ads1013(dev);
+    let mut adc = new_ads1013(&transactions);
+    assert!(adc.is_measurement_in_progress().unwrap());
+    destroy_ads1013(adc);
 }
 
 #[test]
@@ -258,9 +258,9 @@ fn can_read_measurement_not_in_progress() {
         vec![Register::CONFIG],
         vec![config_os.msb(), config_os.lsb()],
     )];
-    let mut dev = new_ads1013(&transactions);
-    assert!(!dev.is_measurement_in_progress().unwrap());
-    destroy_ads1013(dev);
+    let mut adc = new_ads1013(&transactions);
+    assert!(!adc.is_measurement_in_progress().unwrap());
+    destroy_ads1013(adc);
 }
 
 #[test]
@@ -270,9 +270,9 @@ fn can_convert_to_continuous() {
         DEV_ADDR,
         vec![Register::CONFIG, config.msb(), config.lsb()],
     )];
-    let dev = new_ads1013(&transactions);
-    let dev = dev.into_continuous().ok().unwrap();
-    destroy_ads1013(dev);
+    let adc = new_ads1013(&transactions);
+    let adc = adc.into_continuous().ok().unwrap();
+    destroy_ads1013(adc);
 }
 
 #[test]
@@ -289,8 +289,8 @@ fn can_convert_to_one_shot() {
             vec![Register::CONFIG, config_os.msb(), config_os.lsb()],
         ),
     ];
-    let dev = new_ads1013(&transactions);
-    let dev = dev.into_continuous().ok().unwrap();
-    let dev = dev.into_one_shot().ok().unwrap();
-    destroy_ads1013(dev);
+    let adc = new_ads1013(&transactions);
+    let adc = adc.into_continuous().ok().unwrap();
+    let adc = adc.into_one_shot().ok().unwrap();
+    destroy_ads1013(adc);
 }
