@@ -13,9 +13,9 @@ macro_rules! set_value_test {
         #[test]
         fn $name() {
             let transactions = [I2cTrans::write(DEV_ADDR, vec![Register::$reg, $msb, $lsb])];
-            let mut dev = new_ads1014(&transactions);
-            dev.$method($value).unwrap();
-            destroy_ads1014(dev);
+            let mut adc = new_ads1014(&transactions);
+            adc.$method($value).unwrap();
+            destroy_ads1014(adc);
         }
     };
 }
@@ -89,9 +89,9 @@ fn can_disable_comparator() {
         DEV_ADDR,
         vec![Register::CONFIG, config.msb(), config.lsb()],
     )];
-    let mut dev = new_ads1014(&transactions);
-    dev.disable_comparator().unwrap();
-    destroy_ads1014(dev);
+    let mut adc = new_ads1014(&transactions);
+    adc.disable_comparator().unwrap();
+    destroy_ads1014(adc);
 }
 
 mod can_set_comparator_queue {
@@ -128,9 +128,9 @@ fn can_use_alert_rdy_pin_as_rdy_does_not_disable_comparator_if_already_disabled(
         I2cTrans::write(DEV_ADDR, vec![Register::HIGH_TH, 0b1000_0000, 0]),
         I2cTrans::write(DEV_ADDR, vec![Register::LOW_TH, 0, 0]),
     ];
-    let mut dev = new_ads1014(&transactions);
-    dev.use_alert_rdy_pin_as_ready().unwrap();
-    destroy_ads1014(dev);
+    let mut adc = new_ads1014(&transactions);
+    adc.use_alert_rdy_pin_as_ready().unwrap();
+    destroy_ads1014(adc);
 }
 
 #[test]
@@ -154,10 +154,10 @@ fn can_use_alert_rdy_pin_as_rdy_disabled_comparator() {
         I2cTrans::write(DEV_ADDR, vec![Register::HIGH_TH, 0b1000_0000, 0]),
         I2cTrans::write(DEV_ADDR, vec![Register::LOW_TH, 0, 0]),
     ];
-    let mut dev = new_ads1014(&transactions);
-    dev.set_comparator_queue(ComparatorQueue::One).unwrap();
-    dev.use_alert_rdy_pin_as_ready().unwrap();
-    destroy_ads1014(dev);
+    let mut adc = new_ads1014(&transactions);
+    adc.set_comparator_queue(ComparatorQueue::One).unwrap();
+    adc.use_alert_rdy_pin_as_ready().unwrap();
+    destroy_ads1014(adc);
 }
 
 mod can_set_full_scale_range {

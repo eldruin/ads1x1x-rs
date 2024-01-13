@@ -13,21 +13,21 @@ analog-to-digital converters (ADC), based on the [`embedded-hal`] traits.
 [Introductory blog post]
 
 This driver allows you to:
-- Set the operating mode to one-shot or continuous. See: `into_continuous()`.
-- Make a measurement in one-shot mode. See: `read()`.
-- Start continuous conversion mode. See: `start()`.
-- Read the last measurement made in continuous conversion mode. See: `read()`.
-- Set the data rate. See: `set_data_rate()`.
-- Set the full-scale range (gain amplifier). See `set_full_scale_range()`.
-- Read whether a measurement is in progress. See: `is_measurement_in_progress()`.
-- Set the ALERT/RDY pin to be used as conversion-ready pin. See: `use_alert_rdy_pin_as_ready()`.
+- Set the operating mode to one-shot or continuous. See `Ads1115::into_continuous`.
+- Make a measurement in one-shot mode. See `Ads1115::read`.
+- Start continuous conversion mode. See `Ads1115::start`.
+- Read the last measurement made in continuous conversion mode. See `Ads1115::read`.
+- Set the data rate. See `Ads1115::set_data_rate`.
+- Set the full-scale range (gain amplifier). Se `Ads1115::set_full_scale_range`.
+- Read whether a measurement is in progress. See `Ads1115::is_measurement_in_progress`.
+- Set the ALERT/RDY pin to be used as conversion-ready pin. See `Ads1115::use_alert_rdy_pin_as_ready`.
 - Comparator:
-    - Set the low and high thresholds. See: `set_high_threshold_raw()`.
-    - Set the comparator mode. See: `set_comparator_mode()`.
-    - Set the comparator polarity. See: `set_comparator_polarity()`.
-    - Set the comparator latching. See: `set_comparator_latching()`.
-    - Set the comparator queue. See: `set_comparator_queue()`.
-    - Disable the comparator. See: `disable_comparator()`.
+    - Set the low and high thresholds. See `Ads1115::set_high_threshold_raw`.
+    - Set the comparator mode. See `Ads1115::set_comparator_mode`.
+    - Set the comparator polarity. See `Ads1115::set_comparator_polarity`.
+    - Set the comparator latching. See `Ads1115::set_comparator_latching`.
+    - Set the comparator queue. See `Ads1115::set_comparator_queue`.
+    - Disable the comparator. See `Ads1115::disable_comparator`.
 
 ## The devices
 
@@ -70,26 +70,27 @@ Datasheets:
 To use this driver, import this crate and an `embedded_hal` implementation,
 then instantiate the appropriate device.
 In the following examples an instance of the device ADS1013 will be created
-as an example. Other devices can be created with similar methods like:
-`Ads1x1x::new_ads1114(...)`.
+as an example.
 
 Please find additional examples using hardware in this repository: [driver-examples]
 
 [driver-examples]: https://github.com/eldruin/driver-examples
 
 ```rust
+use ads1x1x::{channel, Ads1013, SlaveAddr};
 use linux_embedded_hal::I2cdev;
 use nb::block;
 
-use ads1x1x::{channel, Ads1x1x, SlaveAddr};
-
 fn main() {
-    let dev = I2cdev::new("/dev/i2c-1").unwrap();
-    let mut adc = Ads1x1x::new_ads1013(dev, SlaveAddr::default());
+    let i2c = I2cdev::new("/dev/i2c-1").unwrap();
+    let mut adc = Ads1013::new(i2c, SlaveAddr::default());
+
     let value = block!(adc.read(channel::DifferentialA0A1)).unwrap();
     println!("Measurement: {}", value);
-    // get I2C device back
-    let _dev = adc.destroy_ads1013();
+
+    // Get the I2C peripheral back.
+    let i2c = adc.release();
+    drop(i2c);
 }
 ```
 

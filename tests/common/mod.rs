@@ -1,4 +1,4 @@
-use ads1x1x::{ic, mode, Ads1x1x, SlaveAddr};
+use ads1x1x::{mode, Ads1013, Ads1014, Ads1015, Ads1113, Ads1114, Ads1115, SlaveAddr};
 use embedded_hal_mock::eh1::i2c::{Mock as I2cMock, Transaction as I2cTrans};
 
 #[allow(unused)]
@@ -67,31 +67,31 @@ impl Default for Config {
 }
 
 macro_rules! impl_new_destroy {
-    ($ic:ident, $create:ident, $destroy:ident, $conv:ty, $trans:ty, $iface:ty) => {
+    ($Ads:ident, $create:ident, $destroy:ident, $trans:ty) => {
         #[allow(unused)]
-        pub fn $create(transactions: &[$trans]) -> Ads1x1x<$iface, ic::$ic, $conv, mode::OneShot> {
-            Ads1x1x::$create(I2cMock::new(transactions), SlaveAddr::default())
+        pub fn $create(transactions: &[$trans]) -> $Ads<I2cMock, mode::OneShot> {
+            $Ads::new(I2cMock::new(transactions), SlaveAddr::default())
         }
 
         #[allow(unused)]
-        pub fn $destroy<MODE>(dev: Ads1x1x<$iface, ic::$ic, $conv, MODE>) {
-            dev.$destroy().done();
+        pub fn $destroy<MODE>(adc: $Ads<I2cMock, MODE>) {
+            adc.release().done();
         }
     };
 }
 
 macro_rules! impl_new_destroy_i2c {
-    ($ic:ident, $create:ident, $destroy:ident, $conv:ty) => {
-        impl_new_destroy!($ic, $create, $destroy, $conv, I2cTrans, I2cMock);
+    ($Ads:ident, $create:ident, $destroy:ident) => {
+        impl_new_destroy!($Ads, $create, $destroy, I2cTrans);
     };
 }
 
-impl_new_destroy_i2c!(Ads1013, new_ads1013, destroy_ads1013, ic::Resolution12Bit);
-impl_new_destroy_i2c!(Ads1113, new_ads1113, destroy_ads1113, ic::Resolution16Bit);
-impl_new_destroy_i2c!(Ads1014, new_ads1014, destroy_ads1014, ic::Resolution12Bit);
-impl_new_destroy_i2c!(Ads1114, new_ads1114, destroy_ads1114, ic::Resolution16Bit);
-impl_new_destroy_i2c!(Ads1015, new_ads1015, destroy_ads1015, ic::Resolution12Bit);
-impl_new_destroy_i2c!(Ads1115, new_ads1115, destroy_ads1115, ic::Resolution16Bit);
+impl_new_destroy_i2c!(Ads1013, new_ads1013, destroy_ads1013);
+impl_new_destroy_i2c!(Ads1113, new_ads1113, destroy_ads1113);
+impl_new_destroy_i2c!(Ads1014, new_ads1014, destroy_ads1014);
+impl_new_destroy_i2c!(Ads1114, new_ads1114, destroy_ads1114);
+impl_new_destroy_i2c!(Ads1015, new_ads1015, destroy_ads1015);
+impl_new_destroy_i2c!(Ads1115, new_ads1115, destroy_ads1115);
 
 #[macro_export]
 macro_rules! assert_would_block {
