@@ -9,7 +9,7 @@ use crate::{
 
 impl<DI, IC, CONV, MODE, E> Ads1x1x<DI, IC, CONV, MODE>
 where
-    DI: interface::WriteData<Error = E>,
+    DI: interface::ReadWriteRegister<Error = E>,
     IC: ic::Tier2Features,
     CONV: conversion::ConvertThreshold<E>,
 {

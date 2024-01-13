@@ -7,7 +7,7 @@ use core::marker::PhantomData;
 
 impl<DI, IC, CONV, E> Ads1x1x<DI, IC, CONV, mode::OneShot>
 where
-    DI: interface::WriteData<Error = E> + interface::ReadData<Error = E>,
+    DI: interface::ReadWriteRegister<Error = E>,
     CONV: conversion::ConvertMeasurement,
 {
     /// Change operating mode to Continuous
@@ -36,7 +36,7 @@ where
 
 impl<DI, IC, CONV, E> Ads1x1x<DI, IC, CONV, mode::OneShot>
 where
-    DI: interface::ReadData<Error = E> + interface::WriteData<Error = E>,
+    DI: interface::ReadWriteRegister<Error = E>,
     CONV: conversion::ConvertMeasurement,
 {
     fn read_inner(&mut self, channel: ChannelSelection) -> nb::Result<i16, Error<E>> {
@@ -85,7 +85,7 @@ where
 
 impl<DI, IC, CONV, E> DynamicOneShot for Ads1x1x<DI, IC, CONV, mode::OneShot>
 where
-    DI: interface::ReadData<Error = E> + interface::WriteData<Error = E>,
+    DI: interface::ReadWriteRegister<Error = E>,
     CONV: conversion::ConvertMeasurement,
 {
     type Error = Error<E>;

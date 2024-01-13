@@ -6,7 +6,7 @@ use crate::{
 
 impl<DI, IC, MODE, E> Ads1x1x<DI, IC, ic::Resolution12Bit, MODE>
 where
-    DI: interface::WriteData<Error = E>,
+    DI: interface::ReadWriteRegister<Error = E>,
 {
     /// Set data rate
     pub fn set_data_rate(&mut self, rate: DataRate12Bit) -> Result<(), Error<E>> {
@@ -29,7 +29,7 @@ where
 
 impl<DI, IC, MODE, E> Ads1x1x<DI, IC, ic::Resolution16Bit, MODE>
 where
-    DI: interface::WriteData<Error = E>,
+    DI: interface::ReadWriteRegister<Error = E>,
 {
     /// Set data rate
     pub fn set_data_rate(&mut self, rate: DataRate16Bit) -> Result<(), Error<E>> {

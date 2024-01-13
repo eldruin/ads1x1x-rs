@@ -8,7 +8,7 @@ use core::marker::PhantomData;
 
 impl<DI, IC, CONV, E> Ads1x1x<DI, IC, CONV, mode::Continuous>
 where
-    DI: interface::ReadData<Error = E> + interface::WriteData<Error = E>,
+    DI: interface::ReadWriteRegister<Error = E>,
     CONV: conversion::ConvertMeasurement,
 {
     /// Change operating mode to OneShot

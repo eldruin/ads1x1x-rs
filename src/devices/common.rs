@@ -4,7 +4,7 @@ use crate::{devices::OperatingMode, interface, Ads1x1x, BitFlags, Config, Error,
 
 impl<DI, IC, CONV, MODE, E> Ads1x1x<DI, IC, CONV, MODE>
 where
-    DI: interface::WriteData<Error = E> + interface::ReadData<Error = E>,
+    DI: interface::ReadWriteRegister<Error = E>,
 {
     pub(super) fn set_operating_mode(&mut self, mode: OperatingMode) -> Result<(), Error<E>> {
         let config = match mode {
