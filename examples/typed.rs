@@ -21,8 +21,7 @@ pub fn read(adc: &mut Adc) -> i16 {
 
 fn main() {
     let dev = I2cdev::new("/dev/i2c-1").unwrap();
-    let address = SlaveAddr::default();
-    let mut adc = Ads1x1x::new_ads1115(dev, address);
+    let mut adc = Ads1x1x::new_ads1115(dev, SlaveAddr::default());
 
     let value = read(&mut adc);
     println!("Measurement: {}", value);

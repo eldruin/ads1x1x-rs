@@ -84,46 +84,28 @@
 //!
 //! [driver-examples]: https://github.com/eldruin/driver-examples
 //!
-//! ### Create a driver instance for the ADS1013
+//! ### Create a driver instance for an ADS1013 with the default address.
 //!
 //! ```no_run
 //! use linux_embedded_hal::I2cdev;
 //! use ads1x1x::{Ads1x1x, SlaveAddr};
 //!
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
-//! let address = SlaveAddr::default();
-//! let adc = Ads1x1x::new_ads1013(dev, address);
+//! let adc = Ads1x1x::new_ads1013(dev, SlaveAddr::default());
 //! // do something...
 //!
 //! // get the I2C device back
 //! let dev = adc.destroy_ads1013();
 //! ```
 //!
-//! ### Create a driver instance for the ADS1013 with an alternative address (method 1)
+//! ### Create a driver instance for an ADS1013 with the ADDR pin connected to SDA.
 //!
 //! ```no_run
 //! use linux_embedded_hal::I2cdev;
 //! use ads1x1x::{Ads1x1x, SlaveAddr};
 //!
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
-//! let (bit1, bit0) = (true, false); // last two bits of address
-//! let address = SlaveAddr::Alternative(bit1, bit0);
-//! let adc = Ads1x1x::new_ads1013(dev, address);
-//! ```
-
-//! ### Create a driver instance for the ADS1013 with an alternative address (method 2)
-//!
-//! Using helper `SlaveAddr` creation method depending on the connection of
-//! the `ADDR` pin.
-//!
-//! ```no_run
-//! use linux_embedded_hal::I2cdev;
-//! use ads1x1x::{Ads1x1x, SlaveAddr};
-//!
-//! let dev = I2cdev::new("/dev/i2c-1").unwrap();
-//! // `ADDR` pin connected to SDA results in the 0x4A effective address
-//! let address = SlaveAddr::new_sda();
-//! let adc = Ads1x1x::new_ads1013(dev, address);
+//! let adc = Ads1x1x::new_ads1013(dev, SlaveAddr::Sda);
 //! ```
 //!
 //! ### Make a one-shot measurement
@@ -149,8 +131,7 @@
 //! use ads1x1x::{Ads1x1x, ModeChangeError, SlaveAddr};
 //!
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
-//! let address = SlaveAddr::default();
-//! let adc = Ads1x1x::new_ads1013(dev, address);
+//! let adc = Ads1x1x::new_ads1013(dev, SlaveAddr::default());
 //! match adc.into_continuous() {
 //!     Err(ModeChangeError::I2C(e, adc)) => /* mode change failed handling */ panic!(),
 //!     Ok(mut adc) => {
@@ -170,8 +151,7 @@
 //! use ads1x1x::{Ads1x1x, DataRate16Bit, SlaveAddr};
 //!
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
-//! let address = SlaveAddr::default();
-//! let mut adc = Ads1x1x::new_ads1115(dev, address);
+//! let mut adc = Ads1x1x::new_ads1115(dev, SlaveAddr::default());
 //! adc.set_data_rate(DataRate16Bit::Sps860).unwrap();
 //! ```
 //!
@@ -203,8 +183,6 @@
 #![deny(unsafe_code)]
 #![deny(missing_docs)]
 #![no_std]
-
-const DEVICE_BASE_ADDRESS: u8 = 0b100_1000;
 
 struct Register;
 impl Register {

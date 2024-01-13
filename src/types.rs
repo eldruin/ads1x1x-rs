@@ -162,55 +162,34 @@ pub enum FullScaleRange {
     Within0_256V,
 }
 
-/// Possible slave addresses
+/// A slave address.
+///
+/// See [Table 4 in the datasheet](https://www.ti.com/lit/ds/symlink/ads1115.pdf#%5B%7B%22num%22%3A716%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C0%2C602.2%2C0%5D).
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub enum SlaveAddr {
+    /// Address when the ADDR pin is connected to GND. (default)
     #[default]
-    /// Default slave address
-    Default,
-    /// Alternative slave address using the provided values
-    /// for the last two bits (A1, A0)
-    Alternative(bool, bool),
+    Gnd,
+    /// Address when the ADDR pin is connected to VDD.
+    Vdd,
+    /// Address when the ADDR pin is connected to SDA.
+    ///
+    /// If SDA is used as the device address, hold the SDA line low for at
+    /// least 100 ns after the SCL line goes low to make sure the device
+    /// decodes the address correctly during I²C communication.
+    Sda,
+    /// Address when the ADDR pin is connected to SCL.
+    Scl,
 }
 
 impl SlaveAddr {
-    pub(crate) fn addr(self, default: u8) -> u8 {
+    pub(crate) const fn bits(self) -> u8 {
         match self {
-            SlaveAddr::Default => default,
-            SlaveAddr::Alternative(a1, a0) => default | ((a1 as u8) << 1) | a0 as u8,
+            Self::Gnd => 0b1001000,
+            Self::Vdd => 0b1001001,
+            Self::Sda => 0b1001010,
+            Self::Scl => 0b1001011,
         }
-    }
-
-    /// Create `SlaveAddr` instance corresponding to the address
-    /// effective when connecting the pin `ADDR` to GND (0x48).
-    ///
-    /// See [Table 4 in the datasheet](https://www.ti.com/lit/ds/symlink/ads1115.pdf#%5B%7B%22num%22%3A716%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C0%2C602.2%2C0%5D).
-    pub fn new_gnd() -> Self {
-        SlaveAddr::default()
-    }
-
-    /// Create `SlaveAddr` instance corresponding to the address
-    /// effective when connecting the pin `ADDR` to VDD (0x49).
-    ///
-    /// See [Table 4 in the datasheet](https://www.ti.com/lit/ds/symlink/ads1115.pdf#%5B%7B%22num%22%3A716%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C0%2C602.2%2C0%5D).
-    pub fn new_vdd() -> Self {
-        SlaveAddr::Alternative(false, true)
-    }
-
-    /// Create `SlaveAddr` instance corresponding to the address
-    /// effective when connecting the pin `ADDR` to SDA (0x4A).
-    ///
-    /// See [Table 4 in the datasheet](https://www.ti.com/lit/ds/symlink/ads1115.pdf#%5B%7B%22num%22%3A716%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C0%2C602.2%2C0%5D).
-    pub fn new_sda() -> Self {
-        SlaveAddr::Alternative(true, false)
-    }
-
-    /// Create `SlaveAddr` instance corresponding to the address
-    /// effective when connecting the pin `ADDR` to SCL (0x4B).
-    ///
-    /// See [Table 4 in the datasheet](https://www.ti.com/lit/ds/symlink/ads1115.pdf#%5B%7B%22num%22%3A716%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C0%2C602.2%2C0%5D).
-    pub fn new_scl() -> Self {
-        SlaveAddr::Alternative(true, true)
     }
 }
 
@@ -267,29 +246,19 @@ pub trait DynamicOneShot: private::Sealed {
 
 #[cfg(test)]
 mod tests {
-    use crate::DEVICE_BASE_ADDRESS as ADDR;
     use crate::{FullScaleRange, SlaveAddr};
 
     #[test]
-    fn can_get_default_address() {
-        let addr = SlaveAddr::default();
-        assert_eq!(ADDR, addr.addr(ADDR));
+    fn slave_addr_default() {
+        assert_eq!(0b100_1000, SlaveAddr::default().bits());
     }
 
     #[test]
-    fn can_generate_alternative_addresses() {
-        assert_eq!(0b100_1000, SlaveAddr::Alternative(false, false).addr(ADDR));
-        assert_eq!(0b100_1001, SlaveAddr::Alternative(false, true).addr(ADDR));
-        assert_eq!(0b100_1010, SlaveAddr::Alternative(true, false).addr(ADDR));
-        assert_eq!(0b100_1011, SlaveAddr::Alternative(true, true).addr(ADDR));
-    }
-
-    #[test]
-    fn can_generate_alternative_addresses_using_helper_constructors() {
-        assert_eq!(0b100_1000, SlaveAddr::new_gnd().addr(ADDR));
-        assert_eq!(0b100_1001, SlaveAddr::new_vdd().addr(ADDR));
-        assert_eq!(0b100_1010, SlaveAddr::new_sda().addr(ADDR));
-        assert_eq!(0b100_1011, SlaveAddr::new_scl().addr(ADDR));
+    fn slave_addr_bits() {
+        assert_eq!(0b100_1000, SlaveAddr::Gnd.bits());
+        assert_eq!(0b100_1001, SlaveAddr::Vdd.bits());
+        assert_eq!(0b100_1010, SlaveAddr::Sda.bits());
+        assert_eq!(0b100_1011, SlaveAddr::Scl.bits());
     }
 
     #[test]
