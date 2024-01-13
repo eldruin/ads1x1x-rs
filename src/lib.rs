@@ -125,13 +125,13 @@
 //! In this case, you can retrieve the unchanged device from the error type.
 //!
 //! ```no_run
-//! use ads1x1x::{Ads1013, ModeChangeError, TargetAddr};
+//! use ads1x1x::{Ads1013, TargetAddr};
 //! use linux_embedded_hal::I2cdev;
 //!
 //! let i2c = I2cdev::new("/dev/i2c-1").unwrap();
 //! let adc = Ads1013::new(i2c, TargetAddr::default());
 //! match adc.into_continuous() {
-//!     Err(ModeChangeError::I2C(e, adc)) => {
+//!     Err((e, adc)) => {
 //!         panic!("Mode change failed: {e}")
 //!     },
 //!     Ok(mut adc) => {
@@ -196,7 +196,7 @@ mod types;
 use crate::types::Config;
 pub use crate::types::{
     mode, ComparatorLatching, ComparatorMode, ComparatorPolarity, ComparatorQueue, DataRate12Bit,
-    DataRate16Bit, Error, FullScaleRange, ModeChangeError, TargetAddr,
+    DataRate16Bit, Error, FullScaleRange, TargetAddr,
 };
 
 struct Register;
