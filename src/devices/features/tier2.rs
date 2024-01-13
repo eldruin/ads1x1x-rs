@@ -17,29 +17,34 @@ macro_rules! impl_tier2_features {
             ///
             /// This configures the programmable gain amplifier (PGA) and determines the measurable input voltage range.
             pub fn set_full_scale_range(&mut self, range: FullScaleRange) -> Result<(), Error<E>> {
-                use crate::FullScaleRange as FSR;
-                let cfg = self.config.clone();
                 let config = match range {
-                    FSR::Within6_144V => {
-                        cfg.with_low(BF::PGA2).with_low(BF::PGA1).with_low(BF::PGA0)
-                    }
-                    FSR::Within4_096V => cfg
+                    FullScaleRange::Within6_144V => self
+                        .config
+                        .with_low(BF::PGA2)
+                        .with_low(BF::PGA1)
+                        .with_low(BF::PGA0),
+                    FullScaleRange::Within4_096V => self
+                        .config
                         .with_low(BF::PGA2)
                         .with_low(BF::PGA1)
                         .with_high(BF::PGA0),
-                    FSR::Within2_048V => cfg
+                    FullScaleRange::Within2_048V => self
+                        .config
                         .with_low(BF::PGA2)
                         .with_high(BF::PGA1)
                         .with_low(BF::PGA0),
-                    FSR::Within1_024V => cfg
+                    FullScaleRange::Within1_024V => self
+                        .config
                         .with_low(BF::PGA2)
                         .with_high(BF::PGA1)
                         .with_high(BF::PGA0),
-                    FSR::Within0_512V => cfg
+                    FullScaleRange::Within0_512V => self
+                        .config
                         .with_high(BF::PGA2)
                         .with_low(BF::PGA1)
                         .with_low(BF::PGA0),
-                    FSR::Within0_256V => cfg
+                    FullScaleRange::Within0_256V => self
+                        .config
                         .with_high(BF::PGA2)
                         .with_low(BF::PGA1)
                         .with_high(BF::PGA0),
