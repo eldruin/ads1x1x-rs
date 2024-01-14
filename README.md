@@ -88,7 +88,7 @@ fn main() {
     let value = block!(adc.read(channel::DifferentialA0A1)).unwrap();
     println!("Measurement: {}", value);
 
-    // Get the I2C peripheral back.
+    // Get the I²C peripheral back.
     let i2c = adc.release();
     drop(i2c);
 }

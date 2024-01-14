@@ -81,7 +81,7 @@
 //!
 //! // Do something.
 //!
-//! // Get the I2C device back.
+//! // Get the I²C device back.
 //! let i2c = adc.release();
 //! # drop(i2c);
 //! # Ok(())
