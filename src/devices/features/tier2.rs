@@ -148,15 +148,11 @@ macro_rules! impl_tier2_features {
             ///
             /// When calling this the comparator will be disabled and the thresholds will be cleared.
             pub fn use_alert_rdy_pin_as_ready(&mut self) -> Result<(), Error<E>> {
-                if self.config
-                    != self
-                        .config
-                        .union(Config::COMP_QUE1)
-                        .union(Config::COMP_QUE0)
+                if !self.config.contains(Config::COMP_QUE)
                 {
                     self.disable_comparator()?;
                 }
-                self.write_reg_u16(HiThresh(0x8000))?;
+                self.write_reg_u16(HiThresh(0b1000000000000000))?;
                 self.write_reg_u16(LoThresh(0))
             }
         }
