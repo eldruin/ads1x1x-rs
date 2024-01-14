@@ -42,7 +42,7 @@
 //! The devices operate either in continuous-conversion mode, or in a
 //! single-shot mode that automatically powers down after a conversion.
 //! Single-shot mode significantly reduces current consumption during idle
-//! periods. Data is transferred through I2C.
+//! periods. Data is transferred through I²C.
 //!
 //! Here is a comparison of the caracteristics of the devices:
 //!
@@ -81,7 +81,7 @@
 //!
 //! // Do something.
 //!
-//! // Get the I2C device back.
+//! // Get the I²C device back.
 //! let i2c = adc.release();
 //! # drop(i2c);
 //! # Ok(())

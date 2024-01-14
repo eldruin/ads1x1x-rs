@@ -48,7 +48,7 @@ thermocouples.
 The devices operate either in continuous-conversion mode, or in a
 single-shot mode that automatically powers down after a conversion.
 Single-shot mode significantly reduces current consumption during idle
-periods. Data is transferred through I2C.
+periods. Data is transferred through I²C.
 
 Here is a comparison of the caracteristics of the devices:
 
@@ -88,7 +88,7 @@ fn main() {
     let value = block!(adc.read(channel::DifferentialA0A1)).unwrap();
     println!("Measurement: {}", value);
 
-    // Get the I2C peripheral back.
+    // Get the I²C peripheral back.
     let i2c = adc.release();
     drop(i2c);
 }
