@@ -1,34 +1,27 @@
-/// Read a register.
-pub trait ReadReg<R>
+pub trait Reg<R>
 where
     Self: Sized,
 {
     /// Register address.
     const ADDR: u8;
 
-    /// Read a register.
+    /// Converts from a register value.
     fn from_reg(reg: R) -> Self;
-}
 
-/// Write a register.
-pub trait WriteReg<R>: ReadReg<R> {
-    /// Write a register.
+    /// Converts to a register value.
     fn to_reg(self) -> R;
 }
 
 macro_rules! register {
-  (@impl_read_reg $Reg:ident : $addr:literal : $RegTy:ty) => {
-    impl ReadReg<$RegTy> for $Reg {
+  (@impl_reg $Reg:ident : $addr:literal : $RegTy:ty) => {
+    impl Reg<$RegTy> for $Reg {
       const ADDR: u8 = $addr;
 
       #[inline]
       fn from_reg(reg: $RegTy) -> Self {
         $Reg::from_bits_truncate(reg)
       }
-    }
-  };
-  (@impl_write_reg $Reg:ident : $addr:literal : $RegTy:ty) => {
-    impl WriteReg<$RegTy> for $Reg {
+
       fn to_reg(self) -> $RegTy {
         self.bits()
       }
@@ -51,8 +44,7 @@ macro_rules! register {
       }
     }
 
-    register!(@impl_read_reg $Reg: $addr: $RegTy);
-    register!(@impl_write_reg $Reg: $addr: $RegTy);
+    register!(@impl_reg $Reg: $addr: $RegTy);
   };
   (
     #[doc = $name:expr]
@@ -74,8 +66,7 @@ macro_rules! register {
       }
     }
 
-    register!(@impl_read_reg $Reg: $addr: $RegTy);
-    register!(@impl_write_reg $Reg: $addr: $RegTy);
+    register!(@impl_reg $Reg: $addr: $RegTy);
   };
 }
 

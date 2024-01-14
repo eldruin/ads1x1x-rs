@@ -199,7 +199,7 @@ pub use types::{
 pub mod mode;
 pub use mode::*;
 pub(crate) mod register;
-use register::{Config, ReadReg, WriteReg};
+use register::{Config, Reg};
 
 macro_rules! impl_ads1x1x {
     ($name:expr, $Ads:ident) => {
@@ -230,7 +230,7 @@ macro_rules! impl_ads1x1x {
         where
             I2C: embedded_hal::i2c::I2c<Error = E>,
         {
-            pub(crate) fn read_reg_u16<R: ReadReg<u16>>(&mut self) -> Result<R, Error<E>> {
+            pub(crate) fn read_reg_u16<R: Reg<u16>>(&mut self) -> Result<R, Error<E>> {
                 let mut buf = [0, 0];
                 self.i2c
                     .write_read(self.address.bits(), &[R::ADDR], &mut buf)
@@ -238,10 +238,7 @@ macro_rules! impl_ads1x1x {
                 Ok(R::from_reg(u16::from_be_bytes(buf)))
             }
 
-            pub(crate) fn write_reg_u16<R: WriteReg<u16>>(
-                &mut self,
-                reg: R,
-            ) -> Result<(), Error<E>> {
+            pub(crate) fn write_reg_u16<R: Reg<u16>>(&mut self, reg: R) -> Result<(), Error<E>> {
                 let buf = reg.to_reg().to_be_bytes();
                 let payload: [u8; 3] = [R::ADDR, buf[0], buf[1]];
                 self.i2c
