@@ -21,8 +21,9 @@ include = [
 edition = "2021"
 
 [dependencies]
-nb = "1"
+bitflags = "2"
 embedded-hal = "1"
+nb = "1"
 
 [dev-dependencies]
 embedded-hal-mock = { version = "0.10", default-features = false, features = ["eh1"] }

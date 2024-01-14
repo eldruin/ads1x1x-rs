@@ -40,12 +40,12 @@ pub struct Config {
 
 #[allow(dead_code)]
 impl Config {
-    pub fn with_high(&self, mask: u16) -> Self {
+    pub fn union(&self, mask: u16) -> Self {
         Config {
             bits: self.bits | mask,
         }
     }
-    pub fn with_low(&self, mask: u16) -> Self {
+    pub fn difference(&self, mask: u16) -> Self {
         Config {
             bits: self.bits & !mask,
         }

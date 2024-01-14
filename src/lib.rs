@@ -191,66 +191,34 @@ use core::marker::PhantomData;
 pub mod channel;
 pub use channel::ChannelId;
 mod devices;
-mod ic;
 mod types;
-use crate::types::Config;
-pub use crate::types::{
+pub use types::{
     ComparatorLatching, ComparatorMode, ComparatorPolarity, ComparatorQueue, DataRate12Bit,
     DataRate16Bit, Error, FullScaleRange, TargetAddr,
 };
 pub mod mode;
 pub use mode::*;
-
-struct Register;
-
-#[rustfmt::skip]
-impl Register {
-    const CONVERSION: u8 = 0x00;
-    const CONFIG:     u8 = 0x01;
-    const LOW_TH:     u8 = 0x02;
-    const HIGH_TH:    u8 = 0x03;
-}
-
-struct BitFlags;
-
-#[rustfmt::skip]
-impl BitFlags {
-    const OS:        u16 = 0b1000_0000_0000_0000;
-    const MUX2:      u16 = 0b0100_0000_0000_0000;
-    const MUX1:      u16 = 0b0010_0000_0000_0000;
-    const MUX0:      u16 = 0b0001_0000_0000_0000;
-    const PGA2:      u16 = 0b0000_1000_0000_0000;
-    const PGA1:      u16 = 0b0000_0100_0000_0000;
-    const PGA0:      u16 = 0b0000_0010_0000_0000;
-    const OP_MODE:   u16 = 0b0000_0001_0000_0000;
-    const DR2:       u16 = 0b0000_0000_1000_0000;
-    const DR1:       u16 = 0b0000_0000_0100_0000;
-    const DR0:       u16 = 0b0000_0000_0010_0000;
-    const COMP_MODE: u16 = 0b0000_0000_0001_0000;
-    const COMP_POL:  u16 = 0b0000_0000_0000_1000;
-    const COMP_LAT:  u16 = 0b0000_0000_0000_0100;
-    const COMP_QUE1: u16 = 0b0000_0000_0000_0010;
-    const COMP_QUE0: u16 = 0b0000_0000_0000_0001;
-}
+pub(crate) mod register;
+use register::{Config, ReadReg, WriteReg};
 
 macro_rules! impl_ads1x1x {
-    ($Ads:ident) => {
-        /// ADS1x1x ADC driver
+    ($name:expr, $Ads:ident) => {
+        #[doc = concat!("An ", $name, " ADC.")]
         #[derive(Debug)]
         pub struct $Ads<I2C, MODE> {
             pub(crate) i2c: I2C,
-            pub(crate) address: u8,
+            pub(crate) address: TargetAddr,
             pub(crate) config: Config,
             pub(crate) a_conversion_was_started: bool,
             pub(crate) mode: PhantomData<MODE>,
         }
 
         impl<I2C> $Ads<I2C, mode::OneShot> {
-            /// Create a new instance of the device in one-shot mode.
+            #[doc = concat!("Creates a new ", $name, " instance in one-shot mode.")]
             pub fn new(i2c: I2C, address: TargetAddr) -> Self {
                 $Ads {
                     i2c,
-                    address: address.bits(),
+                    address,
                     config: Config::default(),
                     a_conversion_was_started: false,
                     mode: PhantomData,
@@ -258,8 +226,32 @@ macro_rules! impl_ads1x1x {
             }
         }
 
+        impl<I2C, E, MODE> $Ads<I2C, MODE>
+        where
+            I2C: embedded_hal::i2c::I2c<Error = E>,
+        {
+            pub(crate) fn read_reg_u16<R: ReadReg<u16>>(&mut self) -> Result<R, Error<E>> {
+                let mut buf = [0, 0];
+                self.i2c
+                    .write_read(self.address.bits(), &[R::ADDR], &mut buf)
+                    .map_err(Error::I2C)?;
+                Ok(R::from_reg(u16::from_be_bytes(buf)))
+            }
+
+            pub(crate) fn write_reg_u16<R: WriteReg<u16>>(
+                &mut self,
+                reg: R,
+            ) -> Result<(), Error<E>> {
+                let buf = reg.to_reg().to_be_bytes();
+                let payload: [u8; 3] = [R::ADDR, buf[0], buf[1]];
+                self.i2c
+                    .write(self.address.bits(), &payload)
+                    .map_err(Error::I2C)
+            }
+        }
+
         impl<I2C, MODE> $Ads<I2C, MODE> {
-            /// Release the contained I²C peripheral.
+            /// Releases the contained I²C peripheral.
             pub fn release(self) -> I2C {
                 self.i2c
             }
@@ -267,9 +259,9 @@ macro_rules! impl_ads1x1x {
     };
 }
 
-impl_ads1x1x!(Ads1013);
-impl_ads1x1x!(Ads1113);
-impl_ads1x1x!(Ads1014);
-impl_ads1x1x!(Ads1114);
-impl_ads1x1x!(Ads1015);
-impl_ads1x1x!(Ads1115);
+impl_ads1x1x!("ADS1013", Ads1013);
+impl_ads1x1x!("ADS1113", Ads1113);
+impl_ads1x1x!("ADS1014", Ads1014);
+impl_ads1x1x!("ADS1114", Ads1114);
+impl_ads1x1x!("ADS1015", Ads1015);
+impl_ads1x1x!("ADS1115", Ads1115);

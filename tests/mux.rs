@@ -16,7 +16,7 @@ macro_rules! mux_test {
             #[test]
             fn can_read() {
                 let default_config = Config::default();
-                let config = Config::default().with_high(BF::OS).with_high($config_bits);
+                let config = Config::default().union(BF::OS).union($config_bits);
                 let transactions = [
                     I2cTrans::write_read(
                         DEV_ADDR,
@@ -40,8 +40,8 @@ macro_rules! mux_test {
             #[test]
             fn read_then_read_different_triggers_new_measurement() {
                 let default_config = Config::default();
-                let config = Config::default().with_high(BF::OS).with_high($config_bits);
-                let other_config = Config::default().with_high($other_config_bits);
+                let config = Config::default().union(BF::OS).union($config_bits);
+                let other_config = Config::default().union($other_config_bits);
                 let transactions = [
                     I2cTrans::write_read(
                         DEV_ADDR,
@@ -74,8 +74,8 @@ macro_rules! mux_test {
 
             #[test]
             fn continuous_can_select_channel() {
-                let config1 = Config::default().with_low(BF::OP_MODE);
-                let config2 = config1.with_high($config_bits);
+                let config1 = Config::default().difference(BF::OP_MODE);
+                let config2 = config1.union($config_bits);
                 let transactions = [
                     I2cTrans::write(
                         DEV_ADDR,
