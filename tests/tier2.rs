@@ -38,13 +38,13 @@ mod can_set_comparator_mode {
         traditional,
         set_comparator_mode,
         ComparatorMode::Traditional,
-        Config::default().with_low(BF::COMP_MODE)
+        Config::default().difference(BF::COMP_MODE)
     );
     config_test!(
         window,
         set_comparator_mode,
         ComparatorMode::Window,
-        Config::default().with_high(BF::COMP_MODE)
+        Config::default().union(BF::COMP_MODE)
     );
 }
 
@@ -54,13 +54,13 @@ mod can_set_comparator_polarity {
         low,
         set_comparator_polarity,
         ComparatorPolarity::ActiveLow,
-        Config::default().with_low(BF::COMP_POL)
+        Config::default().difference(BF::COMP_POL)
     );
     config_test!(
         high,
         set_comparator_polarity,
         ComparatorPolarity::ActiveHigh,
-        Config::default().with_high(BF::COMP_POL)
+        Config::default().union(BF::COMP_POL)
     );
 }
 
@@ -70,21 +70,19 @@ mod can_set_comparator_latching {
         non,
         set_comparator_latching,
         ComparatorLatching::Nonlatching,
-        Config::default().with_low(BF::COMP_LAT)
+        Config::default().difference(BF::COMP_LAT)
     );
     config_test!(
         lat,
         set_comparator_latching,
         ComparatorLatching::Latching,
-        Config::default().with_high(BF::COMP_LAT)
+        Config::default().union(BF::COMP_LAT)
     );
 }
 
 #[test]
 fn can_disable_comparator() {
-    let config = Config::default()
-        .with_high(BF::COMP_QUE1)
-        .with_high(BF::COMP_QUE0);
+    let config = Config::default().union(BF::COMP_QUE1).union(BF::COMP_QUE0);
     let transactions = [I2cTrans::write(
         DEV_ADDR,
         vec![Register::CONFIG, config.msb(), config.lsb()],
@@ -101,24 +99,24 @@ mod can_set_comparator_queue {
         set_comparator_queue,
         ComparatorQueue::One,
         Config::default()
-            .with_low(BF::COMP_QUE1)
-            .with_low(BF::COMP_QUE0)
+            .difference(BF::COMP_QUE1)
+            .difference(BF::COMP_QUE0)
     );
     config_test!(
         two,
         set_comparator_queue,
         ComparatorQueue::Two,
         Config::default()
-            .with_low(BF::COMP_QUE1)
-            .with_high(BF::COMP_QUE0)
+            .difference(BF::COMP_QUE1)
+            .union(BF::COMP_QUE0)
     );
     config_test!(
         four,
         set_comparator_queue,
         ComparatorQueue::Four,
         Config::default()
-            .with_high(BF::COMP_QUE1)
-            .with_low(BF::COMP_QUE0)
+            .union(BF::COMP_QUE1)
+            .difference(BF::COMP_QUE0)
     );
 }
 
@@ -136,11 +134,9 @@ fn can_use_alert_rdy_pin_as_rdy_does_not_disable_comparator_if_already_disabled(
 #[test]
 fn can_use_alert_rdy_pin_as_rdy_disabled_comparator() {
     let config = Config::default()
-        .with_low(BF::COMP_QUE1)
-        .with_low(BF::COMP_QUE0);
-    let config_disabled_comp = Config::default()
-        .with_high(BF::COMP_QUE1)
-        .with_high(BF::COMP_QUE0);
+        .difference(BF::COMP_QUE1)
+        .difference(BF::COMP_QUE0);
+    let config_disabled_comp = Config::default().union(BF::COMP_QUE1).union(BF::COMP_QUE0);
     let transactions = [
         I2cTrans::write(DEV_ADDR, vec![Register::CONFIG, config.msb(), config.lsb()]),
         I2cTrans::write(
@@ -167,53 +163,53 @@ mod can_set_full_scale_range {
         set_full_scale_range,
         FullScaleRange::Within6_144V,
         Config::default()
-            .with_low(BF::PGA2)
-            .with_low(BF::PGA1)
-            .with_low(BF::PGA0)
+            .difference(BF::PGA2)
+            .difference(BF::PGA1)
+            .difference(BF::PGA0)
     );
     config_test!(
         fsr4,
         set_full_scale_range,
         FullScaleRange::Within4_096V,
         Config::default()
-            .with_low(BF::PGA2)
-            .with_low(BF::PGA1)
-            .with_high(BF::PGA0)
+            .difference(BF::PGA2)
+            .difference(BF::PGA1)
+            .union(BF::PGA0)
     );
     config_test!(
         fsr2,
         set_full_scale_range,
         FullScaleRange::Within2_048V,
         Config::default()
-            .with_low(BF::PGA2)
-            .with_high(BF::PGA1)
-            .with_low(BF::PGA0)
+            .difference(BF::PGA2)
+            .union(BF::PGA1)
+            .difference(BF::PGA0)
     );
     config_test!(
         fsr1,
         set_full_scale_range,
         FullScaleRange::Within1_024V,
         Config::default()
-            .with_low(BF::PGA2)
-            .with_high(BF::PGA1)
-            .with_high(BF::PGA0)
+            .difference(BF::PGA2)
+            .union(BF::PGA1)
+            .union(BF::PGA0)
     );
     config_test!(
         fsr0_5,
         set_full_scale_range,
         FullScaleRange::Within0_512V,
         Config::default()
-            .with_high(BF::PGA2)
-            .with_low(BF::PGA1)
-            .with_low(BF::PGA0)
+            .union(BF::PGA2)
+            .difference(BF::PGA1)
+            .difference(BF::PGA0)
     );
     config_test!(
         fsr0_2,
         set_full_scale_range,
         FullScaleRange::Within0_256V,
         Config::default()
-            .with_high(BF::PGA2)
-            .with_low(BF::PGA1)
-            .with_high(BF::PGA0)
+            .union(BF::PGA2)
+            .difference(BF::PGA1)
+            .union(BF::PGA0)
     );
 }

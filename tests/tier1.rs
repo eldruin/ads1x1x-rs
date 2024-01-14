@@ -18,7 +18,7 @@ macro_rules! measure_tests {
 
                 #[test]
                 fn read_if_measurement_in_progress() {
-                    let config = Config::default().with_low(BF::OS);
+                    let config = Config::default().difference(BF::OS);
                     let transactions = [I2cTrans::write_read(
                         DEV_ADDR,
                         vec![Register::CONFIG],
@@ -33,7 +33,7 @@ macro_rules! measure_tests {
             #[test]
             fn can_measure() {
                 let default_config = Config::default();
-                let config_with_os = Config::default().with_high(BF::OS);
+                let config_with_os = Config::default().union(BF::OS);
                 let transactions = [
                     I2cTrans::write_read(
                         DEV_ADDR,
@@ -59,7 +59,7 @@ macro_rules! measure_tests {
 
             #[test]
             fn can_measure_continuous() {
-                let config = Config::default().with_low(BF::OP_MODE);
+                let config = Config::default().difference(BF::OP_MODE);
                 let transactions = [
                     I2cTrans::write(DEV_ADDR, vec![Register::CONFIG, config.msb(), config.lsb()]),
                     I2cTrans::write_read(DEV_ADDR, vec![Register::CONVERSION], vec![0x80, 0x00]),
@@ -99,57 +99,57 @@ mod data_rate_12bit {
         sps128,
         Sps128,
         Config::default()
-            .with_low(BF::DR2)
-            .with_low(BF::DR1)
-            .with_low(BF::DR0)
+            .difference(BF::DR2)
+            .difference(BF::DR1)
+            .difference(BF::DR0)
     );
     test!(
         sps250,
         Sps250,
         Config::default()
-            .with_low(BF::DR2)
-            .with_low(BF::DR1)
-            .with_high(BF::DR0)
+            .difference(BF::DR2)
+            .difference(BF::DR1)
+            .union(BF::DR0)
     );
     test!(
         sps490,
         Sps490,
         Config::default()
-            .with_low(BF::DR2)
-            .with_high(BF::DR1)
-            .with_low(BF::DR0)
+            .difference(BF::DR2)
+            .union(BF::DR1)
+            .difference(BF::DR0)
     );
     test!(
         sps920,
         Sps920,
         Config::default()
-            .with_low(BF::DR2)
-            .with_high(BF::DR1)
-            .with_high(BF::DR0)
+            .difference(BF::DR2)
+            .union(BF::DR1)
+            .union(BF::DR0)
     );
     test!(
         sps1600,
         Sps1600,
         Config::default()
-            .with_high(BF::DR2)
-            .with_low(BF::DR1)
-            .with_low(BF::DR0)
+            .union(BF::DR2)
+            .difference(BF::DR1)
+            .difference(BF::DR0)
     );
     test!(
         sps2400,
         Sps2400,
         Config::default()
-            .with_high(BF::DR2)
-            .with_low(BF::DR1)
-            .with_high(BF::DR0)
+            .union(BF::DR2)
+            .difference(BF::DR1)
+            .union(BF::DR0)
     );
     test!(
         sps3300,
         Sps3300,
         Config::default()
-            .with_high(BF::DR2)
-            .with_high(BF::DR1)
-            .with_low(BF::DR0)
+            .union(BF::DR2)
+            .union(BF::DR1)
+            .difference(BF::DR0)
     );
 }
 
@@ -175,71 +175,71 @@ mod data_rate_16bit {
         sps8,
         Sps8,
         Config::default()
-            .with_low(BF::DR2)
-            .with_low(BF::DR1)
-            .with_low(BF::DR0)
+            .difference(BF::DR2)
+            .difference(BF::DR1)
+            .difference(BF::DR0)
     );
     test!(
         sps16,
         Sps16,
         Config::default()
-            .with_low(BF::DR2)
-            .with_low(BF::DR1)
-            .with_high(BF::DR0)
+            .difference(BF::DR2)
+            .difference(BF::DR1)
+            .union(BF::DR0)
     );
     test!(
         sps32,
         Sps32,
         Config::default()
-            .with_low(BF::DR2)
-            .with_high(BF::DR1)
-            .with_low(BF::DR0)
+            .difference(BF::DR2)
+            .union(BF::DR1)
+            .difference(BF::DR0)
     );
     test!(
         sps64,
         Sps64,
         Config::default()
-            .with_low(BF::DR2)
-            .with_high(BF::DR1)
-            .with_high(BF::DR0)
+            .difference(BF::DR2)
+            .union(BF::DR1)
+            .union(BF::DR0)
     );
     test!(
         sps128,
         Sps128,
         Config::default()
-            .with_high(BF::DR2)
-            .with_low(BF::DR1)
-            .with_low(BF::DR0)
+            .union(BF::DR2)
+            .difference(BF::DR1)
+            .difference(BF::DR0)
     );
     test!(
         sps250,
         Sps250,
         Config::default()
-            .with_high(BF::DR2)
-            .with_low(BF::DR1)
-            .with_high(BF::DR0)
+            .union(BF::DR2)
+            .difference(BF::DR1)
+            .union(BF::DR0)
     );
     test!(
         sps475,
         Sps475,
         Config::default()
-            .with_high(BF::DR2)
-            .with_high(BF::DR1)
-            .with_low(BF::DR0)
+            .union(BF::DR2)
+            .union(BF::DR1)
+            .difference(BF::DR0)
     );
     test!(
         sps860,
         Sps860,
         Config::default()
-            .with_high(BF::DR2)
-            .with_high(BF::DR1)
-            .with_high(BF::DR0)
+            .union(BF::DR2)
+            .union(BF::DR1)
+            .union(BF::DR0)
     );
 }
 
 #[test]
 fn can_read_measurement_in_progress() {
-    let config_os = Config::default().with_low(BF::OS);
+    let config_os = Config::default().difference(BF::OS);
     let transactions = [I2cTrans::write_read(
         DEV_ADDR,
         vec![Register::CONFIG],
@@ -252,7 +252,7 @@ fn can_read_measurement_in_progress() {
 
 #[test]
 fn can_read_measurement_not_in_progress() {
-    let config_os = Config::default().with_high(BF::OS);
+    let config_os = Config::default().union(BF::OS);
     let transactions = [I2cTrans::write_read(
         DEV_ADDR,
         vec![Register::CONFIG],
@@ -265,7 +265,7 @@ fn can_read_measurement_not_in_progress() {
 
 #[test]
 fn can_convert_to_continuous() {
-    let config = Config::default().with_low(BF::OP_MODE);
+    let config = Config::default().difference(BF::OP_MODE);
     let transactions = [I2cTrans::write(
         DEV_ADDR,
         vec![Register::CONFIG, config.msb(), config.lsb()],
@@ -277,7 +277,7 @@ fn can_convert_to_continuous() {
 
 #[test]
 fn can_convert_to_one_shot() {
-    let config_cont = Config::default().with_low(BF::OP_MODE);
+    let config_cont = Config::default().difference(BF::OP_MODE);
     let config_os = Config::default();
     let transactions = [
         I2cTrans::write(

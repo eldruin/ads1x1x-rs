@@ -2,7 +2,6 @@
 
 use crate::{
     Ads1013, Ads1014, Ads1015, Ads1113, Ads1114, Ads1115, DataRate12Bit, DataRate16Bit, Error,
-    Register,
 };
 
 macro_rules! impl_tier1_features {
@@ -13,9 +12,8 @@ macro_rules! impl_tier1_features {
         {
             /// Sets the data rate.
             pub fn set_data_rate(&mut self, rate: $DataRate) -> Result<(), Error<E>> {
-                let mut config = self.config.clone();
-                rate.configure(&mut config);
-                self.write_register(Register::CONFIG, config.bits)?;
+                let config = rate.configure(self.config);
+                self.write_reg_u16(config)?;
                 self.config = config;
                 Ok(())
             }

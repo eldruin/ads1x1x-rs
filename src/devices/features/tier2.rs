@@ -3,8 +3,9 @@
 //! These are the features included only in ADS1x14, ADS1x15
 
 use crate::{
-    ic, Ads1014, Ads1015, Ads1114, Ads1115, BitFlags as BF, ComparatorLatching, ComparatorMode,
-    ComparatorPolarity, ComparatorQueue, Error, FullScaleRange, Register,
+    register::{Conversion12, Conversion16, HiThresh, LoThresh},
+    Ads1014, Ads1015, Ads1114, Ads1115, ComparatorLatching, ComparatorMode, ComparatorPolarity,
+    ComparatorQueue, Config, Error, FullScaleRange,
 };
 
 macro_rules! doc_threshold {
@@ -36,39 +37,8 @@ macro_rules! impl_tier2_features {
             ///
             /// This configures the programmable gain amplifier (PGA) and determines the measurable input voltage range.
             pub fn set_full_scale_range(&mut self, range: FullScaleRange) -> Result<(), Error<E>> {
-                let config = match range {
-                    FullScaleRange::Within6_144V => self
-                        .config
-                        .with_low(BF::PGA2)
-                        .with_low(BF::PGA1)
-                        .with_low(BF::PGA0),
-                    FullScaleRange::Within4_096V => self
-                        .config
-                        .with_low(BF::PGA2)
-                        .with_low(BF::PGA1)
-                        .with_high(BF::PGA0),
-                    FullScaleRange::Within2_048V => self
-                        .config
-                        .with_low(BF::PGA2)
-                        .with_high(BF::PGA1)
-                        .with_low(BF::PGA0),
-                    FullScaleRange::Within1_024V => self
-                        .config
-                        .with_low(BF::PGA2)
-                        .with_high(BF::PGA1)
-                        .with_high(BF::PGA0),
-                    FullScaleRange::Within0_512V => self
-                        .config
-                        .with_high(BF::PGA2)
-                        .with_low(BF::PGA1)
-                        .with_low(BF::PGA0),
-                    FullScaleRange::Within0_256V => self
-                        .config
-                        .with_high(BF::PGA2)
-                        .with_low(BF::PGA1)
-                        .with_high(BF::PGA0),
-                };
-                self.write_register(Register::CONFIG, config.bits)?;
+                let config = range.configure(self.config);
+                self.write_reg_u16(config)?;
                 self.config = config;
                 Ok(())
             }
@@ -81,7 +51,7 @@ macro_rules! impl_tier2_features {
             #[doc = doc_threshold!($($th_range)+)]
             pub fn set_low_threshold_raw(&mut self, value: i16) -> Result<(), Error<E>> {
                 let register_value = <$conv>::convert_threshold(value);
-                self.write_register(Register::LOW_TH, register_value)
+                self.write_reg_u16(LoThresh(register_value))
             }
 
             /// Sets the raw comparator upper threshold.
@@ -92,16 +62,16 @@ macro_rules! impl_tier2_features {
             #[doc = doc_threshold!($($th_range)+)]
             pub fn set_high_threshold_raw(&mut self, value: i16) -> Result<(), Error<E>> {
                 let register_value = <$conv>::convert_threshold(value);
-                self.write_register(Register::HIGH_TH, register_value)
+                self.write_reg_u16(HiThresh(register_value))
             }
 
             /// Sets the comparator mode.
             pub fn set_comparator_mode(&mut self, mode: ComparatorMode) -> Result<(), Error<E>> {
                 let config = match mode {
-                    ComparatorMode::Traditional => self.config.with_low(BF::COMP_MODE),
-                    ComparatorMode::Window => self.config.with_high(BF::COMP_MODE),
+                    ComparatorMode::Traditional => self.config.difference(Config::COMP_MODE),
+                    ComparatorMode::Window => self.config.union(Config::COMP_MODE),
                 };
-                self.write_register(Register::CONFIG, config.bits)?;
+                self.write_reg_u16(config)?;
                 self.config = config;
                 Ok(())
             }
@@ -112,10 +82,10 @@ macro_rules! impl_tier2_features {
                 polarity: ComparatorPolarity,
             ) -> Result<(), Error<E>> {
                 let config = match polarity {
-                    ComparatorPolarity::ActiveLow => self.config.with_low(BF::COMP_POL),
-                    ComparatorPolarity::ActiveHigh => self.config.with_high(BF::COMP_POL),
+                    ComparatorPolarity::ActiveLow => self.config.difference(Config::COMP_POL),
+                    ComparatorPolarity::ActiveHigh => self.config.union(Config::COMP_POL),
                 };
-                self.write_register(Register::CONFIG, config.bits)?;
+                self.write_reg_u16(config)?;
                 self.config = config;
                 Ok(())
             }
@@ -126,10 +96,10 @@ macro_rules! impl_tier2_features {
                 latching: ComparatorLatching,
             ) -> Result<(), Error<E>> {
                 let config = match latching {
-                    ComparatorLatching::Nonlatching => self.config.with_low(BF::COMP_LAT),
-                    ComparatorLatching::Latching => self.config.with_high(BF::COMP_LAT),
+                    ComparatorLatching::Nonlatching => self.config.difference(Config::COMP_LAT),
+                    ComparatorLatching::Latching => self.config.union(Config::COMP_LAT),
                 };
-                self.write_register(Register::CONFIG, config.bits)?;
+                self.write_reg_u16(config)?;
                 self.config = config;
                 Ok(())
             }
@@ -140,16 +110,16 @@ macro_rules! impl_tier2_features {
             pub fn set_comparator_queue(&mut self, queue: ComparatorQueue) -> Result<(), Error<E>> {
                 let config = match queue {
                     ComparatorQueue::One => {
-                        self.config.with_low(BF::COMP_QUE1).with_low(BF::COMP_QUE0)
+                        self.config.difference(Config::COMP_QUE1).difference(Config::COMP_QUE0)
                     }
                     ComparatorQueue::Two => {
-                        self.config.with_low(BF::COMP_QUE1).with_high(BF::COMP_QUE0)
+                        self.config.difference(Config::COMP_QUE1).union(Config::COMP_QUE0)
                     }
                     ComparatorQueue::Four => {
-                        self.config.with_high(BF::COMP_QUE1).with_low(BF::COMP_QUE0)
+                        self.config.union(Config::COMP_QUE1).difference(Config::COMP_QUE0)
                     }
                 };
-                self.write_register(Register::CONFIG, config.bits)?;
+                self.write_reg_u16(config)?;
                 self.config = config;
                 Ok(())
             }
@@ -163,9 +133,9 @@ macro_rules! impl_tier2_features {
             pub fn disable_comparator(&mut self) -> Result<(), Error<E>> {
                 let config = self
                     .config
-                    .with_high(BF::COMP_QUE1)
-                    .with_high(BF::COMP_QUE0);
-                self.write_register(Register::CONFIG, config.bits)?;
+                    .union(Config::COMP_QUE1)
+                    .union(Config::COMP_QUE0);
+                self.write_reg_u16(config)?;
                 self.config = config;
                 Ok(())
             }
@@ -181,19 +151,19 @@ macro_rules! impl_tier2_features {
                 if self.config
                     != self
                         .config
-                        .with_high(BF::COMP_QUE1)
-                        .with_high(BF::COMP_QUE0)
+                        .union(Config::COMP_QUE1)
+                        .union(Config::COMP_QUE0)
                 {
                     self.disable_comparator()?;
                 }
-                self.write_register(Register::HIGH_TH, 0x8000)?;
-                self.write_register(Register::LOW_TH, 0)
+                self.write_reg_u16(HiThresh(0x8000))?;
+                self.write_reg_u16(LoThresh(0))
             }
         }
     };
 }
 
-impl_tier2_features!(Ads1014, ic::Resolution12Bit, [-2048, 2047]);
-impl_tier2_features!(Ads1015, ic::Resolution12Bit, [-2048, 2047]);
-impl_tier2_features!(Ads1114, ic::Resolution16Bit, [-32768, 32767]);
-impl_tier2_features!(Ads1115, ic::Resolution16Bit, [-32768, 32767]);
+impl_tier2_features!(Ads1014, Conversion12, [-2048, 2047]);
+impl_tier2_features!(Ads1015, Conversion12, [-2048, 2047]);
+impl_tier2_features!(Ads1114, Conversion16, [-32768, 32767]);
+impl_tier2_features!(Ads1115, Conversion16, [-32768, 32767]);

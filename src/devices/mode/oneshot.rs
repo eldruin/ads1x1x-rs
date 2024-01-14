@@ -2,8 +2,10 @@
 use core::marker::PhantomData;
 
 use crate::{
-    devices::OperatingMode, ic, mode, Ads1013, Ads1014, Ads1015, Ads1113, Ads1114, Ads1115,
-    BitFlags, ChannelId, Config, Error, Register,
+    devices::OperatingMode,
+    mode,
+    register::{Conversion12, Conversion16},
+    Ads1013, Ads1014, Ads1015, Ads1113, Ads1114, Ads1115, ChannelId, Config, Error,
 };
 
 macro_rules! impl_one_shot {
@@ -31,8 +33,8 @@ macro_rules! impl_one_shot {
             }
 
             fn trigger_measurement(&mut self, config: &Config) -> Result<(), Error<E>> {
-                let config = config.with_high(BitFlags::OS);
-                self.write_register(Register::CONFIG, config.bits)
+                let config = config.union(Config::OS);
+                self.write_reg_u16(config)
             }
 
             /// Requests that the ADC begins a conversion on the specified channel.
@@ -59,11 +61,9 @@ macro_rules! impl_one_shot {
                 let same_channel = self.config == config;
                 if self.a_conversion_was_started && same_channel {
                     // result is ready
-                    let value = self
-                        .read_register(Register::CONVERSION)
-                        .map_err(nb::Error::Other)?;
+                    let value = self.read_reg_u16::<$conv>().map_err(nb::Error::Other)?;
                     self.a_conversion_was_started = false;
-                    return Ok(<$conv>::convert_measurement(value));
+                    return Ok(<$conv>::convert_measurement(value.0));
                 }
                 self.trigger_measurement(&config)
                     .map_err(nb::Error::Other)?;
@@ -75,9 +75,9 @@ macro_rules! impl_one_shot {
     };
 }
 
-impl_one_shot!(Ads1013, ic::Resolution12Bit);
-impl_one_shot!(Ads1014, ic::Resolution12Bit);
-impl_one_shot!(Ads1015, ic::Resolution12Bit);
-impl_one_shot!(Ads1113, ic::Resolution16Bit);
-impl_one_shot!(Ads1114, ic::Resolution16Bit);
-impl_one_shot!(Ads1115, ic::Resolution16Bit);
+impl_one_shot!(Ads1013, Conversion12);
+impl_one_shot!(Ads1014, Conversion12);
+impl_one_shot!(Ads1015, Conversion12);
+impl_one_shot!(Ads1113, Conversion16);
+impl_one_shot!(Ads1114, Conversion16);
+impl_one_shot!(Ads1115, Conversion16);

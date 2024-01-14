@@ -1,8 +1,10 @@
 //! Continuous measurement mode
 
 use crate::{
-    devices::OperatingMode, ic, mode, Ads1013, Ads1014, Ads1015, Ads1113, Ads1114, Ads1115,
-    ChannelId, Error, Register,
+    devices::OperatingMode,
+    mode,
+    register::{Conversion12, Conversion16},
+    Ads1013, Ads1014, Ads1015, Ads1113, Ads1114, Ads1115, ChannelId, Error,
 };
 use core::marker::PhantomData;
 
@@ -30,8 +32,8 @@ macro_rules! impl_continuous {
 
             /// Reads the most recent measurement.
             pub fn read(&mut self) -> Result<i16, Error<E>> {
-                let value = self.read_register(Register::CONVERSION)?;
-                Ok(<$conv>::convert_measurement(value))
+                let value = self.read_reg_u16::<$conv>()?;
+                Ok(<$conv>::convert_measurement(value.0))
             }
 
             /// Selects the channel for measurements.
@@ -45,7 +47,7 @@ macro_rules! impl_continuous {
                 channel: CH,
             ) -> Result<(), Error<E>> {
                 let config = self.config.with_mux_bits(CH::channel_id());
-                self.write_register(Register::CONFIG, config.bits)?;
+                self.write_reg_u16(config)?;
                 self.config = config;
                 Ok(())
             }
@@ -53,9 +55,9 @@ macro_rules! impl_continuous {
     };
 }
 
-impl_continuous!(Ads1013, ic::Resolution12Bit);
-impl_continuous!(Ads1014, ic::Resolution12Bit);
-impl_continuous!(Ads1015, ic::Resolution12Bit);
-impl_continuous!(Ads1113, ic::Resolution16Bit);
-impl_continuous!(Ads1114, ic::Resolution16Bit);
-impl_continuous!(Ads1115, ic::Resolution16Bit);
+impl_continuous!(Ads1013, Conversion12);
+impl_continuous!(Ads1014, Conversion12);
+impl_continuous!(Ads1015, Conversion12);
+impl_continuous!(Ads1113, Conversion16);
+impl_continuous!(Ads1114, Conversion16);
+impl_continuous!(Ads1115, Conversion16);
