@@ -3,9 +3,9 @@
 //! These are the features included only in ADS1x14, ADS1x15
 
 use crate::{
-    register::{Conversion12, Conversion16, HiThresh, LoThresh},
+    register::{Config, Conversion12, Conversion16, HiThresh, LoThresh},
     Ads1014, Ads1015, Ads1114, Ads1115, ComparatorLatching, ComparatorMode, ComparatorPolarity,
-    ComparatorQueue, Config, Error, FullScaleRange,
+    ComparatorQueue, Error, FullScaleRange,
 };
 
 macro_rules! doc_threshold {

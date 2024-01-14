@@ -2,10 +2,9 @@
 use core::marker::PhantomData;
 
 use crate::{
-    devices::OperatingMode,
     mode,
-    register::{Conversion12, Conversion16},
-    Ads1013, Ads1014, Ads1015, Ads1113, Ads1114, Ads1115, ChannelId, Config, Error,
+    register::{Config, Conversion12, Conversion16},
+    Ads1013, Ads1014, Ads1015, Ads1113, Ads1114, Ads1115, ChannelId, Error,
 };
 
 macro_rules! impl_one_shot {
@@ -20,13 +19,14 @@ macro_rules! impl_one_shot {
             pub fn into_continuous(
                 mut self,
             ) -> Result<$Ads<I2C, mode::Continuous>, (Error<E>, Self)> {
-                if let Err(e) = self.set_operating_mode(OperatingMode::Continuous) {
+                let config = self.config.difference(Config::MODE);
+                if let Err(e) = self.write_reg_u16(config) {
                     return Err((e, self));
                 }
                 Ok($Ads {
                     i2c: self.i2c,
                     address: self.address,
-                    config: self.config,
+                    config,
                     a_conversion_was_started: true,
                     mode: PhantomData,
                 })
