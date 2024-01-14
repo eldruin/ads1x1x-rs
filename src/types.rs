@@ -11,17 +11,6 @@ pub enum Error<E> {
     InvalidInputData,
 }
 
-/// Mode marker types
-pub mod mode {
-    /// One-shot operating mode / power-down state (default)
-    #[non_exhaustive]
-    pub struct OneShot;
-
-    /// Continuous conversion mode
-    #[non_exhaustive]
-    pub struct Continuous;
-}
-
 /// Data rate for ADS1013, ADS1014, ADS1015
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub enum DataRate12Bit {
