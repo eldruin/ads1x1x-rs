@@ -195,9 +195,11 @@ mod ic;
 mod types;
 use crate::types::Config;
 pub use crate::types::{
-    mode, ComparatorLatching, ComparatorMode, ComparatorPolarity, ComparatorQueue, DataRate12Bit,
+    ComparatorLatching, ComparatorMode, ComparatorPolarity, ComparatorQueue, DataRate12Bit,
     DataRate16Bit, Error, FullScaleRange, TargetAddr,
 };
+pub mod mode;
+pub use mode::*;
 
 struct Register;
 
