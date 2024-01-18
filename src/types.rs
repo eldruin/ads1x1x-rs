@@ -147,18 +147,18 @@ pub enum ComparatorQueue {
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
 #[allow(non_camel_case_types)]
 pub enum FullScaleRange {
-    /// The measurable range is ±6.144V.
+    /// ±6.144V
     Within6_144V,
-    /// The measurable range is ±4.096V.
+    /// ±4.096V
     Within4_096V,
-    #[default]
     /// The measurable range is ±2.048V. (default)
+    #[default]
     Within2_048V,
-    /// The measurable range is ±1.024V.
+    /// ±1.024V
     Within1_024V,
-    /// The measurable range is ±0.512V.
+    /// ±0.512V
     Within0_512V,
-    /// The measurable range is ±0.256V.
+    /// ±0.256V
     Within0_256V,
 }
 
