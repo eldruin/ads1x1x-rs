@@ -1,8 +1,5 @@
-on:
-  push:
-  pull_request:
-
 name: Build
+on: [push, pull_request]
 
 env:
   RUSTFLAGS: '--deny warnings'
@@ -13,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        rust: [stable, 1.60.0]
+        rust: [stable, 1.62.0]
         TARGET:
           - x86_64-unknown-linux-gnu
           - x86_64-unknown-linux-musl
@@ -26,16 +23,14 @@ jobs:
           - thumbv7m-none-eabi
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
         with:
-          profile: minimal
           toolchain: ${{ matrix.rust }}
-          target: ${{ matrix.TARGET }}
-          override: true
+          targets: ${{ matrix.TARGET }}
 
       - name: Checkout CI scripts
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: 'eldruin/rust-driver-ci-scripts'
           ref: 'master'
@@ -44,105 +39,84 @@ jobs:
       - run: ./ci/patch-no-std.sh
         if: ${{ ! contains(matrix.TARGET, 'x86_64') }}
 
-      - name: Build
-        uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: --target=${{ matrix.TARGET }}
+      - run: cargo build --target=${{ matrix.TARGET }}
 
   checks:
     name: Checks
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        rust: [stable]
-        TARGET:
-          - x86_64-unknown-linux-gnu
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
         with:
-          profile: minimal
-          toolchain: ${{ matrix.rust }}
-          target: ${{ matrix.TARGET }}
-          override: true
+          targets: x86_64-unknown-linux-gnu
           components: rustfmt
 
-      - name: Doc
-        uses: actions-rs/cargo@v1
-        with:
-          command: doc
-
-      - name: Formatting
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --all -- --check
+      - run: cargo doc
+      - run: cargo fmt --all -- --check
 
   clippy:
     name: Clippy
     runs-on: ubuntu-latest
+<<<<<<< HEAD
     strategy:
       matrix:
         rust: [1.60.0]
         TARGET:
           - x86_64-unknown-linux-gnu
+||||||| parent of 25424bf... Update CI
+    strategy:
+      matrix:
+        rust: [1.52.1]
+        TARGET:
+          - x86_64-unknown-linux-gnu
+=======
+>>>>>>> 25424bf... Update CI
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
         with:
-          profile: minimal
-          toolchain: ${{ matrix.rust }}
-          target: ${{ matrix.TARGET }}
-          override: true
+          toolchain: 1.73.0
+          targets: x86_64-unknown-linux-gnu
           components: clippy
 
-      - name: Clippy
-        uses: actions-rs/clippy-check@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - run: cargo clippy --all-targets
 
   test:
     name: Tests
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        rust: [stable, beta]
+        rust: [stable]
         TARGET: [x86_64-unknown-linux-gnu, x86_64-unknown-linux-musl]
+
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
         with:
-          profile: minimal
           toolchain: ${{ matrix.rust }}
-          target: ${{ matrix.TARGET }}
-          override: true
+          targets: ${{ matrix.TARGET }}
 
       - name: Test
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: --target=${{ matrix.TARGET }}
+        run: cargo test --target=${{ matrix.TARGET }}
+
+      - name: Build examples
+        run: cargo build --target=${{ matrix.TARGET }} --examples
 
   coverage:
     name: Coverage
     runs-on: ubuntu-latest
+    container:
+      image: xd009642/tarpaulin:latest
+      options: --security-opt seccomp=unconfined
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
 
-      - name: Install stable toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
 
       - name: Run cargo-tarpaulin
-        uses: actions-rs/tarpaulin@v0.1
-        with:
-          args: '--out Lcov -- --test-threads 1'
+        run: cargo tarpaulin --out Lcov -- --test-threads 1
 
       - name: upload to Coveralls
         uses: coverallsapp/github-action@master
