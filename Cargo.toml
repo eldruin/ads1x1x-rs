@@ -20,9 +20,6 @@ include = [
 ]
 edition = "2021"
 
-[badges]
-coveralls = { repository = "eldruin/ads1x1x-rs", branch = "master", service = "github" }
-
 [dependencies]
 nb = "1"
 embedded-hal = "1"
