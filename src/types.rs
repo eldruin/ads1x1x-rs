@@ -34,7 +34,7 @@ pub mod mode {
 }
 
 /// Data rate for ADS1013, ADS1014, ADS1015
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub enum DataRate12Bit {
     /// 128 SPS
     Sps128,
@@ -44,6 +44,7 @@ pub enum DataRate12Bit {
     Sps490,
     /// 920 SPS
     Sps920,
+    #[default]
     /// 1600 SPS (default)
     Sps1600,
     /// 2400 SPS
@@ -53,7 +54,7 @@ pub enum DataRate12Bit {
 }
 
 /// Data rate for ADS1113, ADS1114, ADS1115
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub enum DataRate16Bit {
     /// 8 SPS
     Sps8,
@@ -63,6 +64,7 @@ pub enum DataRate16Bit {
     Sps32,
     /// 64 SPS
     Sps64,
+    #[default]
     /// 128 SPS (default)
     Sps128,
     /// 250 SPS
@@ -74,8 +76,9 @@ pub enum DataRate16Bit {
 }
 
 /// Comparator mode (only for ADS1x14, ADS1x15)
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub enum ComparatorMode {
+    #[default]
     /// Traditional comparator (default)
     ///
     /// In this mode the ALERT/RDY pin asserts (according to selected active
@@ -92,8 +95,9 @@ pub enum ComparatorMode {
 }
 
 /// Comparator polarity (only for ADS1x14, ADS1x15)
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub enum ComparatorPolarity {
+    #[default]
     /// Active low (default)
     ActiveLow,
     /// Active high
@@ -105,8 +109,9 @@ pub enum ComparatorPolarity {
 /// Select whether the ALERT/RDY pin latches after being asserted or clears
 /// after conversions are within the margin of the upper and lower
 /// threshold values.
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub enum ComparatorLatching {
+    #[default]
     /// Nonlatching (default)
     ///
     /// The ALERT/RDY pin does not latch when asserted.
@@ -124,13 +129,14 @@ pub enum ComparatorLatching {
 ///
 /// The default state of the comparator is deactivated. It can be activated by setting
 /// the comparator queue.
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub enum ComparatorQueue {
     /// Activate comparator and assert after one conversion exceeding thresholds
     One,
     /// Activate comparator and assert after two consecutive conversions exceeding thresholds
     Two,
-    /// Activate comparator and assert after four consecutive conversions exceeding thresholds
+    #[default]
+    /// Activate comparator and assert after four consecutive conversions exceeding thresholds (default)
     Four,
 }
 
@@ -138,13 +144,14 @@ pub enum ComparatorQueue {
 ///
 /// This sets the input voltage measurable range.
 /// The FSR is fixed at ±2.048 V in the ADS1x13.
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
 #[allow(non_camel_case_types)]
 pub enum FullScaleRange {
     /// The measurable range is ±6.144V.
     Within6_144V,
     /// The measurable range is ±4.096V.
     Within4_096V,
+    #[default]
     /// The measurable range is ±2.048V. (default)
     Within2_048V,
     /// The measurable range is ±1.024V.
@@ -156,20 +163,14 @@ pub enum FullScaleRange {
 }
 
 /// Possible slave addresses
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub enum SlaveAddr {
+    #[default]
     /// Default slave address
     Default,
     /// Alternative slave address using the provided values
     /// for the last two bits (A1, A0)
     Alternative(bool, bool),
-}
-
-impl Default for SlaveAddr {
-    /// Default slave address
-    fn default() -> Self {
-        SlaveAddr::Default
-    }
 }
 
 impl SlaveAddr {
@@ -239,12 +240,6 @@ impl Config {
 impl Default for Config {
     fn default() -> Self {
         Config { bits: 0x8583 }
-    }
-}
-
-impl Default for FullScaleRange {
-    fn default() -> Self {
-        FullScaleRange::Within2_048V
     }
 }
 

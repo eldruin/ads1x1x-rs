@@ -7,9 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+- Derived common traits for types.
+- Add default for `ComparatorQueue`.
+
 ### Changed
 - Updated `embedded-hal` to version `1`, `read` in one-shot mode is therefore only an inherent method.
-- Raised MSRV to 1.62.0
+- Raised MSRV to 1.62.0.
 
 ## [0.2.2] - 2021-07-29
 
