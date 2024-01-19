@@ -7,8 +7,27 @@ use crate::{
     ComparatorPolarity, ComparatorQueue, Error, FullScaleRange, Register,
 };
 
+macro_rules! doc_threshold {
+    (-32768, 32767) => {
+        ""
+    };
+    ($th_low:literal, $th_high:literal) => {
+        concat!(
+            "The given value must be within \\[",
+            stringify!($th_low),
+            ", ",
+            stringify!($th_high),
+            "\\].\n\n# Panics\n\nPanics if the threshold is outside the \\[",
+            stringify!($th_low),
+            ", ",
+            stringify!($th_high),
+            "\\] range."
+        )
+    };
+}
+
 macro_rules! impl_tier2_features {
-    ($Ads:ident, $conv:ty) => {
+    ($Ads:ident, $conv:ty, [$($th_range:tt)+]) => {
         impl<I2C, E, MODE> $Ads<I2C, MODE>
         where
             I2C: embedded_hal::i2c::I2c<Error = E>,
@@ -56,23 +75,23 @@ macro_rules! impl_tier2_features {
 
             /// Sets the raw comparator lower threshold.
             ///
-            /// The input value must be within \[-2048, 2047\] for 12-bit devices (ADS1**0**1x)
-            /// and within \[-32768, 32767\] for 16-bit devices (ADS1**1**1x). The voltage that
-            /// these values correspond to must be calculated using the full-scale range
-            /// ([`FullScaleRange`]) selected.
+            /// The voltage that these values correspond to must be calculated using the
+            /// full-scale range ([`FullScaleRange`]) selected.
+            ///
+            #[doc = doc_threshold!($($th_range)+)]
             pub fn set_low_threshold_raw(&mut self, value: i16) -> Result<(), Error<E>> {
-                let register_value = <$conv>::convert_threshold(value)?;
+                let register_value = <$conv>::convert_threshold(value);
                 self.write_register(Register::LOW_TH, register_value)
             }
 
             /// Sets the raw comparator upper threshold.
             ///
-            /// The input value must be within \[-2048, 2047\] for 12-bit devices (ADS101x)
-            /// and within \[-32768, 32767\] for 16-bit devices (ADS111x). The voltage that
-            /// these values correspond to must be calculated using the full-scale range
-            /// ([`FullScaleRange`]) selected.
+            /// The voltage that these values correspond to must be calculated using the
+            /// full-scale range ([`FullScaleRange`]) selected.
+            ///
+            #[doc = doc_threshold!($($th_range)+)]
             pub fn set_high_threshold_raw(&mut self, value: i16) -> Result<(), Error<E>> {
-                let register_value = <$conv>::convert_threshold(value)?;
+                let register_value = <$conv>::convert_threshold(value);
                 self.write_register(Register::HIGH_TH, register_value)
             }
 
@@ -174,7 +193,7 @@ macro_rules! impl_tier2_features {
     };
 }
 
-impl_tier2_features!(Ads1014, ic::Resolution12Bit);
-impl_tier2_features!(Ads1015, ic::Resolution12Bit);
-impl_tier2_features!(Ads1114, ic::Resolution16Bit);
-impl_tier2_features!(Ads1115, ic::Resolution16Bit);
+impl_tier2_features!(Ads1014, ic::Resolution12Bit, [-2048, 2047]);
+impl_tier2_features!(Ads1015, ic::Resolution12Bit, [-2048, 2047]);
+impl_tier2_features!(Ads1114, ic::Resolution16Bit, [-32768, 32767]);
+impl_tier2_features!(Ads1115, ic::Resolution16Bit, [-32768, 32767]);
