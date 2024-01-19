@@ -61,7 +61,7 @@ jobs:
 <<<<<<< HEAD
     strategy:
       matrix:
-        rust: [1.60.0]
+        rust: [1.70.0]
         TARGET:
           - x86_64-unknown-linux-gnu
 ||||||| parent of 25424bf... Update CI
