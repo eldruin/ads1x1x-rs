@@ -1,12 +1,10 @@
 //! Common functions
 
-use crate::{
-    ic, interface, Ads1x1x, BitFlags as BF, DataRate12Bit, DataRate16Bit, Error, Register,
-};
+use crate::{ic, Ads1x1x, BitFlags as BF, DataRate12Bit, DataRate16Bit, Error, Register};
 
-impl<DI, IC, MODE, E> Ads1x1x<DI, IC, ic::Resolution12Bit, MODE>
+impl<I2C, IC, MODE, E> Ads1x1x<I2C, IC, ic::Resolution12Bit, MODE>
 where
-    DI: interface::WriteData<Error = E>,
+    I2C: embedded_hal::i2c::I2c<Error = E>,
 {
     /// Set data rate
     pub fn set_data_rate(&mut self, rate: DataRate12Bit) -> Result<(), Error<E>> {
@@ -21,15 +19,15 @@ where
             DR::Sps2400 => cfg.with_high(BF::DR2).with_low(BF::DR1).with_high(BF::DR0),
             DR::Sps3300 => cfg.with_high(BF::DR2).with_high(BF::DR1).with_low(BF::DR0),
         };
-        self.iface.write_register(Register::CONFIG, config.bits)?;
+        self.write_register(Register::CONFIG, config.bits)?;
         self.config = config;
         Ok(())
     }
 }
 
-impl<DI, IC, MODE, E> Ads1x1x<DI, IC, ic::Resolution16Bit, MODE>
+impl<I2C, IC, MODE, E> Ads1x1x<I2C, IC, ic::Resolution16Bit, MODE>
 where
-    DI: interface::WriteData<Error = E>,
+    I2C: embedded_hal::i2c::I2c<Error = E>,
 {
     /// Set data rate
     pub fn set_data_rate(&mut self, rate: DataRate16Bit) -> Result<(), Error<E>> {
@@ -45,7 +43,7 @@ where
             DR::Sps475 => cfg.with_high(BF::DR2).with_high(BF::DR1).with_low(BF::DR0),
             DR::Sps860 => cfg.with_high(BF::DR2).with_high(BF::DR1).with_high(BF::DR0),
         };
-        self.iface.write_register(Register::CONFIG, config.bits)?;
+        self.write_register(Register::CONFIG, config.bits)?;
         self.config = config;
         Ok(())
     }

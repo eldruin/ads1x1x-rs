@@ -3,13 +3,13 @@
 //! These are the features included only in ADS1x14, ADS1x15
 
 use crate::{
-    conversion, ic, interface, Ads1x1x, BitFlags as BF, ComparatorLatching, ComparatorMode,
+    conversion, ic, Ads1x1x, BitFlags as BF, ComparatorLatching, ComparatorMode,
     ComparatorPolarity, ComparatorQueue, Error, FullScaleRange, Register,
 };
 
-impl<DI, IC, CONV, MODE, E> Ads1x1x<DI, IC, CONV, MODE>
+impl<I2C, IC, CONV, MODE, E> Ads1x1x<I2C, IC, CONV, MODE>
 where
-    DI: interface::WriteData<Error = E>,
+    I2C: embedded_hal::i2c::I2c<Error = E>,
     IC: ic::Tier2Features,
     CONV: conversion::ConvertThreshold<E>,
 {
@@ -42,7 +42,7 @@ where
                 .with_low(BF::PGA1)
                 .with_high(BF::PGA0),
         };
-        self.iface.write_register(Register::CONFIG, config.bits)?;
+        self.write_register(Register::CONFIG, config.bits)?;
         self.config = config;
         Ok(())
     }
@@ -55,7 +55,7 @@ where
     /// selected. See [`FullScaleRange`](enum.FullScaleRange.html).
     pub fn set_low_threshold_raw(&mut self, value: i16) -> Result<(), Error<E>> {
         let register_value = CONV::convert_threshold(value)?;
-        self.iface.write_register(Register::LOW_TH, register_value)
+        self.write_register(Register::LOW_TH, register_value)
     }
 
     /// Set raw comparator upper threshold
@@ -66,7 +66,7 @@ where
     /// selected. See [`FullScaleRange`](enum.FullScaleRange.html).
     pub fn set_high_threshold_raw(&mut self, value: i16) -> Result<(), Error<E>> {
         let register_value = CONV::convert_threshold(value)?;
-        self.iface.write_register(Register::HIGH_TH, register_value)
+        self.write_register(Register::HIGH_TH, register_value)
     }
 
     /// Set comparator mode
@@ -75,7 +75,7 @@ where
             ComparatorMode::Traditional => self.config.with_low(BF::COMP_MODE),
             ComparatorMode::Window => self.config.with_high(BF::COMP_MODE),
         };
-        self.iface.write_register(Register::CONFIG, config.bits)?;
+        self.write_register(Register::CONFIG, config.bits)?;
         self.config = config;
         Ok(())
     }
@@ -89,7 +89,7 @@ where
             ComparatorPolarity::ActiveLow => self.config.with_low(BF::COMP_POL),
             ComparatorPolarity::ActiveHigh => self.config.with_high(BF::COMP_POL),
         };
-        self.iface.write_register(Register::CONFIG, config.bits)?;
+        self.write_register(Register::CONFIG, config.bits)?;
         self.config = config;
         Ok(())
     }
@@ -103,7 +103,7 @@ where
             ComparatorLatching::Nonlatching => self.config.with_low(BF::COMP_LAT),
             ComparatorLatching::Latching => self.config.with_high(BF::COMP_LAT),
         };
-        self.iface.write_register(Register::CONFIG, config.bits)?;
+        self.write_register(Register::CONFIG, config.bits)?;
         self.config = config;
         Ok(())
     }
@@ -117,7 +117,7 @@ where
             ComparatorQueue::Two => self.config.with_low(BF::COMP_QUE1).with_high(BF::COMP_QUE0),
             ComparatorQueue::Four => self.config.with_high(BF::COMP_QUE1).with_low(BF::COMP_QUE0),
         };
-        self.iface.write_register(Register::CONFIG, config.bits)?;
+        self.write_register(Register::CONFIG, config.bits)?;
         self.config = config;
         Ok(())
     }
@@ -132,7 +132,7 @@ where
             .config
             .with_high(BF::COMP_QUE1)
             .with_high(BF::COMP_QUE0);
-        self.iface.write_register(Register::CONFIG, config.bits)?;
+        self.write_register(Register::CONFIG, config.bits)?;
         self.config = config;
         Ok(())
     }
@@ -153,7 +153,7 @@ where
         {
             self.disable_comparator()?;
         }
-        self.iface.write_register(Register::HIGH_TH, 0x8000)?;
-        self.iface.write_register(Register::LOW_TH, 0)
+        self.write_register(Register::HIGH_TH, 0x8000)?;
+        self.write_register(Register::LOW_TH, 0)
     }
 }

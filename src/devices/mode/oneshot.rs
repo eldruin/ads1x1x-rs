@@ -1,24 +1,25 @@
 //! Common functions
 use crate::{
-    conversion, devices::OperatingMode, interface, mode, Ads1x1x, BitFlags, ChannelId,
-    ChannelSelection, Config, DynamicOneShot, Error, ModeChangeError, Register,
+    conversion, devices::OperatingMode, mode, Ads1x1x, BitFlags, ChannelId, ChannelSelection,
+    Config, DynamicOneShot, Error, ModeChangeError, Register,
 };
 use core::marker::PhantomData;
 
-impl<DI, IC, CONV, E> Ads1x1x<DI, IC, CONV, mode::OneShot>
+impl<I2C, IC, CONV, E> Ads1x1x<I2C, IC, CONV, mode::OneShot>
 where
-    DI: interface::WriteData<Error = E> + interface::ReadData<Error = E>,
+    I2C: embedded_hal::i2c::I2c<Error = E>,
     CONV: conversion::ConvertMeasurement,
 {
     /// Change operating mode to Continuous
     pub fn into_continuous(
         mut self,
-    ) -> Result<Ads1x1x<DI, IC, CONV, mode::Continuous>, ModeChangeError<E, Self>> {
+    ) -> Result<Ads1x1x<I2C, IC, CONV, mode::Continuous>, ModeChangeError<E, Self>> {
         if let Err(Error::I2C(e)) = self.set_operating_mode(OperatingMode::Continuous) {
             return Err(ModeChangeError::I2C(e, self));
         }
         Ok(Ads1x1x {
-            iface: self.iface,
+            i2c: self.i2c,
+            address: self.address,
             config: self.config,
             fsr: self.fsr,
             a_conversion_was_started: true,
@@ -30,13 +31,13 @@ where
 
     fn trigger_measurement(&mut self, config: &Config) -> Result<(), Error<E>> {
         let config = config.with_high(BitFlags::OS);
-        self.iface.write_register(Register::CONFIG, config.bits)
+        self.write_register(Register::CONFIG, config.bits)
     }
 }
 
-impl<DI, IC, CONV, E> Ads1x1x<DI, IC, CONV, mode::OneShot>
+impl<I2C, IC, CONV, E> Ads1x1x<I2C, IC, CONV, mode::OneShot>
 where
-    DI: interface::ReadData<Error = E> + interface::WriteData<Error = E>,
+    I2C: embedded_hal::i2c::I2c<Error = E>,
     CONV: conversion::ConvertMeasurement,
 {
     fn read_inner(&mut self, channel: ChannelSelection) -> nb::Result<i16, Error<E>> {
@@ -51,7 +52,6 @@ where
         if self.a_conversion_was_started && same_channel {
             // result is ready
             let value = self
-                .iface
                 .read_register(Register::CONVERSION)
                 .map_err(nb::Error::Other)?;
             self.a_conversion_was_started = false;
@@ -83,9 +83,9 @@ where
     }
 }
 
-impl<DI, IC, CONV, E> DynamicOneShot for Ads1x1x<DI, IC, CONV, mode::OneShot>
+impl<I2C, IC, CONV, E> DynamicOneShot for Ads1x1x<I2C, IC, CONV, mode::OneShot>
 where
-    DI: interface::ReadData<Error = E> + interface::WriteData<Error = E>,
+    I2C: embedded_hal::i2c::I2c<Error = E>,
     CONV: conversion::ConvertMeasurement,
 {
     type Error = Error<E>;
