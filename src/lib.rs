@@ -22,9 +22,9 @@
 //!     - Disable the comparator. See: [`disable_comparator()`].
 //!
 //! [`into_continuous()`]: struct.Ads1x1x.html#method.into_continuous
-//! [read_os]: struct.Ads1x1x.html#method.read
+//! [read_os]: struct.Ads1x1x.html#method.read-1
 //! [`start()`]: struct.Ads1x1x.html#method.start
-//! [read_cont]: struct.Ads1x1x.html#impl-OneShot%3CAds1x1x%3CI2C%2C%20IC%2C%20CONV%2C%20OneShot%3E%2C%20i16%2C%20CH%3E
+//! [read_cont]: struct.Ads1x1x.html#method.read
 //! [`set_data_rate()`]: struct.Ads1x1x.html#method.set_data_rate
 //! [`set_full_scale_range()`]: struct.Ads1x1x.html#method.set_full_scale_range
 //! [`is_measurement_in_progress()`]: struct.Ads1x1x.html#method.is_measurement_in_progress
