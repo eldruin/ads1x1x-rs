@@ -29,7 +29,7 @@ macro_rules! impl_channels {
             impl private::Sealed for $CH {}
 
             $(
-                impl<DI, CONV, MODE> ChannelId<Ads1x1x<DI, ic::$IC, CONV, MODE>> for $CH {
+                impl<I2C, CONV, MODE> ChannelId<Ads1x1x<I2C, ic::$IC, CONV, MODE>> for $CH {
                     fn channel_id() -> ChannelSelection {
                         ChannelSelection::$CH
                     }

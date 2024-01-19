@@ -1,25 +1,25 @@
 //! Continuous measurement mode
 
 use crate::{
-    conversion, devices::OperatingMode, interface, mode, Ads1x1x, ChannelId, Error,
-    ModeChangeError, Register,
+    conversion, devices::OperatingMode, mode, Ads1x1x, ChannelId, Error, ModeChangeError, Register,
 };
 use core::marker::PhantomData;
 
-impl<DI, IC, CONV, E> Ads1x1x<DI, IC, CONV, mode::Continuous>
+impl<I2C, IC, CONV, E> Ads1x1x<I2C, IC, CONV, mode::Continuous>
 where
-    DI: interface::ReadWriteRegister<Error = E>,
+    I2C: embedded_hal::i2c::I2c<Error = E>,
     CONV: conversion::ConvertMeasurement,
 {
     /// Change operating mode to OneShot
     pub fn into_one_shot(
         mut self,
-    ) -> Result<Ads1x1x<DI, IC, CONV, mode::OneShot>, ModeChangeError<E, Self>> {
+    ) -> Result<Ads1x1x<I2C, IC, CONV, mode::OneShot>, ModeChangeError<E, Self>> {
         if let Err(Error::I2C(e)) = self.set_operating_mode(OperatingMode::OneShot) {
             return Err(ModeChangeError::I2C(e, self));
         }
         Ok(Ads1x1x {
-            iface: self.iface,
+            i2c: self.i2c,
+            address: self.address,
             config: self.config,
             fsr: self.fsr,
             a_conversion_was_started: false,
@@ -31,7 +31,7 @@ where
 
     /// Read the most recent measurement
     pub fn read(&mut self) -> Result<i16, Error<E>> {
-        let value = self.iface.read_register(Register::CONVERSION)?;
+        let value = self.read_register(Register::CONVERSION)?;
         Ok(CONV::convert_measurement(value))
     }
 
@@ -43,7 +43,7 @@ where
     #[allow(unused_variables)]
     pub fn select_channel<CH: ChannelId<Self>>(&mut self, channel: CH) -> Result<(), Error<E>> {
         let config = self.config.with_mux_bits(CH::channel_id());
-        self.iface.write_register(Register::CONFIG, config.bits)?;
+        self.write_register(Register::CONFIG, config.bits)?;
         self.config = config;
         Ok(())
     }

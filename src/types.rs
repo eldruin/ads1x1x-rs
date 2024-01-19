@@ -245,8 +245,9 @@ impl Default for Config {
 
 /// ADS1x1x ADC driver
 #[derive(Debug, Default)]
-pub struct Ads1x1x<DI, IC, CONV, MODE> {
-    pub(crate) iface: DI,
+pub struct Ads1x1x<I2C, IC, CONV, MODE> {
+    pub(crate) i2c: I2C,
+    pub(crate) address: u8,
     pub(crate) config: Config,
     pub(crate) fsr: FullScaleRange,
     pub(crate) a_conversion_was_started: bool,

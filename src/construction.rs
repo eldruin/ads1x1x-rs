@@ -1,24 +1,19 @@
 //! Constructor/destructor functions.
 
-use crate::{
-    ic, interface::I2cInterface, mode, Ads1x1x, Config, FullScaleRange, SlaveAddr,
-    DEVICE_BASE_ADDRESS,
-};
+use crate::{ic, mode, Ads1x1x, Config, FullScaleRange, SlaveAddr, DEVICE_BASE_ADDRESS};
 use core::marker::PhantomData;
 
 macro_rules! impl_new_destroy {
     ( $IC:ident, $create:ident, $destroy:ident, $conv:ty ) => {
-        impl<I2C, E> Ads1x1x<I2cInterface<I2C>, ic::$IC, $conv, mode::OneShot>
+        impl<I2C, E> Ads1x1x<I2C, ic::$IC, $conv, mode::OneShot>
         where
             I2C: embedded_hal::i2c::I2c<Error = E>,
         {
             /// Create a new instance of the device in OneShot mode.
             pub fn $create(i2c: I2C, address: SlaveAddr) -> Self {
                 Ads1x1x {
-                    iface: I2cInterface {
-                        i2c,
-                        address: address.addr(DEVICE_BASE_ADDRESS),
-                    },
+                    i2c,
+                    address: address.addr(DEVICE_BASE_ADDRESS),
                     config: Config::default(),
                     fsr: FullScaleRange::default(),
                     a_conversion_was_started: false,
@@ -28,10 +23,10 @@ macro_rules! impl_new_destroy {
                 }
             }
         }
-        impl<I2C, CONV, MODE> Ads1x1x<I2cInterface<I2C>, ic::$IC, CONV, MODE> {
+        impl<I2C, CONV, MODE> Ads1x1x<I2C, ic::$IC, CONV, MODE> {
             /// Destroy driver instance, return I²C bus instance.
             pub fn $destroy(self) -> I2C {
-                self.iface.i2c
+                self.i2c
             }
         }
     };

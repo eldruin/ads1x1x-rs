@@ -7,12 +7,11 @@ use nb::block;
 use ads1x1x::{
     channel,
     ic::{Ads1115, Resolution16Bit},
-    interface::I2cInterface,
     Ads1x1x, SlaveAddr,
 };
 
 /// Type alias
-type Adc = Ads1x1x<I2cInterface<I2cdev>, Ads1115, Resolution16Bit, ads1x1x::mode::OneShot>;
+type Adc = Ads1x1x<I2cdev, Ads1115, Resolution16Bit, ads1x1x::mode::OneShot>;
 
 /// Read a single value from channel A.
 /// Returns 0 on Error.
