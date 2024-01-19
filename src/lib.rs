@@ -166,7 +166,7 @@
 //!
 //! ```no_run
 //! use ads1x1x::{
-//!     Ads1115, TargetAddr, ComparatorQueue, ComparatorPolarity,
+//!     Ads1015, TargetAddr, ComparatorQueue, ComparatorPolarity,
 //!     ComparatorMode, ComparatorLatching, FullScaleRange
 //! };
 //! use linux_embedded_hal::I2cdev;
