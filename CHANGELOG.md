@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Updated `embedded-hal` to version `1`, `read` in one-shot mode is therefore only an inherent method.
 - Raised MSRV to 1.62.0.
 
+### Removed
+- Removed `I2cInterface`.
+
 ## [0.2.2] - 2021-07-29
 
 ### Added
