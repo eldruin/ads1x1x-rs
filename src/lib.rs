@@ -131,7 +131,9 @@
 //! let i2c = I2cdev::new("/dev/i2c-1").unwrap();
 //! let adc = Ads1013::new(i2c, SlaveAddr::default());
 //! match adc.into_continuous() {
-//!     Err((e, adc)) => /* mode change failed handling */ panic!(),
+//!     Err((e, adc)) => {
+//!         panic!("Mode change failed: {e}")
+//!     },
 //!     Ok(mut adc) => {
 //!         let measurement = adc.read().unwrap();
 //!         // ...

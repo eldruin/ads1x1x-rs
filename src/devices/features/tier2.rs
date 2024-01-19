@@ -1,6 +1,4 @@
-//! Tier 2 features.
-//!
-//! These are the features included only in ADS1x14, ADS1x15
+//! Features only included in ADS1x14, ADS1x15.
 
 use crate::{
     register::{Config, Conversion12, Conversion16, HiThresh, LoThresh},
@@ -140,13 +138,12 @@ macro_rules! impl_tier2_features {
                 Ok(())
             }
 
-            /// Sets the ALERT/RDY pin as conversion-ready pin.
+            /// Enables the ALERT/RDY pin as conversion-ready function.
             ///
-            /// This the ALERT/RDY pin outputs the OS bit when in OneShot mode, and
-            /// provides a continuous-conversion ready pulse when in
-            /// continuous-conversion mode.
+            /// When in one-shot mode, this makes the ALERT/RDY pin output the OS bit,
+            /// in continuous-conversion mode, provides a continuous-conversion ready pulse.
             ///
-            /// When calling this the comparator will be disabled and the thresholds will be cleared.
+            /// When calling this the comparator will be disabled and any thresholds will be cleared.
             pub fn use_alert_rdy_pin_as_ready(&mut self) -> Result<(), Error<E>> {
                 if !self.config.contains(Config::COMP_QUE)
                 {

@@ -1,4 +1,5 @@
-//! Common functions
+//! One-shot measurement mode.
+
 use core::marker::PhantomData;
 
 use crate::{
@@ -13,7 +14,7 @@ macro_rules! impl_one_shot {
         where
             I2C: embedded_hal::i2c::I2c<Error = E>,
         {
-            /// Change operating mode to Continuous
+            /// Changes to continuous operating mode.
             ///
             /// On error, returns a pair of the error and the current instance.
             pub fn into_continuous(

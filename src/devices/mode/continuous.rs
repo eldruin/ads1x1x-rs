@@ -1,4 +1,4 @@
-//! Continuous measurement mode
+//! Continuous measurement mode.
 
 use crate::{
     mode,
@@ -13,7 +13,7 @@ macro_rules! impl_continuous {
         where
             I2C: embedded_hal::i2c::I2c<Error = E>,
         {
-            /// Changes operating mode to `OneShot`.
+            /// Changes to one-shot operating mode.
             ///
             /// On error, returns a pair of the error and the current instance.
             pub fn into_one_shot(mut self) -> Result<$Ads<I2C, mode::OneShot>, (Error<E>, Self)> {

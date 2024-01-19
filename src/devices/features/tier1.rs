@@ -1,5 +1,3 @@
-//! Common functions
-
 use crate::{
     Ads1013, Ads1014, Ads1015, Ads1113, Ads1114, Ads1115, DataRate12Bit, DataRate16Bit, Error,
 };
