@@ -151,7 +151,7 @@ pub enum FullScaleRange {
     Within6_144V,
     /// ±4.096V
     Within4_096V,
-    /// The measurable range is ±2.048V. (default)
+    /// ±2.048V (default)
     #[default]
     Within2_048V,
     /// ±1.024V
