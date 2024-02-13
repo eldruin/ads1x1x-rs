@@ -1,6 +1,6 @@
 //! Constructor/destructor functions.
 
-use crate::{ic, mode, Ads1x1x, Config, FullScaleRange, SlaveAddr, DEVICE_BASE_ADDRESS};
+use crate::{ic, mode, Ads1x1x, Config, FullScaleRange, SlaveAddr};
 use core::marker::PhantomData;
 
 macro_rules! impl_new_destroy {
@@ -13,7 +13,7 @@ macro_rules! impl_new_destroy {
             pub fn $create(i2c: I2C, address: SlaveAddr) -> Self {
                 Ads1x1x {
                     i2c,
-                    address: address.addr(DEVICE_BASE_ADDRESS),
+                    address: address.bits(),
                     config: Config::default(),
                     fsr: FullScaleRange::default(),
                     a_conversion_was_started: false,
