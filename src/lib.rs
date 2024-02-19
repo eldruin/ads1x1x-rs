@@ -213,7 +213,7 @@ impl BitFlags {
 }
 
 pub mod channel;
-pub use channel::{ChannelId, ChannelSelection};
+pub use channel::ChannelId;
 mod construction;
 mod conversion;
 pub use crate::conversion::{ConvertMeasurement, ConvertThreshold};
@@ -224,8 +224,7 @@ mod types;
 use crate::types::Config;
 pub use crate::types::{
     mode, Ads1x1x, ComparatorLatching, ComparatorMode, ComparatorPolarity, ComparatorQueue,
-    DataRate12Bit, DataRate16Bit, DynamicOneShot, Error, FullScaleRange, ModeChangeError,
-    SlaveAddr,
+    DataRate12Bit, DataRate16Bit, Error, FullScaleRange, ModeChangeError, SlaveAddr,
 };
 
 mod private {
