@@ -2,8 +2,6 @@
 
 use core::marker::PhantomData;
 
-use crate::{private, ChannelSelection};
-
 /// Errors in this crate
 #[derive(Debug)]
 pub enum Error<E> {
@@ -233,15 +231,6 @@ pub struct Ads1x1x<I2C, IC, CONV, MODE> {
     pub(crate) _conv: PhantomData<CONV>,
     pub(crate) _ic: PhantomData<IC>,
     pub(crate) _mode: PhantomData<MODE>,
-}
-
-/// Multi channel One-shot ADC
-pub trait DynamicOneShot: private::Sealed {
-    /// Error type
-    type Error;
-
-    /// Read a measurement
-    fn read(&mut self, channel: ChannelSelection) -> nb::Result<i16, Self::Error>;
 }
 
 #[cfg(test)]
