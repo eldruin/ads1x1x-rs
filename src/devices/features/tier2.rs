@@ -143,7 +143,7 @@ where
     /// provides a continuous-conversion ready pulse when in
     /// continuous-conversion mode.
     ///
-    /// When calling this the comparator will be disabled and the thresholds will be cleared.
+    /// When calling this the comparator will be reset to default and the thresholds will be cleared.
     pub fn use_alert_rdy_pin_as_ready(&mut self) -> Result<(), Error<E>> {
         if self.config
             != self
@@ -151,7 +151,7 @@ where
                 .with_high(BF::COMP_QUE1)
                 .with_high(BF::COMP_QUE0)
         {
-            self.disable_comparator()?;
+            self.set_comparator_queue(ComparatorQueue::default())?;
         }
         self.write_register(Register::HIGH_TH, 0x8000)?;
         self.write_register(Register::LOW_TH, 0)
