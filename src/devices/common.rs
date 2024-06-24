@@ -1,6 +1,6 @@
 //! Common functions.
 
-use crate::{register::Config, Ads1013, Ads1014, Ads1015, Ads1113, Ads1114, Ads1115, Error};
+use crate::{register::Config, Ads1013, Ads1014, Ads1015, Ads1113, Ads1114, Ads1115};
 
 macro_rules! impl_common_features {
     ($Ads:ident) => {
@@ -9,7 +9,7 @@ macro_rules! impl_common_features {
             I2C: embedded_hal::i2c::I2c<Error = E>,
         {
             /// Checks whether a measurement is currently in progress.
-            pub fn is_measurement_in_progress(&mut self) -> Result<bool, Error<E>> {
+            pub fn is_measurement_in_progress(&mut self) -> Result<bool, E> {
                 let config = self.read_reg_u16::<Config>()?;
                 Ok(!config.contains(Config::OS))
             }

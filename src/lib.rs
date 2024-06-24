@@ -194,7 +194,7 @@ mod devices;
 mod types;
 pub use types::{
     ComparatorLatching, ComparatorMode, ComparatorPolarity, ComparatorQueue, DataRate12Bit,
-    DataRate16Bit, Error, FullScaleRange, TargetAddr,
+    DataRate16Bit, FullScaleRange, TargetAddr,
 };
 pub mod mode;
 pub use mode::*;
@@ -230,20 +230,17 @@ macro_rules! impl_ads1x1x {
         where
             I2C: embedded_hal::i2c::I2c<Error = E>,
         {
-            pub(crate) fn read_reg_u16<R: Reg<u16>>(&mut self) -> Result<R, Error<E>> {
+            pub(crate) fn read_reg_u16<R: Reg<u16>>(&mut self) -> Result<R, E> {
                 let mut buf = [0, 0];
                 self.i2c
-                    .write_read(self.address.bits(), &[R::ADDR], &mut buf)
-                    .map_err(Error::I2C)?;
+                    .write_read(self.address.bits(), &[R::ADDR], &mut buf)?;
                 Ok(R::from_reg(u16::from_be_bytes(buf)))
             }
 
-            pub(crate) fn write_reg_u16<R: Reg<u16>>(&mut self, reg: R) -> Result<(), Error<E>> {
+            pub(crate) fn write_reg_u16<R: Reg<u16>>(&mut self, reg: R) -> Result<(), E> {
                 let buf = reg.to_reg().to_be_bytes();
                 let payload: [u8; 3] = [R::ADDR, buf[0], buf[1]];
-                self.i2c
-                    .write(self.address.bits(), &payload)
-                    .map_err(Error::I2C)
+                self.i2c.write(self.address.bits(), &payload)
             }
         }
 

@@ -3,7 +3,7 @@
 use crate::{
     register::{Config, Conversion12, Conversion16, HiThresh, LoThresh},
     Ads1014, Ads1015, Ads1114, Ads1115, ComparatorLatching, ComparatorMode, ComparatorPolarity,
-    ComparatorQueue, Error, FullScaleRange,
+    ComparatorQueue, FullScaleRange,
 };
 
 macro_rules! doc_threshold {
@@ -34,7 +34,7 @@ macro_rules! impl_tier2_features {
             /// Sets the input voltage measurable range.
             ///
             /// This configures the programmable gain amplifier (PGA) and determines the measurable input voltage range.
-            pub fn set_full_scale_range(&mut self, range: FullScaleRange) -> Result<(), Error<E>> {
+            pub fn set_full_scale_range(&mut self, range: FullScaleRange) -> Result<(), E> {
                 let config = range.configure(self.config);
                 self.write_reg_u16(config)?;
                 self.config = config;
@@ -47,7 +47,7 @@ macro_rules! impl_tier2_features {
             /// full-scale range ([`FullScaleRange`]) selected.
             ///
             #[doc = doc_threshold!($($th_range)+)]
-            pub fn set_low_threshold_raw(&mut self, value: i16) -> Result<(), Error<E>> {
+            pub fn set_low_threshold_raw(&mut self, value: i16) -> Result<(), E> {
                 let register_value = <$conv>::convert_threshold(value);
                 self.write_reg_u16(LoThresh(register_value))
             }
@@ -58,13 +58,13 @@ macro_rules! impl_tier2_features {
             /// full-scale range ([`FullScaleRange`]) selected.
             ///
             #[doc = doc_threshold!($($th_range)+)]
-            pub fn set_high_threshold_raw(&mut self, value: i16) -> Result<(), Error<E>> {
+            pub fn set_high_threshold_raw(&mut self, value: i16) -> Result<(), E> {
                 let register_value = <$conv>::convert_threshold(value);
                 self.write_reg_u16(HiThresh(register_value))
             }
 
             /// Sets the comparator mode.
-            pub fn set_comparator_mode(&mut self, mode: ComparatorMode) -> Result<(), Error<E>> {
+            pub fn set_comparator_mode(&mut self, mode: ComparatorMode) -> Result<(), E> {
                 let config = match mode {
                     ComparatorMode::Traditional => self.config.difference(Config::COMP_MODE),
                     ComparatorMode::Window => self.config.union(Config::COMP_MODE),
@@ -78,7 +78,7 @@ macro_rules! impl_tier2_features {
             pub fn set_comparator_polarity(
                 &mut self,
                 polarity: ComparatorPolarity,
-            ) -> Result<(), Error<E>> {
+            ) -> Result<(), E> {
                 let config = match polarity {
                     ComparatorPolarity::ActiveLow => self.config.difference(Config::COMP_POL),
                     ComparatorPolarity::ActiveHigh => self.config.union(Config::COMP_POL),
@@ -92,7 +92,7 @@ macro_rules! impl_tier2_features {
             pub fn set_comparator_latching(
                 &mut self,
                 latching: ComparatorLatching,
-            ) -> Result<(), Error<E>> {
+            ) -> Result<(), E> {
                 let config = match latching {
                     ComparatorLatching::Nonlatching => self.config.difference(Config::COMP_LAT),
                     ComparatorLatching::Latching => self.config.union(Config::COMP_LAT),
@@ -105,7 +105,7 @@ macro_rules! impl_tier2_features {
             /// Activates the comparator and sets the alert queue.
             ///
             /// The comparator can be disabled with [`disable_comparator`](Self::disable_comparator).
-            pub fn set_comparator_queue(&mut self, queue: ComparatorQueue) -> Result<(), Error<E>> {
+            pub fn set_comparator_queue(&mut self, queue: ComparatorQueue) -> Result<(), E> {
                 let config = match queue {
                     ComparatorQueue::One => {
                         self.config.difference(Config::COMP_QUE1).difference(Config::COMP_QUE0)
@@ -128,7 +128,7 @@ macro_rules! impl_tier2_features {
             ///
             /// The comparator can be enabled by setting the comparator queue using
             /// the [`set_comparator_queue`](Self::set_comparator_queue) method.
-            pub fn disable_comparator(&mut self) -> Result<(), Error<E>> {
+            pub fn disable_comparator(&mut self) -> Result<(), E> {
                 let config = self
                     .config
                     .union(Config::COMP_QUE1)
@@ -144,7 +144,7 @@ macro_rules! impl_tier2_features {
             /// in continuous-conversion mode, provides a continuous-conversion ready pulse.
             ///
             /// When calling this the comparator will be reset to default and any thresholds will be cleared.
-            pub fn use_alert_rdy_pin_as_ready(&mut self) -> Result<(), Error<E>> {
+            pub fn use_alert_rdy_pin_as_ready(&mut self) -> Result<(), E> {
                 if !self.config.contains(Config::COMP_QUE)
                 {
                     self.set_comparator_queue(ComparatorQueue::default())?;

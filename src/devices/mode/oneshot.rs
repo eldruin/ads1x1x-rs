@@ -5,7 +5,7 @@ use core::marker::PhantomData;
 use crate::{
     mode,
     register::{Config, Conversion12, Conversion16},
-    Ads1013, Ads1014, Ads1015, Ads1113, Ads1114, Ads1115, ChannelId, Error,
+    Ads1013, Ads1014, Ads1015, Ads1113, Ads1114, Ads1115, ChannelId,
 };
 
 macro_rules! impl_one_shot {
@@ -17,9 +17,7 @@ macro_rules! impl_one_shot {
             /// Changes to continuous operating mode.
             ///
             /// On error, returns a pair of the error and the current instance.
-            pub fn into_continuous(
-                mut self,
-            ) -> Result<$Ads<I2C, mode::Continuous>, (Error<E>, Self)> {
+            pub fn into_continuous(mut self) -> Result<$Ads<I2C, mode::Continuous>, (E, Self)> {
                 let config = self.config.difference(Config::MODE);
                 if let Err(e) = self.write_reg_u16(config) {
                     return Err((e, self));
@@ -33,7 +31,7 @@ macro_rules! impl_one_shot {
                 })
             }
 
-            fn trigger_measurement(&mut self, config: &Config) -> Result<(), Error<E>> {
+            fn trigger_measurement(&mut self, config: &Config) -> Result<(), E> {
                 let config = config.union(Config::OS);
                 self.write_reg_u16(config)
             }
@@ -51,7 +49,7 @@ macro_rules! impl_one_shot {
             /// measurement on a different channel is requested, a new measurement on
             /// using the new channel selection is triggered.
             #[allow(unused_variables)]
-            pub fn read<CH: ChannelId<Self>>(&mut self, channel: CH) -> nb::Result<i16, Error<E>> {
+            pub fn read<CH: ChannelId<Self>>(&mut self, channel: CH) -> nb::Result<i16, E> {
                 if self
                     .is_measurement_in_progress()
                     .map_err(nb::Error::Other)?

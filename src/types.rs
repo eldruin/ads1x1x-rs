@@ -2,15 +2,6 @@
 
 use crate::Config;
 
-/// Errors in this crate
-#[derive(Debug, PartialEq)]
-pub enum Error<E> {
-    /// I²C bus error
-    I2C(E),
-    /// Invalid input data provided
-    InvalidInputData,
-}
-
 /// Data rate for ADS101x.
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub enum DataRate12Bit {

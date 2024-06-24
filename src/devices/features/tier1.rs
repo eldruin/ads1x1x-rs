@@ -1,8 +1,4 @@
-//! Features supported on all ADS1x1x devices.
-
-use crate::{
-    Ads1013, Ads1014, Ads1015, Ads1113, Ads1114, Ads1115, DataRate12Bit, DataRate16Bit, Error,
-};
+use crate::{Ads1013, Ads1014, Ads1015, Ads1113, Ads1114, Ads1115, DataRate12Bit, DataRate16Bit};
 
 macro_rules! impl_tier1_features {
     ($Ads:ident, $DataRate:ty) => {
@@ -11,7 +7,7 @@ macro_rules! impl_tier1_features {
             I2C: embedded_hal::i2c::I2c<Error = E>,
         {
             /// Sets the data rate.
-            pub fn set_data_rate(&mut self, rate: $DataRate) -> Result<(), Error<E>> {
+            pub fn set_data_rate(&mut self, rate: $DataRate) -> Result<(), E> {
                 let config = rate.configure(self.config);
                 self.write_reg_u16(config)?;
                 self.config = config;
