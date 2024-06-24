@@ -3,7 +3,7 @@
 use crate::{
     mode,
     register::{Config, Conversion12, Conversion16},
-    Ads1013, Ads1014, Ads1015, Ads1113, Ads1114, Ads1115, ChannelId, Error,
+    Ads1013, Ads1014, Ads1015, Ads1113, Ads1114, Ads1115, ChannelId,
 };
 use core::marker::PhantomData;
 
@@ -16,7 +16,7 @@ macro_rules! impl_continuous {
             /// Changes to one-shot operating mode.
             ///
             /// On error, returns a pair of the error and the current instance.
-            pub fn into_one_shot(mut self) -> Result<$Ads<I2C, mode::OneShot>, (Error<E>, Self)> {
+            pub fn into_one_shot(mut self) -> Result<$Ads<I2C, mode::OneShot>, (E, Self)> {
                 let config = self.config.union(Config::MODE);
                 if let Err(e) = self.write_reg_u16(config) {
                     return Err((e, self));
@@ -31,7 +31,7 @@ macro_rules! impl_continuous {
             }
 
             /// Reads the most recent measurement.
-            pub fn read(&mut self) -> Result<i16, Error<E>> {
+            pub fn read(&mut self) -> Result<i16, E> {
                 let value = self.read_reg_u16::<$conv>()?;
                 Ok(<$conv>::convert_measurement(value.0))
             }
@@ -42,10 +42,7 @@ macro_rules! impl_continuous {
             /// ongoing conversion will be completed.
             /// The following conversions will use the new channel configuration.
             #[allow(unused_variables)]
-            pub fn select_channel<CH: ChannelId<Self>>(
-                &mut self,
-                channel: CH,
-            ) -> Result<(), Error<E>> {
+            pub fn select_channel<CH: ChannelId<Self>>(&mut self, channel: CH) -> Result<(), E> {
                 let config = self.config.with_mux_bits(CH::channel_id());
                 self.write_reg_u16(config)?;
                 self.config = config;
