@@ -10,8 +10,8 @@ macro_rules! impl_tests {
             use super::*;
             #[test]
             fn can_create() {
-                let dev = $create(&[]);
-                $destroy(dev);
+                let adc = $create(&[]);
+                $destroy(adc);
             }
         }
     };
