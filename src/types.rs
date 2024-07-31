@@ -102,7 +102,7 @@ pub enum ComparatorPolarity {
     ActiveHigh,
 }
 
-/// Comparator polarity (only for ADS1x14, ADS1x15)
+/// Comparator latching (only for ADS1x14, ADS1x15)
 ///
 /// Select whether the ALERT/RDY pin latches after being asserted or clears
 /// after conversions are within the margin of the upper and lower
