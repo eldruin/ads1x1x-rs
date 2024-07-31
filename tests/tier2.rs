@@ -140,7 +140,7 @@ fn can_use_alert_rdy_pin_as_rdy_disabled_comparator() {
         .with_low(BF::COMP_QUE0);
     let config_disabled_comp = Config::default()
         .with_high(BF::COMP_QUE1)
-        .with_high(BF::COMP_QUE0);
+        .with_low(BF::COMP_QUE0);
     let transactions = [
         I2cTrans::write(DEV_ADDR, vec![Register::CONFIG, config.msb(), config.lsb()]),
         I2cTrans::write(
