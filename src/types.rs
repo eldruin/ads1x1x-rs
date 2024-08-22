@@ -117,9 +117,9 @@ pub enum ComparatorLatching {
     /// Latching
     ///
     /// The asserted ALERT/RDY pin remains latched until conversion data are
-    /// read by the master or an appropriate SMBus alert response is sent by
-    /// the master. The device responds with its address, and it is the lowest
-    /// address currently asserting the ALERT/RDY bus line.
+    /// read by the controller or an appropriate SMBus alert response is sent by
+    /// the controller. The device responds with its address, and it is the
+    /// lowest address currently asserting the ALERT/RDY bus line.
     Latching,
 }
 
@@ -160,11 +160,11 @@ pub enum FullScaleRange {
     Within0_256V,
 }
 
-/// A slave address.
+/// A target address.
 ///
 /// See [Table 4 in the datasheet](https://www.ti.com/lit/ds/symlink/ads1115.pdf#%5B%7B%22num%22%3A716%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C0%2C602.2%2C0%5D).
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
-pub enum SlaveAddr {
+pub enum TargetAddr {
     /// Address when the ADDR pin is connected to GND. (default)
     #[default]
     Gnd,
@@ -180,7 +180,7 @@ pub enum SlaveAddr {
     Scl,
 }
 
-impl SlaveAddr {
+impl TargetAddr {
     pub(crate) const fn bits(self) -> u8 {
         match self {
             Self::Gnd => 0b1001000,
@@ -235,19 +235,19 @@ pub struct Ads1x1x<I2C, IC, CONV, MODE> {
 
 #[cfg(test)]
 mod tests {
-    use crate::{FullScaleRange, SlaveAddr};
+    use crate::{FullScaleRange, TargetAddr};
 
     #[test]
-    fn slave_addr_default() {
-        assert_eq!(0b100_1000, SlaveAddr::default().bits());
+    fn target_addr_default() {
+        assert_eq!(0b100_1000, TargetAddr::default().bits());
     }
 
     #[test]
-    fn slave_addr_bits() {
-        assert_eq!(0b100_1000, SlaveAddr::Gnd.bits());
-        assert_eq!(0b100_1001, SlaveAddr::Vdd.bits());
-        assert_eq!(0b100_1010, SlaveAddr::Sda.bits());
-        assert_eq!(0b100_1011, SlaveAddr::Scl.bits());
+    fn target_addr_bits() {
+        assert_eq!(0b100_1000, TargetAddr::Gnd.bits());
+        assert_eq!(0b100_1001, TargetAddr::Vdd.bits());
+        assert_eq!(0b100_1010, TargetAddr::Sda.bits());
+        assert_eq!(0b100_1011, TargetAddr::Scl.bits());
     }
 
     #[test]

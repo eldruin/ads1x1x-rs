@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+- [breaking-change] Changed the terms "master/slave" to "controller/target" to align with the I2C bus specification v.7
+
 ### Added
 - Derived common traits for types.
 - Add default for `ComparatorQueue`.
