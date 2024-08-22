@@ -88,10 +88,10 @@
 //!
 //! ```no_run
 //! use linux_embedded_hal::I2cdev;
-//! use ads1x1x::{Ads1x1x, SlaveAddr};
+//! use ads1x1x::{Ads1x1x, TargetAddr};
 //!
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
-//! let adc = Ads1x1x::new_ads1013(dev, SlaveAddr::default());
+//! let adc = Ads1x1x::new_ads1013(dev, TargetAddr::default());
 //! // do something...
 //!
 //! // get the I2C device back
@@ -102,20 +102,20 @@
 //!
 //! ```no_run
 //! use linux_embedded_hal::I2cdev;
-//! use ads1x1x::{Ads1x1x, SlaveAddr};
+//! use ads1x1x::{Ads1x1x, TargetAddr};
 //!
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
-//! let adc = Ads1x1x::new_ads1013(dev, SlaveAddr::Sda);
+//! let adc = Ads1x1x::new_ads1013(dev, TargetAddr::Sda);
 //! ```
 //!
 //! ### Make a one-shot measurement
 //! ```no_run
-//! use ads1x1x::{channel, Ads1x1x, SlaveAddr};
+//! use ads1x1x::{channel, Ads1x1x, TargetAddr};
 //! use linux_embedded_hal::I2cdev;
 //! use nb::block;
 //!
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
-//! let mut adc = Ads1x1x::new_ads1013(dev, SlaveAddr::default());
+//! let mut adc = Ads1x1x::new_ads1013(dev, TargetAddr::default());
 //! let measurement = block!(adc.read(channel::DifferentialA0A1)).unwrap();
 //! println!("Measurement: {}", measurement);
 //! let _dev = adc.destroy_ads1013(); // get I2C device back
@@ -128,10 +128,10 @@
 //!
 //! ```no_run
 //! use linux_embedded_hal::I2cdev;
-//! use ads1x1x::{Ads1x1x, ModeChangeError, SlaveAddr};
+//! use ads1x1x::{Ads1x1x, ModeChangeError, TargetAddr};
 //!
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
-//! let adc = Ads1x1x::new_ads1013(dev, SlaveAddr::default());
+//! let adc = Ads1x1x::new_ads1013(dev, TargetAddr::default());
 //! match adc.into_continuous() {
 //!     Err(ModeChangeError::I2C(e, adc)) => /* mode change failed handling */ panic!(),
 //!     Ok(mut adc) => {
@@ -148,10 +148,10 @@
 //!
 //! ```no_run
 //! use linux_embedded_hal::I2cdev;
-//! use ads1x1x::{Ads1x1x, DataRate16Bit, SlaveAddr};
+//! use ads1x1x::{Ads1x1x, DataRate16Bit, TargetAddr};
 //!
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
-//! let mut adc = Ads1x1x::new_ads1115(dev, SlaveAddr::default());
+//! let mut adc = Ads1x1x::new_ads1115(dev, TargetAddr::default());
 //! adc.set_data_rate(DataRate16Bit::Sps860).unwrap();
 //! ```
 //!
@@ -160,17 +160,17 @@
 //! or goes above 1.5V in at least two consecutive conversions. Then the
 //! ALERT/RDY pin will be set high and it will be kept so until the
 //! measurement is read or an appropriate SMBus alert response is sent by
-//! the master.
+//! the controller.
 //!
 //! ```no_run
 //! use linux_embedded_hal::I2cdev;
 //! use ads1x1x::{
-//!     Ads1x1x, SlaveAddr, ComparatorQueue, ComparatorPolarity,
+//!     Ads1x1x, TargetAddr, ComparatorQueue, ComparatorPolarity,
 //!     ComparatorMode, ComparatorLatching, FullScaleRange
 //! };
 //!
 //! let dev = I2cdev::new("/dev/i2c-1").unwrap();
-//! let address = SlaveAddr::default();
+//! let address = TargetAddr::default();
 //! let mut adc = Ads1x1x::new_ads1015(dev, address);
 //! adc.set_comparator_queue(ComparatorQueue::Two).unwrap();
 //! adc.set_comparator_polarity(ComparatorPolarity::ActiveHigh).unwrap();
@@ -224,7 +224,7 @@ mod types;
 use crate::types::Config;
 pub use crate::types::{
     mode, Ads1x1x, ComparatorLatching, ComparatorMode, ComparatorPolarity, ComparatorQueue,
-    DataRate12Bit, DataRate16Bit, Error, FullScaleRange, ModeChangeError, SlaveAddr,
+    DataRate12Bit, DataRate16Bit, Error, FullScaleRange, ModeChangeError, TargetAddr,
 };
 
 mod private {

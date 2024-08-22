@@ -1,6 +1,6 @@
 //! Constructor/destructor functions.
 
-use crate::{ic, mode, Ads1x1x, Config, FullScaleRange, SlaveAddr};
+use crate::{ic, mode, Ads1x1x, Config, FullScaleRange, TargetAddr};
 use core::marker::PhantomData;
 
 macro_rules! impl_new_destroy {
@@ -10,7 +10,7 @@ macro_rules! impl_new_destroy {
             I2C: embedded_hal::i2c::I2c<Error = E>,
         {
             /// Create a new instance of the device in OneShot mode.
-            pub fn $create(i2c: I2C, address: SlaveAddr) -> Self {
+            pub fn $create(i2c: I2C, address: TargetAddr) -> Self {
                 Ads1x1x {
                     i2c,
                     address: address.bits(),

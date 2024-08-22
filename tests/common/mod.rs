@@ -1,4 +1,4 @@
-use ads1x1x::{ic, mode, Ads1x1x, SlaveAddr};
+use ads1x1x::{ic, mode, Ads1x1x, TargetAddr};
 use embedded_hal_mock::eh1::i2c::{Mock as I2cMock, Transaction as I2cTrans};
 
 #[allow(unused)]
@@ -70,7 +70,7 @@ macro_rules! impl_new_destroy {
     ($ic:ident, $create:ident, $destroy:ident, $conv:ty, $trans:ty, $iface:ty) => {
         #[allow(unused)]
         pub fn $create(transactions: &[$trans]) -> Ads1x1x<$iface, ic::$ic, $conv, mode::OneShot> {
-            Ads1x1x::$create(I2cMock::new(transactions), SlaveAddr::default())
+            Ads1x1x::$create(I2cMock::new(transactions), TargetAddr::default())
         }
 
         #[allow(unused)]
