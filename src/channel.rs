@@ -1,17 +1,19 @@
-//! ADC input channels
-use crate::{ic, Ads1x1x, BitFlags as BF, Config};
+//! ADC input channels.
+use crate::{Ads1013, Ads1014, Ads1015, Ads1113, Ads1114, Ads1115, Config};
 
 use private::ChannelSelection;
 
 /// Marker type for an ADC input channel.
-pub trait ChannelId<T> {
+pub trait ChannelId<T>: private::Sealed {
     /// Get the channel.
     fn channel_id() -> ChannelSelection;
 }
 
 macro_rules! impl_channels {
-    ($(#[doc = $doc:expr] $CH:ident => [$($IC:ident),+]),+ $(,)?) => {
+    ($(#[doc = $doc:expr] $CH:ident => [$($Ads:ident),+]),+ $(,)?) => {
         mod private {
+            pub trait Sealed {}
+
             #[derive(Debug, Clone, Copy)]
             /// ADC input channel selection.
             pub enum ChannelSelection {
@@ -26,8 +28,10 @@ macro_rules! impl_channels {
             #[doc = $doc]
             pub struct $CH;
 
+            impl private::Sealed for $CH {}
+
             $(
-                impl<I2C, CONV, MODE> ChannelId<Ads1x1x<I2C, ic::$IC, CONV, MODE>> for $CH {
+                impl<I2C, MODE> ChannelId<$Ads<I2C, MODE>> for $CH {
                     fn channel_id() -> ChannelSelection {
                         ChannelSelection::$CH
                     }
@@ -60,37 +64,36 @@ impl Config {
     pub(crate) fn with_mux_bits(&self, ch: ChannelSelection) -> Self {
         match ch {
             ChannelSelection::DifferentialA0A1 => self
-                .with_low(BF::MUX2)
-                .with_low(BF::MUX1)
-                .with_low(BF::MUX0),
+                .difference(Self::MUX2)
+                .difference(Self::MUX1)
+                .difference(Self::MUX0),
             ChannelSelection::DifferentialA0A3 => self
-                .with_low(BF::MUX2)
-                .with_low(BF::MUX1)
-                .with_high(BF::MUX0),
+                .difference(Self::MUX2)
+                .difference(Self::MUX1)
+                .union(Self::MUX0),
             ChannelSelection::DifferentialA1A3 => self
-                .with_low(BF::MUX2)
-                .with_high(BF::MUX1)
-                .with_low(BF::MUX0),
+                .difference(Self::MUX2)
+                .union(Self::MUX1)
+                .difference(Self::MUX0),
             ChannelSelection::DifferentialA2A3 => self
-                .with_low(BF::MUX2)
-                .with_high(BF::MUX1)
-                .with_high(BF::MUX0),
+                .difference(Self::MUX2)
+                .union(Self::MUX1)
+                .union(Self::MUX0),
             ChannelSelection::SingleA0 => self
-                .with_high(BF::MUX2)
-                .with_low(BF::MUX1)
-                .with_low(BF::MUX0),
+                .union(Self::MUX2)
+                .difference(Self::MUX1)
+                .difference(Self::MUX0),
             ChannelSelection::SingleA1 => self
-                .with_high(BF::MUX2)
-                .with_low(BF::MUX1)
-                .with_high(BF::MUX0),
+                .union(Self::MUX2)
+                .difference(Self::MUX1)
+                .union(Self::MUX0),
             ChannelSelection::SingleA2 => self
-                .with_high(BF::MUX2)
-                .with_high(BF::MUX1)
-                .with_low(BF::MUX0),
-            ChannelSelection::SingleA3 => self
-                .with_high(BF::MUX2)
-                .with_high(BF::MUX1)
-                .with_high(BF::MUX0),
+                .union(Self::MUX2)
+                .union(Self::MUX1)
+                .difference(Self::MUX0),
+            ChannelSelection::SingleA3 => {
+                self.union(Self::MUX2).union(Self::MUX1).union(Self::MUX0)
+            }
         }
     }
 }
