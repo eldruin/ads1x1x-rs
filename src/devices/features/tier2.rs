@@ -1,6 +1,4 @@
-//! Tier 2 features.
-//!
-//! These are the features included only in ADS1x14, ADS1x15
+//! Features only supported by ADS1x14 and ADS1x15 devices.
 
 use crate::{
     conversion, ic, Ads1x1x, BitFlags as BF, ComparatorLatching, ComparatorMode,
@@ -13,9 +11,9 @@ where
     IC: ic::Tier2Features,
     CONV: conversion::ConvertThreshold<E>,
 {
-    /// Set the input voltage measurable range
+    /// Sets the input voltage measurable range.
     ///
-    /// This configures the programmable gain amplifier and determines the measurable input voltage range.
+    /// This configures the programmable gain amplifier (PGA) and determines the measurable input voltage range.
     pub fn set_full_scale_range(&mut self, range: FullScaleRange) -> Result<(), Error<E>> {
         use crate::FullScaleRange as FSR;
         let cfg = self.config.clone();
@@ -47,29 +45,31 @@ where
         Ok(())
     }
 
-    /// Set raw comparator lower threshold
+    /// Sets the raw comparator lower threshold.
+    ///
+    /// The voltage that these values correspond to must be calculated using the
+    /// full-scale range ([`FullScaleRange`]) selected.
     ///
     /// The input value must be within `[2047..-2048]` for 12-bit devices (`ADS101x`)
-    /// and within `[32767..-32768]` for 16-bit devices (`ADS111x`). The voltage that
-    /// these values correspond to must be calculated using the full-scale range
-    /// selected. See [`FullScaleRange`](enum.FullScaleRange.html).
+    /// and within `[32767..-32768]` for 16-bit devices (`ADS111x`).
     pub fn set_low_threshold_raw(&mut self, value: i16) -> Result<(), Error<E>> {
         let register_value = CONV::convert_threshold(value)?;
         self.write_register(Register::LOW_TH, register_value)
     }
 
-    /// Set raw comparator upper threshold
+    /// Sets the raw comparator upper threshold.
+    ///
+    /// The voltage that these values correspond to must be calculated using the
+    /// full-scale range ([`FullScaleRange`]) selected.
     ///
     /// The input value must be within `[2047..-2048]` for 12-bit devices (`ADS101x`)
-    /// and within `[32767..-32768]` for 16-bit devices (`ADS111x`). The voltage that
-    /// these values correspond to must be calculated using the full-scale range
-    /// selected. See [`FullScaleRange`](enum.FullScaleRange.html).
+    /// and within `[32767..-32768]` for 16-bit devices (`ADS111x`).
     pub fn set_high_threshold_raw(&mut self, value: i16) -> Result<(), Error<E>> {
         let register_value = CONV::convert_threshold(value)?;
         self.write_register(Register::HIGH_TH, register_value)
     }
 
-    /// Set comparator mode
+    /// Sets the comparator mode.
     pub fn set_comparator_mode(&mut self, mode: ComparatorMode) -> Result<(), Error<E>> {
         let config = match mode {
             ComparatorMode::Traditional => self.config.with_low(BF::COMP_MODE),
@@ -80,7 +80,7 @@ where
         Ok(())
     }
 
-    /// Set comparator polarity
+    /// Sets the comparator polarity.
     pub fn set_comparator_polarity(
         &mut self,
         polarity: ComparatorPolarity,
@@ -94,7 +94,7 @@ where
         Ok(())
     }
 
-    /// Set comparator latching
+    /// Sets the comparator latching.
     pub fn set_comparator_latching(
         &mut self,
         latching: ComparatorLatching,
@@ -108,9 +108,9 @@ where
         Ok(())
     }
 
-    /// Activate comparator and set the alert queue
+    /// Activates the comparator and sets the alert queue.
     ///
-    /// The comparator can be disabled with [`disable_comparator()`](struct.Ads1x1x.html#method.disable_comparator)
+    /// The comparator can be disabled with [`disable_comparator`](Self::disable_comparator).
     pub fn set_comparator_queue(&mut self, queue: ComparatorQueue) -> Result<(), Error<E>> {
         let config = match queue {
             ComparatorQueue::One => self.config.with_low(BF::COMP_QUE1).with_low(BF::COMP_QUE0),
@@ -122,11 +122,12 @@ where
         Ok(())
     }
 
-    /// Disable comparator (default)
+    /// Disables the comparator. (default)
     ///
-    /// This will set the ALERT/RDY pin to high-impedance.
-    /// The comparator can be enabled by setting the comparator queue.
-    /// See [`set_comparator_queue()`](struct.Ads1x1x.html#method.set_comparator_queue)
+    /// This sets the ALERT/RDY pin to high-impedance.
+    ///
+    /// The comparator can be enabled by setting the comparator queue using
+    /// the [`set_comparator_queue`](Self::set_comparator_queue) method.
     pub fn disable_comparator(&mut self) -> Result<(), Error<E>> {
         let config = self
             .config
@@ -137,13 +138,12 @@ where
         Ok(())
     }
 
-    /// Use the ALERT/RDY pin as conversion-ready pin.
+    /// Enables the ALERT/RDY pin as conversion-ready function.
     ///
-    /// This the ALERT/RDY pin outputs the OS bit when in OneShot mode, and
-    /// provides a continuous-conversion ready pulse when in
-    /// continuous-conversion mode.
+    /// When in one-shot mode, this makes the ALERT/RDY pin output the OS bit,
+    /// in continuous-conversion mode, provides a continuous-conversion ready pulse.
     ///
-    /// When calling this the comparator will be reset to default and the thresholds will be cleared.
+    /// When calling this the comparator will be reset to default and any thresholds will be cleared.
     pub fn use_alert_rdy_pin_as_ready(&mut self) -> Result<(), Error<E>> {
         if self.config
             != self

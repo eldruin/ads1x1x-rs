@@ -1,4 +1,4 @@
-//! Common functions
+//! Features supported on all ADS1x1x devices.
 
 use crate::{ic, Ads1x1x, BitFlags as BF, DataRate12Bit, DataRate16Bit, Error, Register};
 
@@ -6,7 +6,7 @@ impl<I2C, IC, MODE, E> Ads1x1x<I2C, IC, ic::Resolution12Bit, MODE>
 where
     I2C: embedded_hal::i2c::I2c<Error = E>,
 {
-    /// Set data rate
+    /// Sets the data rate.
     pub fn set_data_rate(&mut self, rate: DataRate12Bit) -> Result<(), Error<E>> {
         use crate::DataRate12Bit as DR;
         let cfg = self.config.clone();
@@ -29,7 +29,7 @@ impl<I2C, IC, MODE, E> Ads1x1x<I2C, IC, ic::Resolution16Bit, MODE>
 where
     I2C: embedded_hal::i2c::I2c<Error = E>,
 {
-    /// Set data rate
+    /// Sets the data rate.
     pub fn set_data_rate(&mut self, rate: DataRate16Bit) -> Result<(), Error<E>> {
         use crate::DataRate16Bit as DR;
         let cfg = self.config.clone();

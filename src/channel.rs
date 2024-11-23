@@ -1,4 +1,5 @@
-//! ADC input channels
+//! ADC input channels.
+
 use crate::{ic, Ads1x1x, BitFlags as BF, Config};
 
 use private::ChannelSelection;

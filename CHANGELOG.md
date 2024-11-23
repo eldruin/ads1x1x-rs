@@ -49,7 +49,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   When changing into continuous mode the measurements are started and to stop one
   can simply change into one-shot mode. (This is how the hardware does it anyway).
   The one-shot mode is not affected.
-  When changing the mode an I2C communication error can occur but the unchanged device
+  When changing the mode an I²C communication error can occur but the unchanged device
   can now be retrieved.
 
 ## [0.1.0] - 2018-11-21

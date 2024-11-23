@@ -1,4 +1,4 @@
-//! Common functions
+//! Common functions.
 
 use crate::{devices::OperatingMode, Ads1x1x, BitFlags, Config, Error, Register};
 
@@ -30,7 +30,7 @@ where
         Ok(())
     }
 
-    /// Read whether a measurement is currently in progress.
+    /// Checks whether a measurement is currently in progress.
     pub fn is_measurement_in_progress(&mut self) -> Result<bool, Error<E>> {
         let config = Config {
             bits: self.read_register(Register::CONFIG)?,

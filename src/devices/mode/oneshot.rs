@@ -1,16 +1,18 @@
-//! Common functions
+//! One-shot measurement mode.
+
+use core::marker::PhantomData;
+
 use crate::{
     conversion, devices::OperatingMode, mode, Ads1x1x, BitFlags, ChannelId, Config, Error,
     ModeChangeError, Register,
 };
-use core::marker::PhantomData;
 
 impl<I2C, IC, CONV, E> Ads1x1x<I2C, IC, CONV, mode::OneShot>
 where
     I2C: embedded_hal::i2c::I2c<Error = E>,
     CONV: conversion::ConvertMeasurement,
 {
-    /// Change operating mode to Continuous
+    /// Changes to continuous operating mode.
     pub fn into_continuous(
         mut self,
     ) -> Result<Ads1x1x<I2C, IC, CONV, mode::Continuous>, ModeChangeError<E, Self>> {
@@ -40,13 +42,12 @@ where
     I2C: embedded_hal::i2c::I2c<Error = E>,
     CONV: conversion::ConvertMeasurement,
 {
-    /// Request that the ADC begin a conversion on the specified channel.
+    /// Requests that the ADC begins a conversion on the specified channel.
     ///
     /// The output value will be within `[2047..-2048]` for 12-bit devices
     /// (`ADS101x`) and within `[32767..-32768]` for 16-bit devices (`ADS111x`).
     /// The voltage that these values correspond to must be calculated using
-    /// the full-scale range selected.
-    /// See [`FullScaleRange`](enum.FullScaleRange.html).
+    /// the full-scale range ([`FullScaleRange`](crate::FullScaleRange)) selected.
     ///
     /// Returns `nb::Error::WouldBlock` while a measurement is in progress.
     ///

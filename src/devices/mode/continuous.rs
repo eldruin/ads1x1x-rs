@@ -1,4 +1,4 @@
-//! Continuous measurement mode
+//! Continuous measurement mode.
 
 use crate::{
     conversion, devices::OperatingMode, mode, Ads1x1x, ChannelId, Error, ModeChangeError, Register,
@@ -10,7 +10,7 @@ where
     I2C: embedded_hal::i2c::I2c<Error = E>,
     CONV: conversion::ConvertMeasurement,
 {
-    /// Change operating mode to OneShot
+    /// Changes to one-shot operating mode.
     pub fn into_one_shot(
         mut self,
     ) -> Result<Ads1x1x<I2C, IC, CONV, mode::OneShot>, ModeChangeError<E, Self>> {
@@ -29,13 +29,13 @@ where
         })
     }
 
-    /// Read the most recent measurement
+    /// Reads the most recent measurement.
     pub fn read(&mut self) -> Result<i16, Error<E>> {
         let value = self.read_register(Register::CONVERSION)?;
         Ok(CONV::convert_measurement(value))
     }
 
-    /// Select the channel for measurements.
+    /// Selects the channel used for measurements.
     ///
     /// Note that when changing the channel in continuous conversion mode, the
     /// ongoing conversion will be completed.

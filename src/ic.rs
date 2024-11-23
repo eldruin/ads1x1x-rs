@@ -1,8 +1,10 @@
 /// ICs
 use crate::private;
 
-pub struct Resolution12Bit(pub(crate) ());
-pub struct Resolution16Bit(pub(crate) ());
+#[non_exhaustive]
+pub struct Resolution12Bit;
+#[non_exhaustive]
+pub struct Resolution16Bit;
 
 macro_rules! ic_marker {
     ($name:ident) => {

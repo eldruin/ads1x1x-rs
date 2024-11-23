@@ -48,7 +48,7 @@ thermocouples.
 The devices operate either in continuous-conversion mode, or in a
 single-shot mode that automatically powers down after a conversion.
 Single-shot mode significantly reduces current consumption during idle
-periods. Data is transferred through I2C.
+periods. Data is transferred through I²C.
 
 Here is a comparison of the caracteristics of the devices:
 
@@ -70,8 +70,7 @@ Datasheets:
 To use this driver, import this crate and an `embedded_hal` implementation,
 then instantiate the appropriate device.
 In the following examples an instance of the device ADS1013 will be created
-as an example. Other devices can be created with similar methods like:
-`Ads1x1x::new_ads1114(...)`.
+as an example.
 
 Please find additional examples using hardware in this repository: [driver-examples]
 
