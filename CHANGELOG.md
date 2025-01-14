@@ -9,16 +9,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased] - ReleaseDate
 
 ### Changed
+- [breaking-change] Updated `embedded-hal` to version `1`, `read` in one-shot mode is therefore only an inherent method.
+- [breaking-change] Simplified `SlaveAddr` enum.
 - [breaking-change] Changed the terms "master/slave" to "controller/target" to align with the I2C bus specification v.7
+- Raised MSRV to 1.62.0.
 
 ### Added
 - Derived common traits for types.
 - Add default for `ComparatorQueue`.
-
-### Changed
-- [breaking-change] Updated `embedded-hal` to version `1`, `read` in one-shot mode is therefore only an inherent method.
-- [breaking-change] Simplified `SlaveAddr` enum.
-- Raised MSRV to 1.62.0.
 
 ### Removed
 - Removed `I2cInterface`.
