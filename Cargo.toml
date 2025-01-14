@@ -1,6 +1,6 @@
 [package]
 name = "ads1x1x"
-version = "0.2.2"
+version = "0.3.0"
 authors = ["Diego Barrios Romero <eldruin@gmail.com>"]
 repository = "https://github.com/eldruin/ads1x1x-rs"
 license = "MIT OR Apache-2.0"

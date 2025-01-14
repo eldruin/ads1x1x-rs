@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [0.3.0] - 2025-01-14
+
 ### Changed
 - [breaking-change] Updated `embedded-hal` to version `1`, `read` in one-shot mode is therefore only an inherent method.
 - [breaking-change] Simplified `SlaveAddr` enum.
@@ -59,7 +61,8 @@ further improved. All changes will be documented in this CHANGELOG.
 
 
 <!-- next-url -->
-[Unreleased]: https://github.com/eldruin/ads1x1x-rs/compare/v0.2.2...HEAD
+[Unreleased]: https://github.com/eldruin/ads1x1x-rs/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/eldruin/ads1x1x-rs/compare/v0.2.2...v0.3.0
 [0.2.2]: https://github.com/eldruin/ads1x1x-rs/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/eldruin/ads1x1x-rs/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/eldruin/ads1x1x-rs/compare/v0.1.0...v0.2.0
