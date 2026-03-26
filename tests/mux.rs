@@ -16,7 +16,7 @@ macro_rules! mux_test {
             #[test]
             fn can_read() {
                 let default_config = Config::default();
-                let config = Config::default().with_high(BF::OS).with_high($config_bits);
+                let config = Config::default().union(BF::OS).union($config_bits);
                 let transactions = [
                     I2cTrans::write_read(
                         DEV_ADDR,
@@ -31,17 +31,17 @@ macro_rules! mux_test {
                     ),
                     I2cTrans::write_read(DEV_ADDR, vec![Register::CONVERSION], vec![0x80, 0x00]),
                 ];
-                let mut dev = new(&transactions);
-                let measurement = block!(dev.read(channel::$CS)).unwrap();
+                let mut adc = new(&transactions);
+                let measurement = block!(adc.read(channel::$CS)).unwrap();
                 assert_eq!(-2048, measurement);
-                destroy(dev);
+                destroy(adc);
             }
 
             #[test]
             fn read_then_read_different_triggers_new_measurement() {
                 let default_config = Config::default();
-                let config = Config::default().with_high(BF::OS).with_high($config_bits);
-                let other_config = Config::default().with_high($other_config_bits);
+                let config = Config::default().union(BF::OS).union($config_bits);
+                let other_config = Config::default().union($other_config_bits);
                 let transactions = [
                     I2cTrans::write_read(
                         DEV_ADDR,
@@ -65,17 +65,17 @@ macro_rules! mux_test {
                     ),
                     I2cTrans::write_read(DEV_ADDR, vec![Register::CONVERSION], vec![0x80, 0x00]),
                 ];
-                let mut dev = new(&transactions);
-                assert_would_block!(dev.read(channel::$CS));
-                let measurement = block!(dev.read(channel::$other_CS)).unwrap();
+                let mut adc = new(&transactions);
+                assert_would_block!(adc.read(channel::$CS));
+                let measurement = block!(adc.read(channel::$other_CS)).unwrap();
                 assert_eq!(-2048, measurement);
-                destroy(dev);
+                destroy(adc);
             }
 
             #[test]
             fn continuous_can_select_channel() {
-                let config1 = Config::default().with_low(BF::OP_MODE);
-                let config2 = config1.with_high($config_bits);
+                let config1 = Config::default().difference(BF::OP_MODE);
+                let config2 = config1.union($config_bits);
                 let transactions = [
                     I2cTrans::write(
                         DEV_ADDR,
@@ -86,10 +86,10 @@ macro_rules! mux_test {
                         vec![Register::CONFIG, config2.msb(), config2.lsb()],
                     ),
                 ];
-                let dev = new(&transactions);
-                let mut dev = dev.into_continuous().ok().unwrap();
-                dev.select_channel(channel::$CS).unwrap();
-                destroy(dev);
+                let adc = new(&transactions);
+                let mut adc = adc.into_continuous().ok().unwrap();
+                adc.select_channel(channel::$CS).unwrap();
+                destroy(adc);
             }
         }
     };

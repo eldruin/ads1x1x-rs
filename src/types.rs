@@ -1,35 +1,6 @@
 //! Type definitions.
 
-use core::marker::PhantomData;
-
-/// Errors in this crate
-#[derive(Debug)]
-pub enum Error<E> {
-    /// I²C bus error
-    I2C(E),
-    /// Invalid input data provided
-    InvalidInputData,
-}
-
-/// Error type for mode changes.
-///
-/// This allows to retrieve the unchanged device in case of an error.
-pub enum ModeChangeError<E, DEV> {
-    /// I²C bus error while changing mode.
-    ///
-    /// `E` is the error that happened.
-    /// `DEV` is the device with the mode unchanged.
-    I2C(E, DEV),
-}
-
-/// Mode marker types
-pub mod mode {
-    /// One-shot operating mode / power-down state (default)
-    pub struct OneShot(());
-
-    /// Continuous conversion mode
-    pub struct Continuous(());
-}
+use crate::Config;
 
 /// Data rate for ADS101x.
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
@@ -49,6 +20,41 @@ pub enum DataRate12Bit {
     Sps2400,
     /// 3300 SPS
     Sps3300,
+}
+
+impl DataRate12Bit {
+    pub(crate) fn configure(self, cfg: Config) -> Config {
+        match self {
+            Self::Sps128 => cfg
+                .difference(Config::DR2)
+                .difference(Config::DR1)
+                .difference(Config::DR0),
+            Self::Sps250 => cfg
+                .difference(Config::DR2)
+                .difference(Config::DR1)
+                .union(Config::DR0),
+            Self::Sps490 => cfg
+                .difference(Config::DR2)
+                .union(Config::DR1)
+                .difference(Config::DR0),
+            Self::Sps920 => cfg
+                .difference(Config::DR2)
+                .union(Config::DR1)
+                .union(Config::DR0),
+            Self::Sps1600 => cfg
+                .union(Config::DR2)
+                .difference(Config::DR1)
+                .difference(Config::DR0),
+            Self::Sps2400 => cfg
+                .union(Config::DR2)
+                .difference(Config::DR1)
+                .union(Config::DR0),
+            Self::Sps3300 => cfg
+                .union(Config::DR2)
+                .union(Config::DR1)
+                .difference(Config::DR0),
+        }
+    }
 }
 
 /// Data rate for ADS111x.
@@ -71,6 +77,42 @@ pub enum DataRate16Bit {
     Sps475,
     /// 860 SPS
     Sps860,
+}
+
+impl DataRate16Bit {
+    pub(crate) fn configure(self, cfg: Config) -> Config {
+        match self {
+            Self::Sps8 => cfg
+                .difference(Config::DR2)
+                .difference(Config::DR1)
+                .difference(Config::DR0),
+            Self::Sps16 => cfg
+                .difference(Config::DR2)
+                .difference(Config::DR1)
+                .union(Config::DR0),
+            Self::Sps32 => cfg
+                .difference(Config::DR2)
+                .union(Config::DR1)
+                .difference(Config::DR0),
+            Self::Sps64 => cfg
+                .difference(Config::DR2)
+                .union(Config::DR1)
+                .union(Config::DR0),
+            Self::Sps128 => cfg
+                .union(Config::DR2)
+                .difference(Config::DR1)
+                .difference(Config::DR0),
+            Self::Sps250 => cfg
+                .union(Config::DR2)
+                .difference(Config::DR1)
+                .union(Config::DR0),
+            Self::Sps475 => cfg
+                .union(Config::DR2)
+                .union(Config::DR1)
+                .difference(Config::DR0),
+            Self::Sps860 => cfg.union(Config::DR2).union(Config::DR1).union(Config::DR0),
+        }
+    }
 }
 
 /// Comparator mode (only for ADS1x14, ADS1x15).
@@ -160,7 +202,38 @@ pub enum FullScaleRange {
     Within0_256V,
 }
 
-/// A target address.
+impl FullScaleRange {
+    pub(crate) fn configure(self, config: Config) -> Config {
+        match self {
+            Self::Within6_144V => config
+                .difference(Config::PGA2)
+                .difference(Config::PGA1)
+                .difference(Config::PGA0),
+            Self::Within4_096V => config
+                .difference(Config::PGA2)
+                .difference(Config::PGA1)
+                .union(Config::PGA0),
+            Self::Within2_048V => config
+                .difference(Config::PGA2)
+                .union(Config::PGA1)
+                .difference(Config::PGA0),
+            Self::Within1_024V => config
+                .difference(Config::PGA2)
+                .union(Config::PGA1)
+                .union(Config::PGA0),
+            Self::Within0_512V => config
+                .union(Config::PGA2)
+                .difference(Config::PGA1)
+                .difference(Config::PGA0),
+            Self::Within0_256V => config
+                .union(Config::PGA2)
+                .difference(Config::PGA1)
+                .union(Config::PGA0),
+        }
+    }
+}
+
+/// A slave address.
 ///
 /// See [Table 4 in the datasheet](https://www.ti.com/lit/ds/symlink/ads1115.pdf#%5B%7B%22num%22%3A716%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C0%2C602.2%2C0%5D).
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
@@ -189,48 +262,6 @@ impl TargetAddr {
             Self::Scl => 0b1001011,
         }
     }
-}
-
-#[derive(Debug, Clone, PartialEq)]
-pub(crate) struct Config {
-    pub(crate) bits: u16,
-}
-
-impl Config {
-    pub(crate) fn is_high(&self, mask: u16) -> bool {
-        (self.bits & mask) != 0
-    }
-
-    pub(crate) fn with_high(&self, mask: u16) -> Self {
-        Config {
-            bits: self.bits | mask,
-        }
-    }
-
-    pub(crate) fn with_low(&self, mask: u16) -> Self {
-        Config {
-            bits: self.bits & !mask,
-        }
-    }
-}
-
-impl Default for Config {
-    fn default() -> Self {
-        Config { bits: 0x8583 }
-    }
-}
-
-/// ADS1x1x ADC driver
-#[derive(Debug, Default)]
-pub struct Ads1x1x<I2C, IC, CONV, MODE> {
-    pub(crate) i2c: I2C,
-    pub(crate) address: u8,
-    pub(crate) config: Config,
-    pub(crate) fsr: FullScaleRange,
-    pub(crate) a_conversion_was_started: bool,
-    pub(crate) _conv: PhantomData<CONV>,
-    pub(crate) _ic: PhantomData<IC>,
-    pub(crate) _mode: PhantomData<MODE>,
 }
 
 #[cfg(test)]
