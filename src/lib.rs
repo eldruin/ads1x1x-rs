@@ -182,6 +182,12 @@
 //! adc.set_high_threshold_raw(1500).unwrap();
 //! adc.set_comparator_latching(ComparatorLatching::Latching).unwrap();
 //! ```
+//! # Optional features
+//!
+//! | Feature | Description |
+//! |---------|-------------|
+//! | `defmt` | Implements [`defmt::Format`] for errors and thus enables efficient logging in `no_std` environments using [`defmt`](https://defmt.ferrous-systems.com/) |
+//!
 #![deny(unsafe_code)]
 #![deny(missing_docs)]
 #![no_std]
