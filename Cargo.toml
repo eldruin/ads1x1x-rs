@@ -20,9 +20,13 @@ include = [
 ]
 edition = "2021"
 
+[features]
+defmt = ["dep:defmt"]
+
 [dependencies]
 nb = "1"
 embedded-hal = "1"
+defmt = { version = "0.3", optional = true }
 
 [dev-dependencies]
 embedded-hal-mock = { version = "0.11.1", default-features = false, features = ["eh1"] }

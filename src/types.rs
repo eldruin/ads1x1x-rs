@@ -4,6 +4,7 @@ use core::marker::PhantomData;
 
 /// Errors in this crate
 #[derive(Debug)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum Error<E> {
     /// I²C bus error
     I2C(E),
@@ -22,6 +23,20 @@ pub enum ModeChangeError<E, DEV> {
     I2C(E, DEV),
 }
 
+#[cfg(feature = "defmt")]
+impl<E, DEV> defmt::Format for ModeChangeError<E, DEV>
+where
+    E: defmt::Format,
+{
+    fn format(&self, fmt: defmt::Formatter) {
+        match self {
+            ModeChangeError::I2C(e, _dev) => {
+                defmt::write!(fmt, "ModeChangeError::I2C({})", e)
+            }
+        }
+    }
+}
+
 /// Mode marker types
 pub mod mode {
     /// One-shot operating mode / power-down state (default)
@@ -33,6 +48,7 @@ pub mod mode {
 
 /// Data rate for ADS101x.
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum DataRate12Bit {
     /// 128 SPS
     Sps128,
@@ -53,6 +69,7 @@ pub enum DataRate12Bit {
 
 /// Data rate for ADS111x.
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum DataRate16Bit {
     /// 8 SPS
     Sps8,
@@ -75,6 +92,7 @@ pub enum DataRate16Bit {
 
 /// Comparator mode (only for ADS1x14, ADS1x15).
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum ComparatorMode {
     #[default]
     /// Traditional comparator (default)
@@ -94,6 +112,7 @@ pub enum ComparatorMode {
 
 /// Comparator polarity (only for ADS1x14, ADS1x15).
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum ComparatorPolarity {
     #[default]
     /// Active low (default)
@@ -108,6 +127,7 @@ pub enum ComparatorPolarity {
 /// after conversions are within the margin of the upper and lower
 /// threshold values.
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum ComparatorLatching {
     #[default]
     /// Nonlatching (default)
@@ -128,6 +148,7 @@ pub enum ComparatorLatching {
 /// The default state of the comparator is deactivated. It can be activated by setting
 /// the comparator queue.
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum ComparatorQueue {
     /// Activate comparator and assert after one conversion exceeding thresholds
     One,
@@ -143,6 +164,7 @@ pub enum ComparatorQueue {
 /// This sets the input voltage measurable range.
 /// The FSR is fixed at ±2.048 V in the ADS1x13.
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[allow(non_camel_case_types)]
 pub enum FullScaleRange {
     /// ±6.144V
@@ -164,6 +186,7 @@ pub enum FullScaleRange {
 ///
 /// See [Table 4 in the datasheet](https://www.ti.com/lit/ds/symlink/ads1115.pdf#%5B%7B%22num%22%3A716%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C0%2C602.2%2C0%5D).
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum TargetAddr {
     /// Address when the ADDR pin is connected to GND. (default)
     #[default]
