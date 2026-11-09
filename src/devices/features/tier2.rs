@@ -148,10 +148,10 @@ where
         if self.config
             != self
                 .config
-                .with_high(BF::COMP_QUE1)
-                .with_high(BF::COMP_QUE0)
+                .with_low(BF::COMP_QUE1)
+                .with_low(BF::COMP_QUE0)
         {
-            self.set_comparator_queue(ComparatorQueue::default())?;
+            self.set_comparator_queue(ComparatorQueue::One)?;
         }
         self.write_register(Register::HIGH_TH, 0x8000)?;
         self.write_register(Register::LOW_TH, 0)
